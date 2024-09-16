@@ -1,0 +1,16 @@
+
+@url_local = http://localhost:3000
+
+POST  {{url_local}}/clients
+content-type: application/json
+    
+{
+    "name":"tharun",
+    "role":"hero",
+    "phone": 9866151252,
+    "poc":"ganesh",
+    "email":"tharunamplu9.8@gmail.com"
+
+
+}
+
