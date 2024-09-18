@@ -12,6 +12,32 @@ const USER_VALIDATIONS ={
 
 }
 
+const CLIENT_VALIDATIONS ={
+
+    CLIENTS_COUNT : "Successfully Fetched Clients Count.",
+    FAILED_CLIENTS_LIST : "Failed to Fetch List of clients.",
+    CLIENT_FETCHED_SUCCESS : "Successfully Fetched List of Clients.",
+    CLIENT_NOT_FOUND : "Clients Not Found",
+    CLIENT_LIST_FETCH_SUCCESS : "Clients List Fetched Successfully",
+
+}
+
+const INVOICES_VALIDATIONS ={
+
+   FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
+   INVOICES_FETCHED_SUCCESS:"'Invoices List Fetched Successfully.",
+   INVOICES_NOT_FOUND : "Invoices Not Found"
+
+} 
+
+const SERVICES_VALIDATIONS ={
+
+   SERVICES_NOT_FOUND: "Services Not Found",
+   SERVICES_FETCHED_SUCCESS :"Services List Fetched Successfully"
+
+}
+
+
 const VALIDATION_MESSAGES = {
 
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
@@ -42,6 +68,6 @@ const COMMON_VALIDATIONS ={
 
 export{
 
-    VALIDATION_MESSAGES,USER_VALIDATIONS,COMMON_VALIDATIONS
+    VALIDATION_MESSAGES,USER_VALIDATIONS,COMMON_VALIDATIONS,CLIENT_VALIDATIONS,INVOICES_VALIDATIONS,SERVICES_VALIDATIONS
 
 }
