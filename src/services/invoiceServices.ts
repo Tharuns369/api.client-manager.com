@@ -1,3 +1,8 @@
+import { invoices } from "../schemas/invoices";
+import {db} from "../db/index"
+import { count, sql } from "drizzle-orm";
+
+
 export class InvoicesService {
     async getTotalInvoicesAmount() {
       return { totalAmount: 5000 };
@@ -11,10 +16,25 @@ export class InvoicesService {
       return { services: [{ id: 1, totalAmount: 1500 }, { id: 2, totalAmount: 3500 }] };
     }
   
-    async listInvoices() {
-      return { invoices: [{ id: 1, amount: 1000 }, { id: 2, amount: 2000 }] };
-    }
-  
+    async getInvoices(limit: number, skip: number, sortString:string) {
+
+        const rawQuery = sql`
+        SELECT *
+        FROM invoices
+        ORDER BY ${sql.raw(sortString)} 
+        LIMIT ${limit}
+        OFFSET ${skip}
+    `;
+    const result = await db.execute(rawQuery);
+    return result.rows; 
+}
+
+   async getInvoiceCount(){
+    const result = await db.select({ count: sql<number>`COUNT(*)` })
+    .from(invoices);
+    return result[0].count;
+   }
+
     async viewInvoice(id: string) {
       return { invoice: { id, amount: 1000 } };
     }
