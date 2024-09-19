@@ -11,7 +11,7 @@ const userRoute = new Hono();
 
 userRoute.post('/signUp', userValidationsMiddleWare.validateEvent ,async (c) => await userController.userSignUp(c));
 userRoute.post('/signIn', userValidationsMiddleWare.validateSignIn, async (c) => await userController.userSignIn(c));
-userRoute.get('/profile', authGuard.authGuard, async (c) => await userController.getUserProfile(c));
+userRoute.get('/profile',  async (c) => await userController.getUserProfile(c));
 
 
 
