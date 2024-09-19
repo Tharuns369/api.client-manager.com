@@ -1,17 +1,17 @@
 import { Context } from "hono";
-import { InvoicesService } from "../services/invoiceServices";
+import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
 import { COMMON_VALIDATIONS, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import { formatCurrency, convertNumberToWords } from '../helpers/currencyFormatterHelper';
 
 
-const invoicesService = new InvoicesService();
+const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
 
 export class InvoiceController {
     async getTotalInvoicesAmount(c: Context) {
         try {
-            const result = await invoicesService.getTotalInvoicesAmount();
+        const result = await invoicesDataServiceProvider.getTotalInvoicesAmount();
             
             const amountInINR = result.totalAmount; 
             return c.json({
@@ -39,8 +39,8 @@ export class InvoiceController {
             const skip: number = (page - 1) * limit;
     
             const [invoicesList, totalCount]: any = await Promise.all([
-                invoicesService.getInvoices(limit, skip, sortString),
-                invoicesService.getInvoiceCount()
+            invoicesDataServiceProvider.getInvoices(limit, skip, sortString),
+            invoicesDataServiceProvider.getInvoiceCount()
             ]);
     
             if (!invoicesList || invoicesList.length === 0) {

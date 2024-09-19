@@ -1,4 +1,4 @@
-const USER_VALIDATIONS = {
+const USER_MESSAGES = {
     USER_INSERTED_SUCCESS: "User Inserted Successfully.",
     USER_ALREADY_EXISTS: "User already Exist With this Mail Id.",
     USER_NOT_FOUND: "User Not Found",
@@ -8,7 +8,8 @@ const USER_VALIDATIONS = {
     INVALID_REFRESH_TOKEN: 'Invalid refresh token.',
     TOKEN_REFRESHED_SUCCESS: 'Access token refreshed successfully.',
     USER_FETCHED_SUCCESS: "User Details Fetched Successfully.",
-    EMAIL_REQUIRED: "Email Is Required."
+    EMAIL_REQUIRED: "Email Is Required.",
+    INVALID_CREDENTIALS: "Invalid credentials.",
 };
 const CLIENT_MESSAGES = {
     CLIENTS_COUNT: "Successfully Fetched Clients Count.",
@@ -21,10 +22,11 @@ const CLIENT_MESSAGES = {
     CLIENT_FETCH_SUCCESS: "Client Fetches Successfully.",
     CLIENTS_NOT_EXIST: "No Clients"
 };
-const INVOICES_VALIDATIONS = {
+const INVOICES_MESSAGES = {
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
     INVOICES_FETCHED_SUCCESS: "'Invoices List Fetched Successfully.",
     INVOICES_NOT_FOUND: "Invoices Not Found",
+    TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
 };
 const SERVICES_MESSAGES = {
     SERVICES_NOT_FOUND: "Services Not Found",
@@ -50,10 +52,11 @@ const VALIDATION_MESSAGES = {
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits.",
     PASSWORD_REQUIRED: "Password is required.",
-    PASSWORD_TOO_SHORT: "Password must be at least 8 characters long."
+    PASSWORD_TOO_SHORT: "Password must be at least 8 characters long.",
+    VALIDATION_FAILED: "Validation Failed"
 };
 const COMMON_VALIDATIONS = {
     SOMETHING_WENT_WRONG: "Something Went Wrong",
     INVALID_CLIENT_ID: "Invalid client ID provided"
 };
-export { VALIDATION_MESSAGES, USER_VALIDATIONS, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_VALIDATIONS, SERVICES_MESSAGES };
+export { VALIDATION_MESSAGES, USER_MESSAGES, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_MESSAGES, SERVICES_MESSAGES };

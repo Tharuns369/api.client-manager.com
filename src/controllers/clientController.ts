@@ -1,17 +1,16 @@
 import { Context } from 'hono';
-import { ClientsService } from '../services/clientsService';
+import { ClientsDataServiceProvider } from '../services/clientsDataServiceProvider';
 import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstants';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
-
-const clientsService = new ClientsService();
+const clientsDataServiceProvider = new ClientsDataServiceProvider();
 
 export class ClientsController {
   
   async getTotalClients(c: Context) {
     try {
 
-    const totalClientCount = await clientsService.getTotalClients();
+    const totalClientCount = await clientsDataServiceProvider.getTotalClients();
 
     if(!totalClientCount){
       return c.json({
@@ -46,8 +45,8 @@ export class ClientsController {
         const skip: number = (page - 1) * limit;
 
         const [invoicesList, totalCount]: any = await Promise.all([
-            clientsService.getClientsWithPagenation(limit, skip, sortString),
-            clientsService.getclientsCount()
+            clientsDataServiceProvider.getClientsWithPagenation(limit, skip, sortString),
+            clientsDataServiceProvider.getclientsCount()
         ]);
 
         if (!invoicesList || invoicesList.length === 0) {
@@ -91,7 +90,7 @@ export class ClientsController {
             },400);
         }
 
-        const client = await clientsService.getClient(id);
+        const client = await clientsDataServiceProvider.getClient(id);
 
         if (!client || client.length === 0) {
           return c.json({
@@ -118,13 +117,13 @@ export class ClientsController {
   } 
 
   async addClient(c: Context) {
-    const result = await clientsService.addClient();
+    const result = await clientsDataServiceProvider.addClient();
     return c.json(result);
   }
 
   async updateClient(c: Context) {
     const { id } = c.req.param();
-    const result = await clientsService.updateClient(id);
+    const result = await clientsDataServiceProvider.updateClient(id);
     return c.json(result);
   }
 
@@ -141,7 +140,7 @@ export class ClientsController {
             },400);
         }
 
-        const client = await clientsService.getClient(id);
+        const client = await clientsDataServiceProvider.getClient(id);
 
         if (!client || client.length === 0) {
           return c.json({
@@ -151,7 +150,7 @@ export class ClientsController {
           },404);
       }
 
-        await clientsService.deleteClient(id);
+        await clientsDataServiceProvider.deleteClient(id);
 
         return c.json({
             success: true,
@@ -170,7 +169,7 @@ export class ClientsController {
 
 
   async exportClients(c: Context) {
-    const result = await clientsService.exportClients();
+    const result = await clientsDataServiceProvider.exportClients();
     return c.json(result);
   }
 }

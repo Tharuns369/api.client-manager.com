@@ -1,18 +1,18 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { CONFIG } from "../config/appConfig";
+import { ConfigData } from "../config/appConfig";
 const { Pool } = pg;
 
 const pool = new Pool({
 
-    user: CONFIG.DB.user,
-    password: CONFIG.DB.password,
-    host: CONFIG.DB.host,
-    port: CONFIG.DB.port,
-    database: CONFIG.DB.database,
+    user: ConfigData.DB.user,
+    password: ConfigData.DB.password,
+    host: ConfigData.DB.host,
+    port: ConfigData.DB.port,
+    database: ConfigData.DB.database,
     ssl: {
         rejectUnauthorized: true,
-        ca: CONFIG.DB.ca,
+        ca: ConfigData.DB.ca,
     },
 
 });

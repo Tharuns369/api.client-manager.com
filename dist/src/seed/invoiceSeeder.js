@@ -37,7 +37,7 @@ const insertInvoicesForClient = async (clientId, numInvoices = 10) => {
     try {
         const serviceRows = await db.select({
             id: services.id
-        }).from(services).where(eq(services.clientId, clientId));
+        }).from(services).where(eq(services.client_id, clientId));
         for (const service of serviceRows) {
             const allInvoices = generateInvoicesForService(service.id, numInvoices);
             const batchSize = 1000;
