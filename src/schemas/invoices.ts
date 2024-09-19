@@ -6,30 +6,31 @@ export const invoiceStatusEnum = pgEnum('invoice_status', ['PENDING', 'COMPLETED
 
 export const invoices = pgTable('invoices', {
     id: serial('id').primaryKey(),
-    serviceId: integer('service_id').notNull(),
-    invoiceStatus: invoiceStatusEnum('invoice_status').default("PENDING"),
+    service_id: integer('service_id').notNull(),
+    invoice_status: invoiceStatusEnum('invoice_status').default("PENDING"),
     remarks: text('remarks'),
-    invoiceDate: date('invoice_date').notNull(),
-    paymentDate: date('payment_date'),
-    invoiceAmount: numeric('invoice_amount', { precision: 100, scale: 2 }),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    invoice_date: date('invoice_date').notNull(),
+    payment_date: date('payment_date'),
+    invoice_amount: numeric('invoice_amount', { precision: 100, scale: 2 }),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    updated_at: timestamp('updated_at').notNull().defaultNow(),
 
 }, (table: any) => {
     return {
-        serviceIdIdx: index("service_id_idx").on(table.serviceId),
-        invoiceStatusIdx: index("invoice_status_idx").on(table.invoiceStatus)
+        serviceIdIdx: index("service_id_idx").on(table.service_id),
+        invoiceStatusIdx: index("invoice_status_idx").on(table.invoice_status)
     };
 });
 
 export const invoicesWithServiceRealtions = relations(invoices, ({ one }) => ({
     service: one(services, {
-        fields: [invoices.serviceId],
+        fields: [invoices.service_id],
         references: [services.id],
     }),
 }));
 
 
-export type invoice = typeof invoices.$inferSelect; 
-export type newInvoice = typeof invoices.$inferInsert; 
+export type Invoice = typeof invoices.$inferSelect;
+export type NewInvoice = typeof invoices.$inferInsert;
+export type InvoiceTable = typeof invoices;
 

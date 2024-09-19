@@ -2,7 +2,7 @@ const USER_VALIDATIONS = {
     USER_INSERTED_SUCCESS: "User Inserted Successfully.",
     USER_ALREADY_EXISTS: "User already Exist With this Mail Id.",
     USER_NOT_FOUND: "User Not Found",
-    INVALID_PASSWORD: "Invalid Password.",
+    INVALID_CREDENTIALS: "Invalid credentials.",
     LOGIN_SUCCESS: "User Login Successfully.",
     REFRESH_TOKEN_REQUIRED: 'Refresh token is required.',
     INVALID_REFRESH_TOKEN: 'Invalid refresh token.',
@@ -26,6 +26,7 @@ const VALIDATION_MESSAGES = {
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits.",
     PASSWORD_REQUIRED: "Password is required.",
+    VALIDATION_FAILED: "Validation failed",
     PASSWORD_TOO_SHORT: "Password must be at least 8 characters long."
 };
 const COMMON_VALIDATIONS = {

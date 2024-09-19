@@ -1,4 +1,4 @@
-export class ClientsService {
+export class ClientsDataServiceProvider {
     async getTotalClients() {
       return { totalClients: 10 };
     }

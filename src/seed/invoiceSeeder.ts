@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { db } from '../db/index'; 
-import { invoices, newInvoice } from '../schemas/invoices';
+import { db } from '../db/index';
+import { invoices } from '../schemas/invoices';
 import { services } from '../schemas/services';
 import { eq } from 'drizzle-orm';
 
-const generateFakeInvoice = (serviceId: number, monthOffset: number): newInvoice => {
+const generateFakeInvoice = (serviceId: number, monthOffset: number) => {
     const currentDate = new Date();
     const invoiceDate = new Date(currentDate.setMonth(currentDate.getMonth() - monthOffset));
 
@@ -13,24 +13,24 @@ const generateFakeInvoice = (serviceId: number, monthOffset: number): newInvoice
         invoiceStatus: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
         remarks: faker.lorem.sentence(),
         invoiceDate: invoiceDate.toISOString(),
-        paymentDate: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }), 
-        invoiceAmount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2), 
-        createdAt: new Date(), 
-        updatedAt: new Date(), 
+        paymentDate: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }),
+        invoiceAmount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2),
+        createdAt: new Date(),
+        updatedAt: new Date(),
     };
 };
 
-const generateInvoicesForService = (serviceId: number, numInvoices: number = 10): newInvoice[] => {
-    const fakeInvoices: newInvoice[] = [];
-    
+const generateInvoicesForService = (serviceId: number, numInvoices: number = 10) => {
+    const fakeInvoices: any[] = [];
+
     for (let i = 0; i < numInvoices; i++) {
         fakeInvoices.push(generateFakeInvoice(serviceId, i));
     }
-    
+
     return fakeInvoices;
 };
 
-const insertInvoicesBatch = async (invoicesBatch: newInvoice[]) => {
+const insertInvoicesBatch = async (invoicesBatch: any) => {
     try {
         await db.insert(invoices).values(invoicesBatch);
         console.log(`Inserted ${invoicesBatch.length} invoices.`);
@@ -43,7 +43,7 @@ const insertInvoicesForClient = async (clientId: number, numInvoices: number = 1
     try {
         const serviceRows = await db.select({
             id: services.id
-        }).from(services).where(eq(services.clientId, clientId)); 
+        }).from(services).where(eq(services.client_id, clientId));
 
         for (const service of serviceRows) {
             const allInvoices = generateInvoicesForService(service.id, numInvoices);
@@ -53,7 +53,7 @@ const insertInvoicesForClient = async (clientId: number, numInvoices: number = 1
                 const invoicesBatch = allInvoices.slice(i, i + batchSize);
                 await insertInvoicesBatch(invoicesBatch);
             }
-            
+
             console.log(`Processed service with ID ${service.id}`);
         }
     } catch (error) {
@@ -67,8 +67,8 @@ const insertInvoicesForClients = async (clientIds: number[], numInvoices: number
     }
 };
 
-const clientIds = Array.from({ length: 1001 }, (_, i) => i + 1); 
-const numInvoices = 10; 
+const clientIds = Array.from({ length: 1001 }, (_, i) => i + 1);
+const numInvoices = 10;
 insertInvoicesForClients(clientIds, numInvoices)
     .then(() => {
         console.log(`Successfully inserted invoices for ${clientIds.length} clients.`);

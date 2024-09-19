@@ -10,18 +10,18 @@ export const clients = pgTable('clients', {
     role: varchar('role'),
     email: varchar('email').notNull().unique(),
     phone: varchar('phone').notNull(),
-    secondaryPhone: varchar('secondary_phone'),
+    secondary_phone: varchar('secondary_phone'),
     status: statusEnum('status').default("ACTIVE"),
     remarks: text('remarks'),
-    bussinessUrl: text('bussiness_url'),
+    bussiness_url: text('bussiness_url'),
     address: text('address'),
     state: varchar('state'),
     city: varchar('city'),
     gst: boolean('gst').default(false),
     country: varchar('country'),
-    totalInvoiceAmount: numeric('total_invoice_amount', { precision: 100, scale: 2 }),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    total_invoice_amount: numeric('total_invoice_amount', { precision: 100, scale: 2 }),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    updated_at: timestamp('updated_at').notNull().defaultNow()
 }, (table) => {
     return {
         nameIdx: index("name_idx").on(table.name),

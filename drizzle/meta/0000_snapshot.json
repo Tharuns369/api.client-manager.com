@@ -1,5 +1,5 @@
 {
-  "id": "e1cc6e92-44ba-4027-8a14-e149e94d6499",
+  "id": "b3d5adda-443b-4600-8aa5-fcec59fbb49d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -491,6 +491,12 @@
       "name": "users",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "first_name": {
           "name": "first_name",
           "type": "varchar",
@@ -526,7 +532,7 @@
           "type": "user_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'ADMIN'"
         },
         "status": {

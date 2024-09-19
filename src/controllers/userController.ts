@@ -1,125 +1,96 @@
-import { Context } from "hono";
-import { UserServices } from "../services/userServices";
-import { USER_VALIDATIONS,COMMON_VALIDATIONS } from "../constants/messaegConstants";
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { Context } from "hono";
+import { USER_VALIDATIONS } from "../constants/messaegConstants";
+import { NotFoundException } from '../exceptions/notFoundException';
+import { ResourceAlreadyExistsException } from "../exceptions/resourceAlreadyExistsException";
+import { UnauthorisedException } from "../exceptions/unAuthorizedException";
+import { AuthHelper } from "../helpers/authHelper";
+import { ResponseHelper } from "../helpers/responseHelper";
+import { UserDataServiceProvider } from "../services/usersDataServiceProvider";
 
-const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET!;
-const JWT_ACCESS_TOKEN_EXPIRES_IN = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN!;
-const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET!;
-const JWT_REFRESH_TOKEN_EXPIRES_IN = process.env.JWT_REFRESH_TOKEN_EXPIRES_IN!;
 
-const userServices = new UserServices();
+const userDataServiceProvider = new UserDataServiceProvider();
+const authHelper = new AuthHelper();
 
-export class UserController{
+export class UserController {
 
-   async userSignUp(c:Context){
+  public async signUp(c: Context) {
 
     try {
       const userData = await c.req.json();
 
-      const existedUser = await userServices.findUser(userData.email);
+      const existedUser = await userDataServiceProvider.findUserByEmail(userData.email);
 
       if (existedUser) {
-          return c.json({
-              status: "failed",
-              message: USER_VALIDATIONS.USER_ALREADY_EXISTS,
-          }, 400);
+        throw new ResourceAlreadyExistsException("email", USER_VALIDATIONS.USER_ALREADY_EXISTS);
       }
 
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       userData.password = hashedPassword;
 
-      const insertedUser = await userServices.insertUser(userData);
+      const data = await userDataServiceProvider.insertUser(userData);
 
-      return c.json({
-          status: "Success",
-          message: USER_VALIDATIONS.USER_INSERTED_SUCCESS,
-          data: insertedUser,
-      });
-  } catch (error) {
-      console.error('Error Insert User:', error);
-      return c.json({
-          status: 'Error',
-          message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-      }, 500);
+      const { password, ...rest } = data;
+
+      return ResponseHelper.sendSuccessResponse(c, 200, USER_VALIDATIONS.USER_INSERTED_SUCCESS, rest);
+
+    } catch (error) {
+      console.log({ error });
+      throw error;
+    }
   }
-   } 
 
 
-   async userSignIn(c: Context) {
+  async signIn(c: Context) {
     try {
-      const { email, password } = await c.req.json();
+      const body = await c.req.json();
 
-      const user = await userServices.findUser(email);
+      const user = await userDataServiceProvider.findUserByEmail(body.email);
 
       if (!user) {
-          return c.json({
-              status: 'failed',
-              message: USER_VALIDATIONS.USER_NOT_FOUND,
-          }, 404);
+        throw new UnauthorisedException(USER_VALIDATIONS.INVALID_CREDENTIALS);
       }
 
-      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      const isPasswordMatch = await bcrypt.compare(body.password, user.password);
 
       if (!isPasswordMatch) {
-          return c.json({
-              status: 'failed',
-              message: USER_VALIDATIONS.INVALID_PASSWORD,
-          }, 401);
+        throw new UnauthorisedException(USER_VALIDATIONS.INVALID_CREDENTIALS);
       }
 
-      const accessToken = jwt.sign({ email: user.email }, process.env.JWT_ACCESS_TOKEN_SECRET!, { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN });
-      const refreshToken = jwt.sign({ email: user.email }, process.env.JWT_REFRESH_TOKEN_SECRET!, { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN });
+      const { token, refreshToken } = await authHelper.getUserAuthTokens(user);
 
-      return c.json({
-          status: 'Success',
-          message: USER_VALIDATIONS.LOGIN_SUCCESS,
-          data: { accessToken, refreshToken },
-      });
-  } catch (error) {
-      console.error('Error Sign-In User:', error);
-      return c.json({
-          status: 'Error',
-          message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-      }, 500);
+      const { password, ...rest } = user;
+
+      let response = {
+        user_details: rest,
+        access_token: token,
+        refresh_token: refreshToken
+      };
+
+      return ResponseHelper.sendSuccessResponse(c, 200, USER_VALIDATIONS.LOGIN_SUCCESS, response);
+
+    }
+
+    catch (error) {
+      throw error;
     }
   }
-     
 
-  async getUserProfile(c: Context) {
+
+  public async getProfile(c: Context) {
     try {
-      const email = c.req.query('email');
-
-      if (!email) {
-        return c.json({
-          status: 'failed',
-          message: USER_VALIDATIONS.EMAIL_REQUIRED,
-        }, 400);
+      const userId = +c.req.param('id');
+      const userData: any = await userDataServiceProvider.findUserById(userId);
+      if (!userData) {
+        throw new NotFoundException(USER_VALIDATIONS.USER_NOT_FOUND);
       }
+      delete userData.password;
 
-      const user = await userServices.findUser(email);
-
-      if (user) {
-        return c.json({
-          status: 'Success',
-          message: USER_VALIDATIONS.USER_FETCHED_SUCCESS,
-          data: user,
-        }, 200);
-      }
-
-      return c.json({
-        status: 'failed',
-        message: USER_VALIDATIONS.USER_NOT_FOUND,
-        data: null,
-      }, 404);
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return c.json({
-        status: 'Error',
-        message:COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-      }, 500);
+      return ResponseHelper.sendSuccessResponse(c, 200, USER_VALIDATIONS.USER_FETCHED_SUCCESS, userData);
+    }
+    catch (error) {
+      throw error;
     }
   }
-  
+
 }

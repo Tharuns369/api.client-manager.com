@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1726325852668,
-      "tag": "0000_fair_molly_hayes",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1726494772566,
-      "tag": "0001_flippant_mariko_yashida",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1726494820000,
-      "tag": "0002_youthful_revanche",
+      "when": 1726737692960,
+      "tag": "0000_flowery_wolf_cub",
       "breakpoints": true
     }
   ]

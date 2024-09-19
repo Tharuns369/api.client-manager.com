@@ -1,5 +1,5 @@
 
-export class ServicesService {
+export class clientsServicesDataServiceProvider {
     async getTotalServices() {
       return {status:"Suuccess", totalServices: 5 };
     }

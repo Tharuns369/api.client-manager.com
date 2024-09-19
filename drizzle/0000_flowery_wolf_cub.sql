@@ -74,12 +74,13 @@ CREATE TABLE IF NOT EXISTS "services" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
+	"id" serial PRIMARY KEY NOT NULL,
 	"first_name" varchar NOT NULL,
 	"last_name" varchar NOT NULL,
 	"email" text NOT NULL,
 	"phone" text NOT NULL,
 	"password" varchar NOT NULL,
-	"user_type" "user_type" DEFAULT 'ADMIN' NOT NULL,
+	"user_type" "user_type" DEFAULT 'ADMIN',
 	"status" "status" DEFAULT 'ACTIVE',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,

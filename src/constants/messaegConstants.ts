@@ -1,21 +1,21 @@
-const USER_VALIDATIONS ={
-    USER_INSERTED_SUCCESS : "User Inserted Successfully.",
-    USER_ALREADY_EXISTS : "User already Exist With this Mail Id.",
-    USER_NOT_FOUND : "User Not Found",
-    INVALID_PASSWORD: "Invalid Password.",
-    LOGIN_SUCCESS : "User Login Successfully.",
+const USER_VALIDATIONS = {
+    USER_INSERTED_SUCCESS: "User Inserted Successfully.",
+    USER_ALREADY_EXISTS: "User already Exist With this Mail Id.",
+    USER_NOT_FOUND: "User Not Found",
+    INVALID_CREDENTIALS: "Invalid credentials.",
+    LOGIN_SUCCESS: "User Login Successfully.",
     REFRESH_TOKEN_REQUIRED: 'Refresh token is required.',
-   INVALID_REFRESH_TOKEN: 'Invalid refresh token.',
-   TOKEN_REFRESHED_SUCCESS: 'Access token refreshed successfully.',
-   USER_FETCHED_SUCCESS :"User Details Fetched Successfully.",
-   EMAIL_REQUIRED : "Email Is Required."
+    INVALID_REFRESH_TOKEN: 'Invalid refresh token.',
+    TOKEN_REFRESHED_SUCCESS: 'Access token refreshed successfully.',
+    USER_FETCHED_SUCCESS: "User Details Fetched Successfully.",
+    EMAIL_REQUIRED: "Email Is Required."
 
-}
+};
 
 const VALIDATION_MESSAGES = {
 
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
-    SERVER_ERROR: "An unexpected server error occurred. Please try again later.",  
+    SERVER_ERROR: "An unexpected server error occurred. Please try again later.",
     FIRST_NAME_REQUIRED: "First Name is required.",
     FIRST_NAME_TOO_SHORT: "First Name must be at least 2 characters long.",
     FIRST_NAME_STRING: "First Name must be a string.",
@@ -29,19 +29,20 @@ const VALIDATION_MESSAGES = {
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits.",
     PASSWORD_REQUIRED: "Password is required.",
+    VALIDATION_FAILED: "Validation failed",
     PASSWORD_TOO_SHORT: "Password must be at least 8 characters long."
 
-}
+};
 
-const COMMON_VALIDATIONS ={
+const COMMON_VALIDATIONS = {
 
-    SOMETHING_WENT_WRONG :"Something Went Wrong"
-}
+    SOMETHING_WENT_WRONG: "Something Went Wrong"
+};
 
 
 
-export{
+export {
 
-    VALIDATION_MESSAGES,USER_VALIDATIONS,COMMON_VALIDATIONS
+    VALIDATION_MESSAGES, USER_VALIDATIONS, COMMON_VALIDATIONS
 
-}
+};
