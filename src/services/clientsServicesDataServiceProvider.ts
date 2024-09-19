@@ -1,6 +1,7 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { services } from "../schemas/services";
+import { services,Service } from "../schemas/services";
+import { getRecordByColumnValue, updateRecordByColumnValue } from "../db/abstractions";
 
 export class ClientsServicesDataServiceProvider {
     async getTotalServicesCount() {
@@ -32,10 +33,7 @@ export class ClientsServicesDataServiceProvider {
     async addService() {
       return {status:"Suuccess",  message: 'Service added successfully' };
     }
-  
-    async updateService(id: string) {
-      return { status:"Suuccess", message: `Service ${id} updated successfully` };
-    }
+
   
     async deleteService(id:number) {
       const result = await db
@@ -45,9 +43,15 @@ export class ClientsServicesDataServiceProvider {
 
   }
 
-    async getService(id: number) {
-      return await db.select().from(services)
-      .where(eq(services.id, id));
+  async getService(id: number) {
+    const userData = await getRecordByColumnValue<Service>(services, 'id', id);
+
+   return userData;
+  }
+
+  async editService(id: number, body: Service) {
+    return await updateRecordByColumnValue<Service>(services, 'id', id, body);
+     
   }
   }
   

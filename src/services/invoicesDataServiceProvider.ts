@@ -1,6 +1,7 @@
-import { invoices } from "../schemas/invoices";
+import { Invoice, invoices } from "../schemas/invoices";
 import {db} from "../db/index"
 import { count, sql } from "drizzle-orm";
+import { updateRecordByColumnValue,getRecordByColumnValue } from "../db/abstractions";
 
 
 export class InvoicesDataServiceProvider {
@@ -53,9 +54,16 @@ export class InvoicesDataServiceProvider {
     async addInvoice() {
       return { message: 'Invoice added successfully' };
     }
+
+    async getInvoice(id: number) {
+      const userData = await getRecordByColumnValue<Invoice>(invoices, 'id', id);
   
-    async updateInvoice(id: string) {
-      return { message: `Invoice ${id} updated successfully` };
+     return userData;
+    }
+  
+    async editInvoice(id: number, body: Invoice) {
+      return await updateRecordByColumnValue<Invoice>(invoices, 'id', id, body);
+       
     }
   }
   

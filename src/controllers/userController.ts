@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { Context } from "hono";
-import { USER_MESSAGES } from "../constants/messaegConstants";
+import { COMMON_VALIDATIONS, USER_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from '../exceptions/notFoundException';
 import { ResourceAlreadyExistsException } from "../exceptions/resourceAlreadyExistsException";
 import { UnauthorisedException } from "../exceptions/unAuthorizedException";
@@ -92,5 +92,38 @@ export class UserController {
       throw error;
     }
   }
+
+  async updateUser(c: Context) {
+    try {
+        const id = parseInt(c.req.param('id'), 10); 
+        
+        const body = await c.req.json();
+
+        const client:any = await usersDataServiceProvider.getUser(id);
+
+        if (!client) {
+            throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
+          }
+
+          const hashedPassword = await bcrypt.hash(body.password, 10);
+          body.password = hashedPassword;
+    
+
+        const updatedClient = await usersDataServiceProvider.editUser(id, body);
+
+        const { password, ...updatedClientData} = updatedClient;
+
+
+        return ResponseHelper.sendSuccessResponse(c, 200,USER_MESSAGES.USER_UPDATE_SUCCESS,updatedClientData);
+
+    } catch (error) {
+        console.error('Error at edit Client:', error);
+        return c.json({
+            success: false,
+            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+            data: []
+        }, 500);
+    }
+   }
 
 }

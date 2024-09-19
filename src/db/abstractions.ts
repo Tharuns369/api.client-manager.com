@@ -21,3 +21,19 @@ export const insertRecord = async <R extends DbRecord>(table: DbTable, record: N
     return respData[0] as R;
 
 };
+
+
+export const updateRecordByColumnValue = async <R extends DbRecord>(
+    table: DbTable,
+    column: string,
+    value: string | number,
+    updateData: Partial<R> 
+) => {
+    const columnInfo = sql.raw(`${getTableName(table)}.${column}`);
+    const respData = await db.update(table)
+        .set(updateData)
+        .where(eq(columnInfo, value))
+        .returning();
+
+    return respData[0] as R;
+};

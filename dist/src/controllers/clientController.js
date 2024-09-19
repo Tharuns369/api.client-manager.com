@@ -97,11 +97,6 @@ export class ClientsController {
             }, 500);
         }
     }
-    //   async getClient(c: Context) {
-    //     const { id } = c.req.param();
-    //     const result = await clientsService.getClient(id);
-    //     return c.json(result);
-    //   }
     async addClient(c) {
         const result = await clientsDataServiceProvider.addClient();
         return c.json(result);
