@@ -19,6 +19,7 @@
     "hono": "^4.5.5",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.5",
+    "number-to-words": "^1.2.4",
     "pg": "^8.12.0",
     "ts-node": "^10.9.2",
     "valibot": "^0.37.0"
@@ -27,6 +28,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.17",
+    "@types/number-to-words": "^1.2.3",
     "@types/pg": "^8.11.6",
     "drizzle-kit": "^0.24.0",
     "tsx": "^4.7.1"

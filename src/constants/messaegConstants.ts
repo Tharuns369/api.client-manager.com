@@ -12,28 +12,39 @@ const USER_VALIDATIONS ={
 
 }
 
-const CLIENT_VALIDATIONS ={
+const CLIENT_MESSAGES ={
 
     CLIENTS_COUNT : "Successfully Fetched Clients Count.",
     FAILED_CLIENTS_LIST : "Failed to Fetch List of clients.",
     CLIENT_FETCHED_SUCCESS : "Successfully Fetched List of Clients.",
     CLIENT_NOT_FOUND : "Clients Not Found",
     CLIENT_LIST_FETCH_SUCCESS : "Clients List Fetched Successfully",
+    CLIENT_DELETED_SUCCESS : "Client deleted successfully.",
+    CLIENT_ID_NOT_FOUND: (id: number) => `Client with ID ${id} does not exist`,
+    CLIENT_FETCH_SUCCESS : "Client Fetches Successfully.",
+    CLIENTS_NOT_EXIST : "No Clients"
 
 }
 
-const INVOICES_VALIDATIONS ={
+const INVOICES_MESSAGES ={
 
    FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
    INVOICES_FETCHED_SUCCESS:"'Invoices List Fetched Successfully.",
-   INVOICES_NOT_FOUND : "Invoices Not Found"
+   INVOICES_NOT_FOUND : "Invoices Not Found",
+   TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
+
 
 } 
 
-const SERVICES_VALIDATIONS ={
+const SERVICES_MESSAGES ={
 
    SERVICES_NOT_FOUND: "Services Not Found",
-   SERVICES_FETCHED_SUCCESS :"Services List Fetched Successfully"
+   SERVICES_FETCHED_SUCCESS :"Services List Fetched Successfully",
+   SERVICE_ID_NOT_FOUND: (id: number) => `Service with ID ${id} does not exist`,
+   SERVICE_DELETED_SUCCESS :"Service Deleted Successfully",
+   SERVICES_NOT_EXIST : "No Services",
+   SERVICE_COUNT : "Successfully Fetched Services Count.",
+
 
 }
 
@@ -61,13 +72,13 @@ const VALIDATION_MESSAGES = {
 
 const COMMON_VALIDATIONS ={
 
-    SOMETHING_WENT_WRONG :"Something Went Wrong"
+    SOMETHING_WENT_WRONG :"Something Went Wrong",
+    INVALID_CLIENT_ID : "Invalid client ID provided"
 }
 
 
 
 export{
 
-    VALIDATION_MESSAGES,USER_VALIDATIONS,COMMON_VALIDATIONS,CLIENT_VALIDATIONS,INVOICES_VALIDATIONS,SERVICES_VALIDATIONS
-
+    VALIDATION_MESSAGES,USER_VALIDATIONS,COMMON_VALIDATIONS,CLIENT_MESSAGES,INVOICES_MESSAGES,SERVICES_MESSAGES
 }

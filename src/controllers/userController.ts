@@ -22,7 +22,7 @@ export class UserController{
 
       if (existedUser) {
           return c.json({
-              status: "failed",
+              status: false,
               message: USER_VALIDATIONS.USER_ALREADY_EXISTS,
           }, 400);
       }
@@ -33,7 +33,7 @@ export class UserController{
       const insertedUser = await userServices.insertUser(userData);
 
       return c.json({
-          status: "Success",
+          status: true,
           message: USER_VALIDATIONS.USER_INSERTED_SUCCESS,
           data: insertedUser,
       });
@@ -55,27 +55,28 @@ export class UserController{
 
       if (!user) {
           return c.json({
-              status: 'failed',
+              status: false,
               message: USER_VALIDATIONS.USER_NOT_FOUND,
           }, 404);
       }
 
       const isPasswordMatch = await bcrypt.compare(password, user.password);
 
+
       if (!isPasswordMatch) {
           return c.json({
-              status: 'failed',
+              status: false,
               message: USER_VALIDATIONS.INVALID_PASSWORD,
           }, 401);
       }
 
       const accessToken = jwt.sign({ email: user.email }, process.env.JWT_ACCESS_TOKEN_SECRET!, { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN });
       const refreshToken = jwt.sign({ email: user.email }, process.env.JWT_REFRESH_TOKEN_SECRET!, { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN });
-
       return c.json({
-          status: 'Success',
+          status: true,
           message: USER_VALIDATIONS.LOGIN_SUCCESS,
-          data: { accessToken, refreshToken },
+          data:user,
+          Accession_token : accessToken,refresh_token: refreshToken 
       });
   } catch (error) {
       console.error('Error Sign-In User:', error);
@@ -89,37 +90,38 @@ export class UserController{
 
   async getUserProfile(c: Context) {
     try {
-      const email = c.req.query('email');
+        const email = c.req.query('email');
+        if (!email) {
+            return c.json({
+                status: false,
+                message: USER_VALIDATIONS.EMAIL_REQUIRED,
+            }, 400);
+        }
 
-      if (!email) {
+        const user = await userServices.findUser(email);
+
+        if (user) {
+            return c.json({
+                status: true,
+                message: USER_VALIDATIONS.USER_FETCHED_SUCCESS,
+                data: user, 
+            }, 200);
+        }
+
         return c.json({
-          status: 'failed',
-          message: USER_VALIDATIONS.EMAIL_REQUIRED,
-        }, 400);
-      }
-
-      const user = await userServices.findUser(email);
-
-      if (user) {
-        return c.json({
-          status: 'Success',
-          message: USER_VALIDATIONS.USER_FETCHED_SUCCESS,
-          data: user,
-        }, 200);
-      }
-
-      return c.json({
-        status: 'failed',
-        message: USER_VALIDATIONS.USER_NOT_FOUND,
-        data: null,
-      }, 404);
+            status: false,
+            message: USER_VALIDATIONS.USER_NOT_FOUND,
+            data: null,
+        }, 404);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return c.json({
-        status: 'Error',
-        message:COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-      }, 500);
+        console.error('Error fetching user profile:', error);
+        return c.json({
+            status: 'Error',
+            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+        }, 500);
     }
-  }
+}
+
+
   
 }

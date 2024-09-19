@@ -1,15 +1,31 @@
 import { Context } from "hono";
 import { InvoicesService } from "../services/invoiceServices";
-import { COMMON_VALIDATIONS, INVOICES_VALIDATIONS } from "../constants/messaegConstants";
+import { COMMON_VALIDATIONS, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { sortHelper } from "../helpers/sortHelper";
+import { formatCurrency, convertNumberToWords } from '../helpers/currencyFormatterHelper';
 
 
 const invoicesService = new InvoicesService();
 
 export class InvoiceController {
-    async getTotalInvoiceAmount(c: Context) {
-        return c.json({ message: "Total invoice amount fetched", total: 1000 });
+    async getTotalInvoicesAmount(c: Context) {
+        try {
+            const result = await invoicesService.getTotalInvoicesAmount();
+            
+            const amountInINR = result.totalAmount; 
+            return c.json({
+                status: true,
+                message: INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS,
+                data: amountInINR
+            }, 200);
+        } catch (error) {
+            console.error('Error fetching total invoices amount:', error);
+            return c.json({
+                status: false,
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+            }, 500);
+        }
     }
 
     async listInvoices(c: Context) {
@@ -30,7 +46,7 @@ export class InvoiceController {
             if (!invoicesList || invoicesList.length === 0) {
                 return c.json({
                     status: 'False',
-                    message: INVOICES_VALIDATIONS.INVOICES_NOT_FOUND,
+                    message: INVOICES_MESSAGES.INVOICES_NOT_FOUND,
                     data: []
                 });
             }
@@ -40,7 +56,7 @@ export class InvoiceController {
                 count: totalCount, 
                 limit,
                 data: invoicesList,
-                message: INVOICES_VALIDATIONS.INVOICES_FETCHED_SUCCESS
+                message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS
             });
     
             return c.json(response);

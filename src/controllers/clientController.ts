@@ -1,6 +1,6 @@
 import { Context } from 'hono';
 import { ClientsService } from '../services/clientsService';
-import { CLIENT_VALIDATIONS, COMMON_VALIDATIONS } from '../constants/messaegConstants';
+import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstants';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
 
@@ -13,13 +13,21 @@ export class ClientsController {
 
     const totalClientCount = await clientsService.getTotalClients();
 
+    if(!totalClientCount){
+      return c.json({
+        status:false,
+        message:CLIENT_MESSAGES.CLIENTS_NOT_EXIST,
+        data:[]
+    },200)        
+    }
+
     return c.json({
-       
-        status:"True",
-        message:CLIENT_VALIDATIONS.CLIENTS_COUNT,
+        status:true,
+        message:CLIENT_MESSAGES.CLIENTS_COUNT,
         data:totalClientCount
-    })        
-    }catch (error) {
+    },200)        
+    }
+    catch (error) {
         console.error('Error at clients count:', error);
         return c.json({
             status: 'Error',
@@ -45,7 +53,7 @@ export class ClientsController {
         if (!invoicesList || invoicesList.length === 0) {
             return c.json({
                 status: 'False',
-                message: CLIENT_VALIDATIONS.CLIENT_NOT_FOUND,
+                message: CLIENT_MESSAGES.CLIENT_NOT_FOUND,
                 data: []
             });
         }
@@ -55,7 +63,7 @@ export class ClientsController {
             count: totalCount, 
             limit,
             data: invoicesList,
-            message: CLIENT_VALIDATIONS.CLIENT_LIST_FETCH_SUCCESS
+            message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
         });
 
         return c.json(response);
@@ -70,11 +78,44 @@ export class ClientsController {
     }   
   
 
-//   async getClient(c: Context) {
-//     const { id } = c.req.param();
-//     const result = await clientsService.getClient(id);
-//     return c.json(result);
-//   }
+  async getClient(c: Context) {
+    try {
+      const queryId = c.req.param('id');
+        const id = Number(queryId);
+        
+        if (isNaN(id)) {
+            return c.json({
+                success: false,
+                message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
+                data: []
+            },400);
+        }
+
+        const client = await clientsService.getClient(id);
+
+        if (!client || client.length === 0) {
+          return c.json({
+              success: false,
+              message: CLIENT_MESSAGES. CLIENT_ID_NOT_FOUND(id),
+              data: []
+          },200);
+      }
+
+      return c.json({
+        success: true,
+        message: CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS,
+        data: client
+    },200);
+  
+    } catch (error) {
+      console.error('Error at get Client:', error);
+      return c.json({
+          success: false,
+          message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+          data: []
+      }, 500);
+  }
+  } 
 
   async addClient(c: Context) {
     const result = await clientsService.addClient();
@@ -89,43 +130,44 @@ export class ClientsController {
 
   async deleteClient(c: Context) {
     try {
-        const queryId = c.req.query('id') || ''; 
-        const id = parseInt(queryId);
+        const queryId = c.req.param('id');
+        const id = Number(queryId);
         
         if (isNaN(id)) {
             return c.json({
                 success: false,
-                message: "Invalid client ID provided",
+                message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
                 data: []
-            });
+            },400);
         }
-        
 
         const client = await clientsService.getClient(id);
 
-        if (!client) {
-            return c.json({
-                success: false,
-                message: "Client not found with the given ID",
-                data: []
-            });
-        }
+        if (!client || client.length === 0) {
+          return c.json({
+              success: false,
+              message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
+              data: []
+          },404);
+      }
 
         await clientsService.deleteClient(id);
 
         return c.json({
             success: true,
-            message: "Client deleted successfully.",
-            data: client
+            message: CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS,
+            data: client 
         });
     } catch (error) {
         console.error('Error at delete Client:', error);
         return c.json({
-            status: 'Error',
-            message: 'Something went wrong while deleting the client',
+            success: false,
+            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+            data: []
         }, 500);
     }
-   }
+  }
+
 
   async exportClients(c: Context) {
     const result = await clientsService.exportClients();

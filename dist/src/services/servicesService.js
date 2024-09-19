@@ -1,9 +1,10 @@
-import { sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { services } from "../schemas/services";
 export class ServicesService {
-    async getTotalServices() {
-        return { status: "Suuccess", totalServices: 5 };
+    async getTotalServicesCount() {
+        const clientsCount = await db.select({ count: count() }).from(services);
+        return clientsCount[0]?.count || 0;
     }
     async getServices(limit, skip, sortString) {
         const rawQuery = sql `
@@ -28,6 +29,13 @@ export class ServicesService {
         return { status: "Suuccess", message: `Service ${id} updated successfully` };
     }
     async deleteService(id) {
-        return { status: "Suuccess", message: `Service ${id} deleted successfully` };
+        const result = await db
+            .delete(services)
+            .where(eq(services.id, id));
+        return result.rowCount;
+    }
+    async getService(id) {
+        return await db.select().from(services)
+            .where(eq(services.id, id));
     }
 }

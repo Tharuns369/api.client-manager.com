@@ -1,12 +1,32 @@
 import { ServicesService } from '../services/servicesService';
-import { COMMON_VALIDATIONS, SERVICES_VALIDATIONS } from '../constants/messaegConstants';
+import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 const servicesService = new ServicesService();
 export class ServicesController {
     async getTotalServices(c) {
-        const result = await servicesService.getTotalServices();
-        return c.json(result);
+        try {
+            const totalClientCount = await servicesService.getTotalServicesCount();
+            if (!totalClientCount) {
+                return c.json({
+                    status: false,
+                    message: SERVICES_MESSAGES.SERVICES_NOT_EXIST,
+                    data: []
+                }, 200);
+            }
+            return c.json({
+                status: true,
+                message: SERVICES_MESSAGES.SERVICE_COUNT,
+                data: totalClientCount
+            }, 200);
+        }
+        catch (error) {
+            console.error('Error at Services count:', error);
+            return c.json({
+                status: 'Error',
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+            }, 500);
+        }
     }
     async listServices(c) {
         try {
@@ -22,7 +42,7 @@ export class ServicesController {
             if (!invoicesList || invoicesList.length === 0) {
                 return c.json({
                     status: 'False',
-                    message: SERVICES_VALIDATIONS.SERVICES_NOT_FOUND,
+                    message: SERVICES_MESSAGES.SERVICES_NOT_FOUND,
                     data: []
                 });
             }
@@ -31,7 +51,7 @@ export class ServicesController {
                 count: totalCount,
                 limit,
                 data: invoicesList,
-                message: SERVICES_VALIDATIONS.SERVICES_FETCHED_SUCCESS
+                message: SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS
             });
             return c.json(response);
         }
@@ -53,8 +73,38 @@ export class ServicesController {
         return c.json(result);
     }
     async deleteService(c) {
-        const { id } = c.req.param();
-        const result = await servicesService.deleteService(id);
-        return c.json(result);
+        try {
+            const queryId = c.req.param('id');
+            const id = Number(queryId);
+            if (isNaN(id)) {
+                return c.json({
+                    success: false,
+                    message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
+                    data: []
+                });
+            }
+            const service = await servicesService.getService(id);
+            if (!service || service.length === 0) {
+                return c.json({
+                    success: false,
+                    message: SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id),
+                    data: []
+                });
+            }
+            await servicesService.deleteService(id);
+            return c.json({
+                success: true,
+                message: SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS,
+                data: service
+            });
+        }
+        catch (error) {
+            console.error('Error at delete Service:', error);
+            return c.json({
+                success: false,
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+                data: []
+            }, 500);
+        }
     }
 }

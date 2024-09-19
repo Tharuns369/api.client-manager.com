@@ -3,7 +3,8 @@ import { db } from "../db";
 import { clients } from "../schemas/clients";
 export class ClientsService {
     async getTotalClients() {
-        return await db.select({ count: count() }).from(clients);
+        const clientsCount = await db.select({ count: count() }).from(clients);
+        return clientsCount[0]?.count || 0;
     }
     async getClientsWithPagenation(limit, skip, sortString) {
         const rawQuery = sql `

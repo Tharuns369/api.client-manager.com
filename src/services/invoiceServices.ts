@@ -4,9 +4,16 @@ import { count, sql } from "drizzle-orm";
 
 
 export class InvoicesService {
-    async getTotalInvoicesAmount() {
-      return { totalAmount: 5000 };
-    }
+  async getTotalInvoicesAmount() {
+    const result = await db
+        .select({
+            totalAmount: sql`SUM(invoice_amount)`.as('totalAmount')
+        })
+        .from(invoices); 
+
+    return { totalAmount: result[0]?.totalAmount || 0 };
+}
+
   
     async getClientsTotalInvoicesAmount() {
       return { clients: [{ id: 1, totalAmount: 3000 }, { id: 2, totalAmount: 2000 }] };
