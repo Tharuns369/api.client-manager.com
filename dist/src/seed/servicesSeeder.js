@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { db } from '../db/index';
-import { services } from '../schemas/services';
+import { services, } from '../schemas/services';
 import { clients } from '../schemas/clients';
 export const generateFakeService = (clientId) => {
     return {

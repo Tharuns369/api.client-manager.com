@@ -3,7 +3,7 @@ import {db} from "../db/index"
 import { count, sql } from "drizzle-orm";
 
 
-export class InvoicesService {
+export class InvoicesDataServiceProvider {
   async getTotalInvoicesAmount() {
     const result = await db
         .select({

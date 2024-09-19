@@ -2,7 +2,7 @@ import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { clients } from "../schemas/clients";
 
-export class ClientsService {
+export class ClientsDataServiceProvider {
 
     async getTotalClients() {
     const clientsCount = await db.select({count: count()}).from(clients);

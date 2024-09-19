@@ -1,19 +1,19 @@
 import { defineConfig } from "drizzle-kit";
-import { CONFIG } from "./src/config/appConfig";
+import { ConfigData } from "./src/config/appConfig";
 
 export default defineConfig({
     schema: "./src/schemas/*",
     out: "./drizzle",
     dialect: 'postgresql',
     dbCredentials: {
-        user: CONFIG.DB.user,
-        password: CONFIG.DB.password,
-        host: CONFIG.DB.host,
-        port: CONFIG.DB.port,
-        database: CONFIG.DB.database,
+        user: ConfigData.DB.user,
+        password: ConfigData.DB.password,
+        host: ConfigData.DB.host,
+        port: ConfigData.DB.port,
+        database: ConfigData.DB.database,
         ssl: {
             rejectUnauthorized: true,
-            ca: CONFIG.DB.ca,
+            ca: ConfigData.DB.ca,
         },
     }
 });

@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { db } from '../db/index'; 
-import { services, newService } from '../schemas/services';
-import { clients } from '../schemas/clients'; 
+import { db } from '../db/index';
+import { services, } from '../schemas/services';
+import { clients } from '../schemas/clients';
 
-export const generateFakeService = (clientId: number): newService => {
+export const generateFakeService = (clientId: number) => {
     return {
         title: faker.company.catchPhrase(),
         type: faker.helpers.arrayElement(['Consulting', 'Development', 'Support', 'Design', 'Marketing']),
@@ -15,8 +15,8 @@ export const generateFakeService = (clientId: number): newService => {
     };
 };
 
-export const generateServicesForClient = (clientId: number, numServices: number = 4): newService[] => {
-    const fakeServices: newService[] = [];
+export const generateServicesForClient = (clientId: number, numServices: number = 4) => {
+    const fakeServices: any[] = [];
 
     for (let i = 0; i < numServices; i++) {
         fakeServices.push(generateFakeService(clientId));
@@ -28,8 +28,8 @@ export const insertServicesForClients = async (numClients: number, servicesPerCl
     try {
         const clientRows = await db.select({
             id: clients.id,
-            name: clients.name 
-        }).from(clients); 
+            name: clients.name
+        }).from(clients);
 
         for (const client of clientRows) {
             const servicesBatch = generateServicesForClient(client.id, servicesPerClient);

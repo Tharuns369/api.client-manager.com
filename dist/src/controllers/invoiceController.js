@@ -1,11 +1,26 @@
-import { InvoicesService } from "../services/invoiceServices";
-import { COMMON_VALIDATIONS, INVOICES_VALIDATIONS } from "../constants/messaegConstants";
+import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
+import { COMMON_VALIDATIONS, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { sortHelper } from "../helpers/sortHelper";
-const invoicesService = new InvoicesService();
+const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
 export class InvoiceController {
-    async getTotalInvoiceAmount(c) {
-        return c.json({ message: "Total invoice amount fetched", total: 1000 });
+    async getTotalInvoicesAmount(c) {
+        try {
+            const result = await invoicesDataServiceProvider.getTotalInvoicesAmount();
+            const amountInINR = result.totalAmount;
+            return c.json({
+                status: true,
+                message: INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS,
+                data: amountInINR
+            }, 200);
+        }
+        catch (error) {
+            console.error('Error fetching total invoices amount:', error);
+            return c.json({
+                status: false,
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+            }, 500);
+        }
     }
     async listInvoices(c) {
         try {
@@ -15,13 +30,13 @@ export class InvoiceController {
             const sortString = sortHelper.resultsSort(query);
             const skip = (page - 1) * limit;
             const [invoicesList, totalCount] = await Promise.all([
-                invoicesService.getInvoices(limit, skip, sortString),
-                invoicesService.getInvoiceCount()
+                invoicesDataServiceProvider.getInvoices(limit, skip, sortString),
+                invoicesDataServiceProvider.getInvoiceCount()
             ]);
             if (!invoicesList || invoicesList.length === 0) {
                 return c.json({
                     status: 'False',
-                    message: INVOICES_VALIDATIONS.INVOICES_NOT_FOUND,
+                    message: INVOICES_MESSAGES.INVOICES_NOT_FOUND,
                     data: []
                 });
             }
@@ -30,7 +45,7 @@ export class InvoiceController {
                 count: totalCount,
                 limit,
                 data: invoicesList,
-                message: INVOICES_VALIDATIONS.INVOICES_FETCHED_SUCCESS
+                message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS
             });
             return c.json(response);
         }

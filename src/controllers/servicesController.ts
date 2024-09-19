@@ -1,17 +1,17 @@
 import { Context } from 'hono';
-import { ServicesService } from '../services/servicesService';
+import { ClientsServicesDataServiceProvider } from '../services/clientsServicesDataServiceProvider';
 import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 
-const servicesService = new ServicesService();
+const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
 
 export class ServicesController {
 
   async getTotalServices(c: Context) {
     try {
       
-    const totalClientCount = await servicesService.getTotalServicesCount();
+    const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();
     if(!totalClientCount){
       return c.json({
         status:false,
@@ -47,8 +47,8 @@ export class ServicesController {
         const skip: number = (page - 1) * limit;
 
         const [invoicesList, totalCount]: any = await Promise.all([
-            servicesService.getServices(limit, skip, sortString),
-            servicesService.getSrvicesCount()
+            clientsServicesDataServiceProvider.getServices(limit, skip, sortString),
+            clientsServicesDataServiceProvider.getSrvicesCount()
         ]);
 
         if (!invoicesList || invoicesList.length === 0) {
@@ -80,13 +80,13 @@ export class ServicesController {
 
 
   async addService(c: Context) {
-    const result = await servicesService.addService();
+    const result = await clientsServicesDataServiceProvider.addService();
     return c.json(result);
   }
 
   async updateService(c: Context) {
     const { id } = c.req.param();
-    const result = await servicesService.updateService(id);
+    const result = await clientsServicesDataServiceProvider.updateService(id);
     return c.json(result);
   }
 
@@ -103,7 +103,7 @@ export class ServicesController {
             });
         }
 
-        const service = await servicesService.getService(id);
+        const service = await clientsServicesDataServiceProvider.getService(id);
 
         if (!service || service.length === 0) {
           return c.json({
@@ -113,7 +113,7 @@ export class ServicesController {
           });
       }
 
-        await servicesService.deleteService(id);
+        await clientsServicesDataServiceProvider.deleteService(id);
 
         return c.json({
             success: true,

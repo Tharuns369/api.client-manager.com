@@ -1,12 +1,12 @@
-import { ClientsService } from '../services/clientsService';
+import { ClientsDataServiceProvider } from '../services/clientsDataServiceProvider';
 import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstants';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
-const clientsService = new ClientsService();
+const clientsDataServiceProvider = new ClientsDataServiceProvider();
 export class ClientsController {
     async getTotalClients(c) {
         try {
-            const totalClientCount = await clientsService.getTotalClients();
+            const totalClientCount = await clientsDataServiceProvider.getTotalClients();
             if (!totalClientCount) {
                 return c.json({
                     status: false,
@@ -36,8 +36,8 @@ export class ClientsController {
             const sortString = sortHelper.resultsSort(query);
             const skip = (page - 1) * limit;
             const [invoicesList, totalCount] = await Promise.all([
-                clientsService.getClientsWithPagenation(limit, skip, sortString),
-                clientsService.getclientsCount()
+                clientsDataServiceProvider.getClientsWithPagenation(limit, skip, sortString),
+                clientsDataServiceProvider.getclientsCount()
             ]);
             if (!invoicesList || invoicesList.length === 0) {
                 return c.json({
@@ -74,7 +74,7 @@ export class ClientsController {
                     data: []
                 }, 400);
             }
-            const client = await clientsService.getClient(id);
+            const client = await clientsDataServiceProvider.getClient(id);
             if (!client || client.length === 0) {
                 return c.json({
                     success: false,
@@ -103,12 +103,12 @@ export class ClientsController {
     //     return c.json(result);
     //   }
     async addClient(c) {
-        const result = await clientsService.addClient();
+        const result = await clientsDataServiceProvider.addClient();
         return c.json(result);
     }
     async updateClient(c) {
         const { id } = c.req.param();
-        const result = await clientsService.updateClient(id);
+        const result = await clientsDataServiceProvider.updateClient(id);
         return c.json(result);
     }
     async deleteClient(c) {
@@ -122,7 +122,7 @@ export class ClientsController {
                     data: []
                 }, 400);
             }
-            const client = await clientsService.getClient(id);
+            const client = await clientsDataServiceProvider.getClient(id);
             if (!client || client.length === 0) {
                 return c.json({
                     success: false,
@@ -130,7 +130,7 @@ export class ClientsController {
                     data: []
                 }, 404);
             }
-            await clientsService.deleteClient(id);
+            await clientsDataServiceProvider.deleteClient(id);
             return c.json({
                 success: true,
                 message: CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS,
@@ -147,7 +147,7 @@ export class ClientsController {
         }
     }
     async exportClients(c) {
-        const result = await clientsService.exportClients();
+        const result = await clientsDataServiceProvider.exportClients();
         return c.json(result);
     }
 }

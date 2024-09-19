@@ -1,12 +1,12 @@
-import { ServicesService } from '../services/servicesService';
+import { ClientsServicesDataServiceProvider } from '../services/clientsServicesDataServiceProvider';
 import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
-const servicesService = new ServicesService();
+const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
 export class ServicesController {
     async getTotalServices(c) {
         try {
-            const totalClientCount = await servicesService.getTotalServicesCount();
+            const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();
             if (!totalClientCount) {
                 return c.json({
                     status: false,
@@ -36,8 +36,8 @@ export class ServicesController {
             const sortString = sortHelper.resultsSort(query);
             const skip = (page - 1) * limit;
             const [invoicesList, totalCount] = await Promise.all([
-                servicesService.getServices(limit, skip, sortString),
-                servicesService.getSrvicesCount()
+                clientsServicesDataServiceProvider.getServices(limit, skip, sortString),
+                clientsServicesDataServiceProvider.getSrvicesCount()
             ]);
             if (!invoicesList || invoicesList.length === 0) {
                 return c.json({
@@ -64,12 +64,12 @@ export class ServicesController {
         }
     }
     async addService(c) {
-        const result = await servicesService.addService();
+        const result = await clientsServicesDataServiceProvider.addService();
         return c.json(result);
     }
     async updateService(c) {
         const { id } = c.req.param();
-        const result = await servicesService.updateService(id);
+        const result = await clientsServicesDataServiceProvider.updateService(id);
         return c.json(result);
     }
     async deleteService(c) {
@@ -83,7 +83,7 @@ export class ServicesController {
                     data: []
                 });
             }
-            const service = await servicesService.getService(id);
+            const service = await clientsServicesDataServiceProvider.getService(id);
             if (!service || service.length === 0) {
                 return c.json({
                     success: false,
@@ -91,7 +91,7 @@ export class ServicesController {
                     data: []
                 });
             }
-            await servicesService.deleteService(id);
+            await clientsServicesDataServiceProvider.deleteService(id);
             return c.json({
                 success: true,
                 message: SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS,
