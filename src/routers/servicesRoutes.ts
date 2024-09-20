@@ -6,7 +6,7 @@ const servicesController = new ServicesController();
 
 servicesRouter.get('/count',  servicesController.getTotalServices);
 servicesRouter.get('/',  servicesController.listServices);
-servicesRouter.post('/add',  servicesController.addService);
+servicesRouter.post('/',  servicesController.addService);
 servicesRouter.patch('/:id', servicesController.updateService);
 servicesRouter.delete('/:id',  servicesController.deleteService);
 

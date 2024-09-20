@@ -88,7 +88,7 @@ export class UserController {
     try {
 
       const userId = +c.req.param('id');
-    
+
       const userData: any = await usersDataServiceProvider.findUserById(userId);
       if (!userData) {
         throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
@@ -126,11 +126,9 @@ export class UserController {
         ...validatedData
       };
 
-      const updatedUser = await usersDataServiceProvider.editUser(id, updatedUserData);
+      await usersDataServiceProvider.editUser(id, updatedUserData);
 
-      const { password, ...responseUserData } = updatedUser;
-
-      return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS, responseUserData);
+      return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS);
 
     } catch (error) {
       throw error;

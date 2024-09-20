@@ -89,9 +89,8 @@ export class UserController {
                 ...existingUser,
                 ...validatedData
             };
-            const updatedUser = await usersDataServiceProvider.editUser(id, updatedUserData);
-            const { password, ...responseUserData } = updatedUser;
-            return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS, responseUserData);
+            await usersDataServiceProvider.editUser(id, updatedUserData);
+            return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS);
         }
         catch (error) {
             throw error;

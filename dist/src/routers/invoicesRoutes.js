@@ -8,6 +8,6 @@ invoicesRouter.get('/amount', invoicesController.getTotalInvoicesAmount);
 invoicesRouter.get('/', invoicesController.listInvoices);
 invoicesRouter.get('/:id', invoicesController.viewInvoice);
 invoicesRouter.post('/upload', invoicesController.uploadInvoice);
-invoicesRouter.post('/add', invoicesController.addInvoice);
+invoicesRouter.post('/', invoicesController.addInvoice);
 invoicesRouter.patch('/:id', invoicesController.updateInvoice);
 export default invoicesRouter;

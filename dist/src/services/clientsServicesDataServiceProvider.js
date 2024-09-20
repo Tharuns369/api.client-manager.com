@@ -1,10 +1,10 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
+import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
 import { services } from "../schemas/services";
-import { getRecordByColumnValue, getRecordCountsByquery, updateRecordByColumnValue } from "../db/abstractions";
 export class ClientsServicesDataServiceProvider {
     async getTotalServicesCount() {
-        const clientsCount = await getRecordCountsByquery(services);
+        const clientsCount = await getTotalRecordsCount(services);
         return clientsCount[0]?.count || 0;
     }
     async getServices(limit, skip, sortString) {
@@ -37,6 +37,6 @@ export class ClientsServicesDataServiceProvider {
         return serviceData;
     }
     async editService(id, body) {
-        return await updateRecordByColumnValue(services, 'id', id, body);
+        return await updateRecordById(services, id, body);
     }
 }

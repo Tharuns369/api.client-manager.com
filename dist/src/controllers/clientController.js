@@ -95,8 +95,8 @@ export class ClientsController {
             if (!client) {
                 return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
-            const updatedClient = await clientsDataServiceProvider.editClient(id, body);
-            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS, updatedClient);
+            await clientsDataServiceProvider.editClient(id, body);
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
         }
         catch (error) {
             throw error;

@@ -1,4 +1,4 @@
-import { getRecordByColumnValue, insertRecord,updateRecordByColumnValue } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { NewUser, User, users } from "../schemas/users";
 
 
@@ -28,12 +28,12 @@ export class UsersDataServiceProvider {
   async getUser(id: number) {
     const userData = await getRecordByColumnValue<User>(users, 'id', id);
 
-   return userData;
+    return userData;
   }
 
   async editUser(id: number, updatedUserData: User) {
-    return await updateRecordByColumnValue<User>(users, 'id', id, updatedUserData);
-     
+    return await updateRecordById(users, id, updatedUserData);
+
   }
 
 }

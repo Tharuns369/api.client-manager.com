@@ -10,15 +10,14 @@ export const insertRecord = async (table, record) => {
     3;
     return respData[0];
 };
-export const updateRecordByColumnValue = async (table, column, value, updateData) => {
-    const columnInfo = sql.raw(`${getTableName(table)}.${column}`);
+export const updateRecordById = async (table, id, updateData) => {
     const respData = await db.update(table)
         .set(updateData)
-        .where(eq(columnInfo, value))
+        .where(eq(table.id, id))
         .returning();
     return respData[0];
 };
-export const getRecordCountsByquery = async (table) => {
+export const getTotalRecordsCount = async (table) => {
     const respData = await db.select({ count: count() }).from(table);
     ;
     return respData;

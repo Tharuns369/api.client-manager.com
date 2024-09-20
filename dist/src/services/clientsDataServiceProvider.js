@@ -1,10 +1,10 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
+import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
-import { getRecordByColumnValue, getRecordCountsByquery, updateRecordByColumnValue } from "../db/abstractions";
 export class ClientsDataServiceProvider {
     async getTotalClientsCount() {
-        const clientsCount = await getRecordCountsByquery(clients);
+        const clientsCount = await getTotalRecordsCount(clients);
         return clientsCount[0]?.count || 0;
     }
     async getClientsWithPagenation(limit, skip, sortString) {
@@ -31,7 +31,7 @@ export class ClientsDataServiceProvider {
         return { message: 'Client added successfully' };
     }
     async editClient(id, body) {
-        return await updateRecordByColumnValue(clients, 'id', id, body);
+        return await updateRecordById(clients, id, body);
     }
     async deleteClient(id) {
         const result = await db

@@ -11,8 +11,8 @@ const authMiddleware = new AuthMiddleware();
 clientsRouter.get('/count', authMiddleware.checkAndValidateAuthToken, clientsController.getTotalClients);
 clientsRouter.get('/', authMiddleware.checkAndValidateAuthToken, clientsController.listClients);
 clientsRouter.get('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.getClient);
-clientsRouter.post('/add', authMiddleware.checkAndValidateAuthToken, clientsController.addClient);
-clientsRouter.patch('/update/:id', authMiddleware.checkAndValidateAuthToken, clientsController.updateClient);
+clientsRouter.post('/', authMiddleware.checkAndValidateAuthToken, clientsController.addClient);
+clientsRouter.patch('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.updateClient);
 clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.deleteClient);
 clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 

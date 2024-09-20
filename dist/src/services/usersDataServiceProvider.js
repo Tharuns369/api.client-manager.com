@@ -1,4 +1,4 @@
-import { getRecordByColumnValue, insertRecord, updateRecordByColumnValue } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { users } from "../schemas/users";
 export class UsersDataServiceProvider {
     async findUserByEmail(email) {
@@ -18,6 +18,6 @@ export class UsersDataServiceProvider {
         return userData;
     }
     async editUser(id, updatedUserData) {
-        return await updateRecordByColumnValue(users, 'id', id, updatedUserData);
+        return await updateRecordById(users, id, updatedUserData);
     }
 }

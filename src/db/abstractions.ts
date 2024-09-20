@@ -15,31 +15,29 @@ export const getRecordByColumnValue = async <R extends DbRecord>(
 };
 
 export const insertRecord = async <R extends DbRecord>(table: DbTable, record: NewDbRecord) => {
-    const respData = await db.insert(table).values(record).returning();3
+    const respData = await db.insert(table).values(record).returning(); 3;
     return respData[0] as R;
 
 };
 
 
-export const updateRecordByColumnValue = async <R extends DbRecord>(
+export const updateRecordById= async (
     table: DbTable,
-    column: string,
-    value: string | number,
-    updateData: Partial<R> 
+    id: number,
+    updateData: NewDbRecord
 ) => {
-    const columnInfo = sql.raw(`${getTableName(table)}.${column}`);
     const respData = await db.update(table)
         .set(updateData)
-        .where(eq(columnInfo, value))
+        .where(eq(table.id, id))
         .returning();
 
-    return respData[0] as R;
+    return respData[0];
 };
 
 
-export const getRecordCountsByquery = async (
+export const getTotalRecordsCount = async (
     table: DbTable,
 ) => {
-    const respData = await db.select({count: count()}).from(table);;
-    return respData ;
+    const respData = await db.select({ count: count() }).from(table);;
+    return respData;
 };

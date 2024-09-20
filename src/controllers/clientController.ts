@@ -7,78 +7,78 @@ import { ResponseHelper } from '../helpers/responseHelper';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 
 export class ClientsController {
-  
+
   async getTotalClients(c: Context) {
     try {
-    const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
+      const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
 
-    if(!totalClientCount){
-    return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
-    }
+      if (!totalClientCount) {
+        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
+      }
 
-   return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT,totalClientCount);
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT, totalClientCount);
     }
     catch (error) {
-        throw error
-      }
+      throw error;
+    }
   }
 
   async listClients(c: Context) {
-    try {        
-        const query = c.req.query();
-        const page: number = parseInt(query.page || '1');
-        const limit: number = parseInt(query.limit || '10');
-        const sortString: string = sortHelper.resultsSort(query);
+    try {
+      const query = c.req.query();
+      const page: number = parseInt(query.page || '1');
+      const limit: number = parseInt(query.limit || '10');
+      const sortString: string = sortHelper.resultsSort(query);
 
-        const skip: number = (page - 1) * limit;
+      const skip: number = (page - 1) * limit;
 
-        const [invoicesList, totalCount]: any = await Promise.all([
-            clientsDataServiceProvider.getClientsWithPagenation(limit, skip, sortString),
-            clientsDataServiceProvider.getclientsCount()
-        ]);
+      const [invoicesList, totalCount]: any = await Promise.all([
+        clientsDataServiceProvider.getClientsWithPagenation(limit, skip, sortString),
+        clientsDataServiceProvider.getclientsCount()
+      ]);
 
-        if (!invoicesList || invoicesList.length === 0) {
-          return ResponseHelper.sendErrorResponse(c,404,CLIENT_MESSAGES.CLIENT_NOT_FOUND);
-            
-        }
+      if (!invoicesList || invoicesList.length === 0) {
+        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_NOT_FOUND);
 
-        const response = paginationHelper.getPaginationResponse({
-            page,
-            count: totalCount, 
-            limit,
-            data: invoicesList,
-            message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
-        });
+      }
 
-        return c.json(response);
+      const response = paginationHelper.getPaginationResponse({
+        page,
+        count: totalCount,
+        limit,
+        data: invoicesList,
+        message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
+      });
+
+      return c.json(response);
 
     } catch (error) {
-        return error
-       }
-    }   
-  
+      return error;
+    }
+  }
+
   async getClient(c: Context) {
     try {
       const queryId = c.req.param('id');
-        const id = Number(queryId);
-        
-        if (isNaN(id)) {
-            
-            return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
-        }
+      const id = Number(queryId);
 
-        const client:any = await clientsDataServiceProvider.getClient(id);
-        
-        if (!client ) {
-            return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES. CLIENT_ID_NOT_FOUND(id));
-        }
+      if (isNaN(id)) {
 
-        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS);
-  
+        return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+      }
+
+      const client: any = await clientsDataServiceProvider.getClient(id);
+
+      if (!client) {
+        return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+      }
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS);
+
     } catch (error) {
-      throw error
+      throw error;
     }
-  } 
+  }
 
   async addClient(c: Context) {
     const result = await clientsDataServiceProvider.addClient();
@@ -88,25 +88,25 @@ export class ClientsController {
 
   async deleteClient(c: Context) {
     try {
-        const queryId = c.req.param('id');
-        const id = Number(queryId);
-        
-        if (isNaN(id)) {
-            return ResponseHelper.sendErrorResponse(c, 400,  COMMON_VALIDATIONS.INVALID_CLIENT_ID);
-         }
+      const queryId = c.req.param('id');
+      const id = Number(queryId);
 
-        const client = await clientsDataServiceProvider.getClient(id);
+      if (isNaN(id)) {
+        return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+      }
 
-        if (!client) {
-            return ResponseHelper.sendErrorResponse(c,404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
-         }
+      const client = await clientsDataServiceProvider.getClient(id);
 
-        await clientsDataServiceProvider.deleteClient(id);
+      if (!client) {
+        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+      }
 
-        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
+      await clientsDataServiceProvider.deleteClient(id);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
 
     } catch (error) {
-       throw error
+      throw error;
     }
   }
 
@@ -118,22 +118,22 @@ export class ClientsController {
 
   async updateClient(c: Context) {
     try {
-        const id = parseInt(c.req.param('id'), 10); 
-        
-        const body = await c.req.json();
+      const id = parseInt(c.req.param('id'), 10);
 
-        const client:any = await clientsDataServiceProvider.getClient(id);
+      const body = await c.req.json();
 
-        if (!client) {
-            return ResponseHelper.sendErrorResponse(c,404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
-        }
+      const client: any = await clientsDataServiceProvider.getClient(id);
 
-        const updatedClient = await clientsDataServiceProvider.editClient(id, body);
+      if (!client) {
+        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+      }
 
-        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS,updatedClient);
+      await clientsDataServiceProvider.editClient(id, body);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
 
     } catch (error) {
-       throw error
+      throw error;
     }
-   }
+  }
 }
