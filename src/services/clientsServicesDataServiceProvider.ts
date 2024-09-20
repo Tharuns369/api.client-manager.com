@@ -44,14 +44,13 @@ export class ClientsServicesDataServiceProvider {
   }
 
   async getService(id: number) {
-    const userData = await getRecordByColumnValue<Service>(services, 'id', id);
+    const serviceData = await getRecordByColumnValue<Service>(services, 'id', id);
 
-   return userData;
+    return serviceData ;
   }
 
   async editService(id: number, body: Service) {
     return await updateRecordByColumnValue<Service>(services, 'id', id, body);
-     
-  }
+    }
   }
   

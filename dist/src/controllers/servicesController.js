@@ -1,7 +1,10 @@
 import { ClientsServicesDataServiceProvider } from '../services/clientsServicesDataServiceProvider';
-import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
+import { COMMON_VALIDATIONS, INVOICES_MESSAGES, SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
+import { ResponseHelper } from '../helpers/responseHelper';
+import { NotFoundException } from '../exceptions/notFoundException';
+import bcrypt from 'bcryptjs';
 const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
 export class ServicesController {
     async getTotalServices(c) {
@@ -68,9 +71,26 @@ export class ServicesController {
         return c.json(result);
     }
     async updateService(c) {
-        const { id } = c.req.param();
-        const result = await clientsServicesDataServiceProvider.updateService(id);
-        return c.json(result);
+        try {
+            const id = parseInt(c.req.param('id'), 10);
+            const body = await c.req.json();
+            const invoice = await clientsServicesDataServiceProvider.getService(id);
+            if (!invoice) {
+                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
+            }
+            const hashedPassword = await bcrypt.hash(body.password, 10);
+            body.password = hashedPassword;
+            const updatedInvoice = await clientsServicesDataServiceProvider.editService(id, body);
+            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
+        }
+        catch (error) {
+            console.error('Error at edit Client:', error);
+            return c.json({
+                success: false,
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+                data: []
+            }, 500);
+        }
     }
     async deleteService(c) {
         try {
@@ -84,7 +104,7 @@ export class ServicesController {
                 });
             }
             const service = await clientsServicesDataServiceProvider.getService(id);
-            if (!service || service.length === 0) {
+            if (!service) {
                 return c.json({
                     success: false,
                     message: SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id),

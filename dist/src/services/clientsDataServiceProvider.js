@@ -1,6 +1,7 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { clients } from "../schemas/clients";
+import { getRecordByColumnValue, updateRecordByColumnValue } from "../db/abstractions";
 export class ClientsDataServiceProvider {
     async getTotalClients() {
         const clientsCount = await db.select({ count: count() }).from(clients);
@@ -23,14 +24,14 @@ export class ClientsDataServiceProvider {
         return result[0].count;
     }
     async getClient(id) {
-        return await db.select().from(clients)
-            .where(eq(clients.id, id));
+        const clientData = await getRecordByColumnValue(clients, 'id', id);
+        return clientData;
     }
     async addClient() {
         return { message: 'Client added successfully' };
     }
-    async updateClient(id) {
-        return { message: `Client ${id} updated successfully` };
+    async editClient(id, body) {
+        return await updateRecordByColumnValue(clients, 'id', id, body);
     }
     async deleteClient(id) {
         const result = await db

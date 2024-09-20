@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import { VALIDATION_MESSAGES } from '../constants/messaegConstants';
+import { VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
 
@@ -15,3 +15,6 @@ export const userSignInValidationSchema = v.object({
     v.minLength(8, VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
   ),
 });
+
+
+export type userValidationDataInput = v.InferInput<typeof userSignInValidationSchema>

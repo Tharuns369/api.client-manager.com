@@ -7,6 +7,10 @@ import { UnauthorisedException } from "../exceptions/unAuthorizedException";
 import { AuthHelper } from "../helpers/authHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { UsersDataServiceProvider } from "../services/usersDataServiceProvider";
+import { userSignInValidationSchema, userValidationDataInput } from '../validations/user/userSignInValidations';
+import validate from '../helpers/validationHelper';
+import { userSignUpValidationDataInput, userValidationSchema } from '../validations/user/userValidations';
+import { updateprofilerValidationDataInput, updateUserValidationSchema } from '../validations/user/updateProfileValidation';
 
 
 const usersDataServiceProvider = new UsersDataServiceProvider();
@@ -19,13 +23,15 @@ export class UserController {
     try {
       const userData = await c.req.json();
 
-      const existedUser = await usersDataServiceProvider.findUserByEmail(userData.email);
+      const validatedData: userSignUpValidationDataInput = await validate(userValidationSchema, userData);
+
+      const existedUser = await usersDataServiceProvider.findUserByEmail(validatedData.email);
 
       if (existedUser) {
         throw new ResourceAlreadyExistsException("email", USER_MESSAGES.USER_ALREADY_EXISTS);
       }
 
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const hashedPassword = await bcrypt.hash(validatedData.password, 10);
       userData.password = hashedPassword;
 
       const data = await usersDataServiceProvider.insertUser(userData);
@@ -35,7 +41,6 @@ export class UserController {
       return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_INSERTED_SUCCESS, rest);
 
     } catch (error) {
-      console.log({ error });
       throw error;
     }
   }
@@ -45,13 +50,15 @@ export class UserController {
     try {
       const body = await c.req.json();
 
-      const user = await usersDataServiceProvider.findUserByEmail(body.email);
+      const validatedData: userValidationDataInput = await validate(userSignInValidationSchema, body);
+
+      const user = await usersDataServiceProvider.findUserByEmail(validatedData.email);
 
       if (!user) {
         throw new UnauthorisedException(USER_MESSAGES.INVALID_CREDENTIALS);
       }
 
-      const isPasswordMatch = await bcrypt.compare(body.password, user.password);
+      const isPasswordMatch = await bcrypt.compare(validatedData.password, user.password);
 
       if (!isPasswordMatch) {
         throw new UnauthorisedException(USER_MESSAGES.INVALID_CREDENTIALS);
@@ -68,7 +75,6 @@ export class UserController {
       };
 
       return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.LOGIN_SUCCESS, response);
-
     }
 
     catch (error) {
@@ -93,37 +99,38 @@ export class UserController {
     }
   }
 
-  async updateUser(c: Context) {
+  async updateProfile(c: Context) {
     try {
-        const id = parseInt(c.req.param('id'), 10); 
-        
-        const body = await c.req.json();
+      const id = parseInt(c.req.param('id'), 10);
+      if (isNaN(id)) {
+          return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+      }
 
-        const client:any = await usersDataServiceProvider.getUser(id);
+      const body = await c.req.json();
+      const validatedData: updateprofilerValidationDataInput = await validate(updateUserValidationSchema, body);
 
-        if (!client) {
-            throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
-          }
+      const existingUser = await usersDataServiceProvider.getUser(id);
+      if (!existingUser) {
+          throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
+      }
 
-          const hashedPassword = await bcrypt.hash(body.password, 10);
-          body.password = hashedPassword;
-    
+      if (validatedData.password) {
+          validatedData.password = await bcrypt.hash(validatedData.password, 10);
+      }
 
-        const updatedClient = await usersDataServiceProvider.editUser(id, body);
+      const updatedUserData = {
+          ...existingUser,  
+          ...validatedData  
+      };
 
-        const { password, ...updatedClientData} = updatedClient;
+      const updatedUser = await usersDataServiceProvider.editUser(id, updatedUserData);
 
+      const { password, ...responseUserData } = updatedUser;
 
-        return ResponseHelper.sendSuccessResponse(c, 200,USER_MESSAGES.USER_UPDATE_SUCCESS,updatedClientData);
+      return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS, responseUserData);
 
-    } catch (error) {
-        console.error('Error at edit Client:', error);
-        return c.json({
-            success: false,
-            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            data: []
-        }, 500);
-    }
-   }
-
+  } catch (error) {
+    throw error;
+  }
+ } 
 }

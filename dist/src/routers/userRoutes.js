@@ -7,4 +7,5 @@ const userRoute = new Hono();
 userRoute.post('/signup', userController.signUp);
 userRoute.post('/signin', userController.signIn);
 userRoute.get('/profile/:id', userController.getProfile);
+userRoute.put('/:id', userController.updateUser);
 export default userRoute;

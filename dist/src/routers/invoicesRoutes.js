@@ -9,5 +9,5 @@ invoicesRouter.get('/', (c) => invoicesController.listInvoices(c));
 invoicesRouter.get('/:id', (c) => invoicesController.viewInvoice(c));
 invoicesRouter.post('/upload', (c) => invoicesController.uploadInvoice(c));
 invoicesRouter.post('/add', (c) => invoicesController.addInvoice(c));
-invoicesRouter.put('/update/:id', (c) => invoicesController.updateInvoice(c));
+invoicesRouter.put('/:id', (c) => invoicesController.updateInvoice(c));
 export default invoicesRouter;

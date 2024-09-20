@@ -10,6 +10,7 @@ const USER_MESSAGES = {
     USER_FETCHED_SUCCESS: "User Details Fetched Successfully.",
     EMAIL_REQUIRED: "Email Is Required.",
     INVALID_CREDENTIALS: "Invalid credentials.",
+    USER_UPDATE_SUCCESS: "User Updated Successfully"
 };
 const CLIENT_MESSAGES = {
     CLIENTS_COUNT: "Successfully Fetched Clients Count.",
@@ -20,13 +21,16 @@ const CLIENT_MESSAGES = {
     CLIENT_DELETED_SUCCESS: "Client deleted successfully.",
     CLIENT_ID_NOT_FOUND: (id) => `Client with ID ${id} does not exist`,
     CLIENT_FETCH_SUCCESS: "Client Fetches Successfully.",
-    CLIENTS_NOT_EXIST: "No Clients"
+    CLIENTS_NOT_EXIST: "No Clients",
+    CLIENT_UPDATE_SUCCESS: "Client Updated Successfully"
 };
 const INVOICES_MESSAGES = {
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
     INVOICES_FETCHED_SUCCESS: "'Invoices List Fetched Successfully.",
     INVOICES_NOT_FOUND: "Invoices Not Found",
     TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
+    INVOICE_NOT_FOUND: "Invoice Not Found",
+    INVOICE_UPDATE_SUCCESS: "Invoice Updated Successfully"
 };
 const SERVICES_MESSAGES = {
     SERVICES_NOT_FOUND: "Services Not Found",

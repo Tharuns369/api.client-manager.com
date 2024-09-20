@@ -11,7 +11,7 @@ const USER_MESSAGES ={
    USER_FETCHED_SUCCESS :"User Details Fetched Successfully.",
    EMAIL_REQUIRED : "Email Is Required.",
    INVALID_CREDENTIALS: "Invalid credentials.",
-   USER_UPDATE_SUCCESS : "User Updated Successfully"
+   USER_UPDATE_SUCCESS : "User Profile Updated Successfully"
 }
 
 const CLIENT_MESSAGES ={
@@ -35,7 +35,7 @@ const INVOICES_MESSAGES ={
    INVOICES_FETCHED_SUCCESS:"'Invoices List Fetched Successfully.",
    INVOICES_NOT_FOUND : "Invoices Not Found",
    TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
-   INVOICE_NOT_FOUND : "Invoice Not Found",
+   INVOICE_NOT_FOUND : "Invoice Not Found With Id",
    INVOICE_UPDATE_SUCCESS : "Invoice Updated Successfully"
 
 
@@ -49,6 +49,8 @@ const SERVICES_MESSAGES ={
    SERVICE_DELETED_SUCCESS :"Service Deleted Successfully",
    SERVICES_NOT_EXIST : "No Services",
    SERVICE_COUNT : "Successfully Fetched Services Count.",
+   SERVICE_NOT_FOUND : "Service Not Found With given Id",
+   SERVICE_UPDATE_SUCCESS : "Service Updated Successfully"
 
 
 }
@@ -67,7 +69,7 @@ const VALIDATION_MESSAGES = {
     LAST_NAME_STRING: "Last Name must be a string.",
     LAST_NAME_INVALID: "Invalid Last Name",
     EMAIL_REQUIRED: "Email is required.",
-    INVALID_EMAIL_FORMAT: "Email must be a valid format.",
+    INVALID_EMAIL_FORMAT: "Invalid Email Format.",
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits.",
     PASSWORD_REQUIRED: "Password is required.",

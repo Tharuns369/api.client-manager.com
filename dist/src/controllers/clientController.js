@@ -75,7 +75,7 @@ export class ClientsController {
                 }, 400);
             }
             const client = await clientsDataServiceProvider.getClient(id);
-            if (!client || client.length === 0) {
+            if (!client) {
                 return c.json({
                     success: false,
                     message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
@@ -101,11 +101,6 @@ export class ClientsController {
         const result = await clientsDataServiceProvider.addClient();
         return c.json(result);
     }
-    async updateClient(c) {
-        const { id } = c.req.param();
-        const result = await clientsDataServiceProvider.updateClient(id);
-        return c.json(result);
-    }
     async deleteClient(c) {
         try {
             const queryId = c.req.param('id');
@@ -118,7 +113,7 @@ export class ClientsController {
                 }, 400);
             }
             const client = await clientsDataServiceProvider.getClient(id);
-            if (!client || client.length === 0) {
+            if (!client) {
                 return c.json({
                     success: false,
                     message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
@@ -144,5 +139,33 @@ export class ClientsController {
     async exportClients(c) {
         const result = await clientsDataServiceProvider.exportClients();
         return c.json(result);
+    }
+    async updateClient(c) {
+        try {
+            const id = parseInt(c.req.param('id'), 10);
+            const body = await c.req.json();
+            const client = await clientsDataServiceProvider.getClient(id);
+            if (!client) {
+                return c.json({
+                    success: false,
+                    message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
+                    data: []
+                });
+            }
+            const updatedClient = await clientsDataServiceProvider.editClient(id, body);
+            return c.json({
+                success: true,
+                message: CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS,
+                data: updatedClient
+            });
+        }
+        catch (error) {
+            console.error('Error at edit Client:', error);
+            return c.json({
+                success: false,
+                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
+                data: []
+            }, 500);
+        }
     }
 }

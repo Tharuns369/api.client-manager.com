@@ -2,8 +2,8 @@ import { Context, Next } from 'hono';
 import { safeParse, flatten } from 'valibot';
 import { ResponseHelper } from '../helpers/responseHelper';
 import { VALIDATION_MESSAGES } from '../constants/messaegConstants';
-import { userValidationSchema } from '../validations/userValidations';
-import { userSignInValidationSchema } from '../validations/userSignInValidations';
+import { userValidationSchema } from '../validations/user/userValidations';
+import { userSignInValidationSchema } from '../validations/user/userSignInValidations';
 
 export class UserValidationsMiddleWare {
 

@@ -1,16 +1,16 @@
 import * as v from 'valibot';
-import { VALIDATION_MESSAGES } from '../constants/messaegConstants';
+import { VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
 
 export const userValidationSchema = v.object({
-  firstName: v.pipe(
+  first_name: v.pipe(
     v.string(VALIDATION_MESSAGES.FIRST_NAME_STRING),
     v.nonEmpty(VALIDATION_MESSAGES.FIRST_NAME_REQUIRED),
     v.regex(alphaRegex, VALIDATION_MESSAGES.FIRST_NAME_INVALID),
     v.minLength(2, VALIDATION_MESSAGES.FIRST_NAME_TOO_SHORT)
   ),
-  lastName: v.pipe(
+  last_name: v.pipe(
     v.string(VALIDATION_MESSAGES.LAST_NAME_STRING),
     v.nonEmpty(VALIDATION_MESSAGES.LAST_NAME_REQUIRED),
     v.regex(alphaRegex, VALIDATION_MESSAGES.LAST_NAME_INVALID),
@@ -32,3 +32,6 @@ export const userValidationSchema = v.object({
     v.minLength(8, VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
   ),
 });
+
+
+export type userSignUpValidationDataInput = v.InferInput<typeof userValidationSchema>

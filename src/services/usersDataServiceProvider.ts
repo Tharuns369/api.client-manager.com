@@ -31,8 +31,8 @@ export class UsersDataServiceProvider {
    return userData;
   }
 
-  async editUser(id: number, body: User) {
-    return await updateRecordByColumnValue<User>(users, 'id', id, body);
+  async editUser(id: number, updatedUserData: User) {
+    return await updateRecordByColumnValue<User>(users, 'id', id, updatedUserData);
      
   }
 
