@@ -4,7 +4,6 @@ import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { NotFoundException } from "../exceptions/notFoundException";
-import bcrypt from 'bcryptjs';
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
 export class InvoiceController {
     async getTotalInvoicesAmount(c) {
@@ -77,18 +76,11 @@ export class InvoiceController {
             if (!invoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
-            const hashedPassword = await bcrypt.hash(body.password, 10);
-            body.password = hashedPassword;
             const updatedInvoice = await invoicesDataServiceProvider.editInvoice(id, body);
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {
-            console.error('Error at edit Client:', error);
-            return c.json({
-                success: false,
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-                data: []
-            }, 500);
+            throw error;
         }
     }
 }

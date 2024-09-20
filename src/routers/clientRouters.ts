@@ -1,15 +1,19 @@
 import { Hono } from 'hono';
 import { ClientsController } from '../controllers/clientController';
+import { AuthMiddleware } from '../middlewares/authMiddleware';
+
 
 const clientsRouter = new Hono();
 const clientsController = new ClientsController();
+const authMiddleware = new AuthMiddleware();
 
-clientsRouter.get('/count',  clientsController.getTotalClients);
-clientsRouter.get('/',  clientsController.listClients);
-clientsRouter.get('/:id',  clientsController.getClient);
-clientsRouter.post('/add',  clientsController.addClient);
-clientsRouter.patch('/update/:id',  clientsController.updateClient);
-clientsRouter.delete('/:id',  clientsController.deleteClient);
-clientsRouter.get('/export',  clientsController.exportClients);
+
+clientsRouter.get('/count', authMiddleware.checkAndValidateAuthToken, clientsController.getTotalClients);
+clientsRouter.get('/', authMiddleware.checkAndValidateAuthToken, clientsController.listClients);
+clientsRouter.get('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.getClient);
+clientsRouter.post('/add', authMiddleware.checkAndValidateAuthToken, clientsController.addClient);
+clientsRouter.patch('/update/:id', authMiddleware.checkAndValidateAuthToken, clientsController.updateClient);
+clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.deleteClient);
+clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 
 export default clientsRouter;

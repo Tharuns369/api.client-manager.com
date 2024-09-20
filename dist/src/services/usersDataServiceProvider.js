@@ -17,7 +17,7 @@ export class UsersDataServiceProvider {
         const userData = await getRecordByColumnValue(users, 'id', id);
         return userData;
     }
-    async editUser(id, body) {
-        return await updateRecordByColumnValue(users, 'id', id, body);
+    async editUser(id, updatedUserData) {
+        return await updateRecordByColumnValue(users, 'id', id, updatedUserData);
     }
 }

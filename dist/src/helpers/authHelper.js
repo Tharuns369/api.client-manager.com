@@ -9,8 +9,8 @@ export class AuthHelper {
             first_name: userData.first_name,
             last_name: userData.last_name,
         };
-        const payloadForAccessToken = { ...commonPayload, exp: ConfigData.JWT.token_life };
-        const payloadForRefreshToken = { ...commonPayload, exp: ConfigData.JWT.refresh_token_life };
+        const payloadForAccessToken = { ...commonPayload, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, };
+        const payloadForRefreshToken = { ...commonPayload, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 3, };
         let tokenSecret = ConfigData.JWT.token_secret + userData.password;
         let refreshTokenSecret = ConfigData.JWT.refresh_token_secret + userData.password;
         const token = await sign(payloadForAccessToken, tokenSecret);

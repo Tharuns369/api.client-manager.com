@@ -33,8 +33,8 @@ export class ClientsServicesDataServiceProvider {
         return result.rowCount;
     }
     async getService(id) {
-        const userData = await getRecordByColumnValue(services, 'id', id);
-        return userData;
+        const serviceData = await getRecordByColumnValue(services, 'id', id);
+        return serviceData;
     }
     async editService(id, body) {
         return await updateRecordByColumnValue(services, 'id', id, body);
