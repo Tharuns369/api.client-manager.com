@@ -5,6 +5,7 @@ import { updateRecordByColumnValue,getRecordByColumnValue } from "../db/abstract
 
 
 export class InvoicesDataServiceProvider {
+  
   async getTotalInvoicesAmount() {
     const result = await db
         .select({

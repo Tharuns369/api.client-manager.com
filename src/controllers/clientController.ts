@@ -3,35 +3,23 @@ import { ClientsDataServiceProvider } from '../services/clientsDataServiceProvid
 import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstants';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
+import { ResponseHelper } from '../helpers/responseHelper';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 
 export class ClientsController {
   
   async getTotalClients(c: Context) {
     try {
-
-    const totalClientCount = await clientsDataServiceProvider.getTotalClients();
+    const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
 
     if(!totalClientCount){
-      return c.json({
-        status:false,
-        message:CLIENT_MESSAGES.CLIENTS_NOT_EXIST,
-        data:[]
-    },200)        
+    return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
     }
 
-    return c.json({
-        status:true,
-        message:CLIENT_MESSAGES.CLIENTS_COUNT,
-        data:totalClientCount
-    },200)        
+   return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT,totalClientCount);
     }
     catch (error) {
-        console.error('Error at clients count:', error);
-        return c.json({
-            status: 'Error',
-            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-        }, 500);
+        throw error
       }
   }
 
@@ -50,11 +38,8 @@ export class ClientsController {
         ]);
 
         if (!invoicesList || invoicesList.length === 0) {
-            return c.json({
-                status: 'False',
-                message: CLIENT_MESSAGES.CLIENT_NOT_FOUND,
-                data: []
-            });
+          return ResponseHelper.sendErrorResponse(c,404,CLIENT_MESSAGES.CLIENT_NOT_FOUND);
+            
         }
 
         const response = paginationHelper.getPaginationResponse({
@@ -68,51 +53,30 @@ export class ClientsController {
         return c.json(response);
 
     } catch (error) {
-        console.error('Error at list of Clients:', error);
-        return c.json({
-            status: 'Error',
-            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-        }, 500);
+        return error
        }
     }   
   
-
   async getClient(c: Context) {
     try {
       const queryId = c.req.param('id');
         const id = Number(queryId);
         
         if (isNaN(id)) {
-            return c.json({
-                success: false,
-                message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
-                data: []
-            },400);
+            
+            return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
         }
 
         const client:any = await clientsDataServiceProvider.getClient(id);
         
         if (!client ) {
-          return c.json({
-              success: false,
-              message: CLIENT_MESSAGES. CLIENT_ID_NOT_FOUND(id),
-              data: []
-          },200);
-      }
+            return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES. CLIENT_ID_NOT_FOUND(id));
+        }
 
-      return c.json({
-        success: true,
-        message: CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS,
-        data: client
-    },200);
+        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS);
   
     } catch (error) {
-      console.error('Error at get Client:', error);
-      return c.json({
-          success: false,
-          message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-          data: []
-      }, 500);
+      throw error
     }
   } 
 
@@ -128,37 +92,21 @@ export class ClientsController {
         const id = Number(queryId);
         
         if (isNaN(id)) {
-            return c.json({
-                success: false,
-                message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
-                data: []
-            },400);
-        }
+            return ResponseHelper.sendErrorResponse(c, 400,  COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+         }
 
-        const client : any = await clientsDataServiceProvider.getClient(id);
+        const client = await clientsDataServiceProvider.getClient(id);
 
         if (!client) {
-          return c.json({
-              success: false,
-              message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
-              data: []
-          },404);
-      }
+            return ResponseHelper.sendErrorResponse(c,404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+         }
 
         await clientsDataServiceProvider.deleteClient(id);
 
-        return c.json({
-            success: true,
-            message: CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS,
-            data: client 
-        });
+        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
+
     } catch (error) {
-        console.error('Error at delete Client:', error);
-        return c.json({
-            success: false,
-            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            data: []
-        }, 500);
+       throw error
     }
   }
 
@@ -177,28 +125,15 @@ export class ClientsController {
         const client:any = await clientsDataServiceProvider.getClient(id);
 
         if (!client) {
-            return c.json({
-                success: false,
-                message: CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id),
-                data: []
-            });
+            return ResponseHelper.sendErrorResponse(c,404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
         }
 
         const updatedClient = await clientsDataServiceProvider.editClient(id, body);
 
-        return c.json({
-            success: true,
-            message: CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS,
-            data: updatedClient
-        });
+        return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS,updatedClient);
 
     } catch (error) {
-        console.error('Error at edit Client:', error);
-        return c.json({
-            success: false,
-            message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            data: []
-        }, 500);
+       throw error
     }
    }
 }

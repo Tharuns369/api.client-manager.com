@@ -1,7 +1,7 @@
 import { db } from ".";
 import { DbRecord, DbTable, NewDbRecord } from "../utils/types";
 
-import { eq, getTableName, sql } from "drizzle-orm";
+import { count, eq, getTableName, sql } from "drizzle-orm";
 
 
 export const getRecordByColumnValue = async <R extends DbRecord>(
@@ -15,9 +15,7 @@ export const getRecordByColumnValue = async <R extends DbRecord>(
 };
 
 export const insertRecord = async <R extends DbRecord>(table: DbTable, record: NewDbRecord) => {
-
-    const respData = await db.insert(table).values(record).returning();
-
+    const respData = await db.insert(table).values(record).returning();3
     return respData[0] as R;
 
 };
@@ -36,4 +34,12 @@ export const updateRecordByColumnValue = async <R extends DbRecord>(
         .returning();
 
     return respData[0] as R;
+};
+
+
+export const getRecordCountsByquery = async (
+    table: DbTable,
+) => {
+    const respData = await db.select({count: count()}).from(table);;
+    return respData ;
 };

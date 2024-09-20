@@ -1,11 +1,11 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { services,Service } from "../schemas/services";
-import { getRecordByColumnValue, updateRecordByColumnValue } from "../db/abstractions";
+import { getRecordByColumnValue, getRecordCountsByquery, updateRecordByColumnValue } from "../db/abstractions";
 
 export class ClientsServicesDataServiceProvider {
     async getTotalServicesCount() {
-      const clientsCount = await db.select({count: count()}).from(services);
+      const clientsCount = await getRecordCountsByquery(services);
       return clientsCount[0]?.count || 0 
     
     }

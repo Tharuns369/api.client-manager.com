@@ -1,14 +1,14 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { clients,Client } from "../schemas/clients";
-import { getRecordByColumnValue, insertRecord,updateRecordByColumnValue } from "../db/abstractions";
+import { getRecordByColumnValue, getRecordCountsByquery, insertRecord,updateRecordByColumnValue } from "../db/abstractions";
 
 export class ClientsDataServiceProvider {
 
-    async getTotalClients() {
-    const clientsCount = await db.select({count: count()}).from(clients);
+    async getTotalClientsCount() {
+    const clientsCount = await getRecordCountsByquery(clients);
  
-    return clientsCount[0]?.count || 0
+    return clientsCount[0]?.count || 0;
   }
   
     async getClientsWithPagenation(limit: number, skip: number, sortString:string) {
