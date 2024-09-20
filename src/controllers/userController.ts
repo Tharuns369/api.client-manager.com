@@ -13,12 +13,13 @@ import { userSignUpValidationDataInput, userValidationSchema } from '../validati
 import { updateprofilerValidationDataInput, updateUserValidationSchema } from '../validations/user/updateProfileValidation';
 
 
+
 const usersDataServiceProvider = new UsersDataServiceProvider();
 const authHelper = new AuthHelper();
 
 export class UserController {
 
-   async signUp(c: Context) {
+  async signUp(c: Context) {
 
     try {
       const userData = await c.req.json();
@@ -83,9 +84,11 @@ export class UserController {
   }
 
 
-   async getProfile(c: Context) {
+  async getProfile(c: Context) {
     try {
+
       const userId = +c.req.param('id');
+    
       const userData: any = await usersDataServiceProvider.findUserById(userId);
       if (!userData) {
         throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
@@ -103,7 +106,7 @@ export class UserController {
     try {
       const id = parseInt(c.req.param('id'), 10);
       if (isNaN(id)) {
-          return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+        return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
       }
 
       const body = await c.req.json();
@@ -111,16 +114,16 @@ export class UserController {
 
       const existingUser = await usersDataServiceProvider.getUser(id);
       if (!existingUser) {
-          throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
+        throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
       }
 
       if (validatedData.password) {
-          validatedData.password = await bcrypt.hash(validatedData.password, 10);
+        validatedData.password = await bcrypt.hash(validatedData.password, 10);
       }
 
       const updatedUserData = {
-          ...existingUser,  
-          ...validatedData  
+        ...existingUser,
+        ...validatedData
       };
 
       const updatedUser = await usersDataServiceProvider.editUser(id, updatedUserData);
@@ -129,8 +132,8 @@ export class UserController {
 
       return ResponseHelper.sendSuccessResponse(c, 200, USER_MESSAGES.USER_UPDATE_SUCCESS, responseUserData);
 
-  } catch (error) {
-    throw error;
+    } catch (error) {
+      throw error;
+    }
   }
- } 
 }

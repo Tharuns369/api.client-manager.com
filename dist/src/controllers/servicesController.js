@@ -1,10 +1,9 @@
 import { ClientsServicesDataServiceProvider } from '../services/clientsServicesDataServiceProvider';
-import { COMMON_VALIDATIONS, INVOICES_MESSAGES, SERVICES_MESSAGES } from '../constants/messaegConstants';
+import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
 import { NotFoundException } from '../exceptions/notFoundException';
-import bcrypt from 'bcryptjs';
 const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
 export class ServicesController {
     async getTotalServices(c) {
@@ -73,23 +72,19 @@ export class ServicesController {
     async updateService(c) {
         try {
             const id = parseInt(c.req.param('id'), 10);
-            const body = await c.req.json();
-            const invoice = await clientsServicesDataServiceProvider.getService(id);
-            if (!invoice) {
-                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
+            if (isNaN(id)) {
+                return ResponseHelper.sendErrorResponse(c, 400, 'Invalid Service ID');
             }
-            const hashedPassword = await bcrypt.hash(body.password, 10);
-            body.password = hashedPassword;
-            const updatedInvoice = await clientsServicesDataServiceProvider.editService(id, body);
-            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
+            const body = await c.req.json();
+            const service = await clientsServicesDataServiceProvider.getService(id);
+            if (!service) {
+                throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
+            }
+            const updatedService = await clientsServicesDataServiceProvider.editService(id, body);
+            return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS, updatedService);
         }
         catch (error) {
-            console.error('Error at edit Client:', error);
-            return c.json({
-                success: false,
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-                data: []
-            }, 500);
+            throw error;
         }
     }
     async deleteService(c) {

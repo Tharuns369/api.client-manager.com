@@ -1,5 +1,5 @@
 import { serve } from '@hono/node-server';
-import { Hono,Context } from 'hono';
+import { Hono, Context } from 'hono';
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import { ConfigData } from './config/appConfig';
