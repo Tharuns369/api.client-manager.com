@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { services } from "../schemas/services";
 export class ClientsServicesDataServiceProvider {
     async getTotalServicesCount() {
@@ -23,8 +23,9 @@ export class ClientsServicesDataServiceProvider {
             .from(services);
         return result[0].count;
     }
-    async addService() {
-        return { status: "Suuccess", message: 'Service added successfully' };
+    async insertClient(serviceData) {
+        const insertedClient = await insertRecord(services, serviceData);
+        return insertedClient;
     }
     async deleteService(id) {
         const result = await db

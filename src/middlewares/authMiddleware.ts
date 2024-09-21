@@ -12,7 +12,7 @@ const userDataServiceProvider = new UsersDataServiceProvider();
 export class AuthMiddleware {
 
     public async checkAndValidateAuthToken(c: Context, next: Next) {
-        try {
+        try {            
             const authHeader = c.req.header("authorization");
 
             if (!authHeader) {

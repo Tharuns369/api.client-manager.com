@@ -3,7 +3,7 @@ import { db } from "../db";
 import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
-import { services } from "../schemas/services";
+
 
 
 
@@ -64,6 +64,16 @@ export class ClientsDataServiceProvider {
     const userRecord = await getRecordByColumnValue<Client>(clients, 'email', email);
 
     return userRecord;
+  }
+
+  async allClientsInvoiceAmountCount(){
+
+    const clientsAmountCount = await db.select({name: clients.name,totalInvoiceAmount: clients.total_invoice_amount})
+    .from(clients);
+
+    console.log("clientsAmountCount",clientsAmountCount);
+    
+    return clientsAmountCount;
   }
 
 
