@@ -16,6 +16,7 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS, amountInINR);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -43,6 +44,7 @@ export class InvoiceController {
             return c.json(response);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -80,6 +82,7 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }

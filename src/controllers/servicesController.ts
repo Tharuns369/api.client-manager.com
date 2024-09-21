@@ -5,6 +5,8 @@ import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
 import { NotFoundException } from '../exceptions/notFoundException';
+import { ServiceValidationInput, serviceValidationSchema } from '../validations/serviceValidations/addServiceValidation';
+import validate from '../helpers/validationHelper';
 
 
 const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
@@ -12,24 +14,20 @@ const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvide
 export class ServicesController {
 
 
-    // async addService(c: Context) {
-    //     try {
-    //         const clientData = await c.req.json();
+    async addService(c: Context) {
+        try {
+            const clientData = await c.req.json();
 
-    //         const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
+            const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, clientData);
 
-    //         const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
-    //         if (existingClient) {
-    //         throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
-    //         }
+            const newClient = await clientsServicesDataServiceProvider.insertClient(clientData);
 
-    //         const newClient = await clientsDataServiceProvider.insertClient(clientData);
-
-    //         return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient); 
-    //     }catch (error) {
-    //         throw error
-    //     }
-    // }
+            return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newClient); 
+        }catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
 
   async getTotalServices(c: Context) {
     try {
@@ -41,6 +39,7 @@ export class ServicesController {
     return ResponseHelper.sendSuccessResponse(c, 200,SERVICES_MESSAGES.SERVICE_COUNT,totalClientCount);
     }
     catch (error) {
+        console.log(error);
        throw error
       }
   }
@@ -74,15 +73,10 @@ export class ServicesController {
         });
         return c.json(response);
     } catch (error) {
+        console.log(error);
        throw error
        }
     }
-
-
-  async addService(c: Context) {
-    const result = await clientsServicesDataServiceProvider.addService();
-    return c.json(result);
-  }
 
   async updateService(c: Context) {
     try {
@@ -105,6 +99,7 @@ export class ServicesController {
         return ResponseHelper.sendSuccessResponse(c, 200,SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS,updatedService);
 
     } catch (error) {
+        console.log(error);
         throw error;
       }
    }
@@ -128,9 +123,9 @@ export class ServicesController {
         return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS,service) 
  
     } catch (error) {
+    console.log(error);
        throw error
     }
   }
-
 
 }

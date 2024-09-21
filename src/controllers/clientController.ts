@@ -16,6 +16,49 @@ const searchFilter = new SearchFilter();
 
 export class ClientsController {
 
+  async addClient(c: Context) {
+    try {
+      const clientData = await c.req.json();
+
+      const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
+
+      const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
+      if (existingClient) {
+        throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
+      }
+
+      const newClient = await clientsDataServiceProvider.insertClient(clientData);
+
+      return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getClient(c: Context) {
+    try {
+      const id = +c.req.param('id');
+
+      if (isNaN(id)) {
+
+        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+      }
+
+      const client: any = await clientsDataServiceProvider.getClient(id);
+
+      if (!client) {
+        return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+      }
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
+
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async getTotalClients(c: Context) {
     try {
       const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
@@ -27,6 +70,7 @@ export class ClientsController {
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT, totalClientCount);
     }
     catch (error) {
+    console.log(error);
       throw error;
     }
   }
@@ -61,52 +105,7 @@ export class ClientsController {
       return c.json(response);
 
     } catch (error) {
-      throw error;
-    }
-  }
-  
-
-  async getClient(c: Context) {
-    try {
-      const id = +c.req.param('id');
-
-      if (isNaN(id)) {
-
-        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
-      }
-
-      const client: any = await clientsDataServiceProvider.getClient(id);
-
-      if (!client) {
-        return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
-      }
-
-      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
-
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteClient(c: Context) {
-    try {
-      const id = +c.req.param('id');
-
-      if (isNaN(id)) {
-        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
-      }
-
-      const client = await clientsDataServiceProvider.getClient(id);
-
-      if (!client) {
-        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
-      }
-
-      await clientsDataServiceProvider.deleteClient(id);
-
-      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
-
-    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -129,12 +128,56 @@ export class ClientsController {
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
 
     } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  
+
+  async deleteClient(c: Context) {
+    try {
+      const id = +c.req.param('id');
+
+      if (isNaN(id)) {
+        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+      }
+
+      const client = await clientsDataServiceProvider.getClient(id);
+
+      if (!client) {
+        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+      }
+
+      await clientsDataServiceProvider.deleteClient(id);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
+
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
 
 
-  async getClientsWiseServices(c: Context) {
+  async getClientsWiseInvoiceAmountCount(c:Context){
+    try {
+      console.log("try");
+      
+      const  clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
+      console.log("clientsAmountCount",clientsAmountCount);
+      
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
+        
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  }
+
+
+  
+ async getClientsWiseServices(c: Context) {
     try {
 
       const clientId = +c.req.param('id');
@@ -145,7 +188,7 @@ export class ClientsController {
 
     }
     catch (error) {
-      console.log(error);
+    console.log(error);
       throw error;
     }
   }
@@ -172,23 +215,7 @@ export class ClientsController {
       throw error;
     }
   }
-  async addClient(c: Context) {
-    try {
-      const clientData = await c.req.json();
 
-      const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
-
-      const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
-      if (existingClient) {
-        throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
-      }
-
-      const newClient = await clientsDataServiceProvider.insertClient(clientData);
-
-      return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
-    } catch (error) {
-      throw error;
-    }
-  }
+ 
 }
 

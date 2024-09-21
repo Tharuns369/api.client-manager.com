@@ -21,6 +21,7 @@ export class ClientsController {
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT, totalClientCount);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -48,6 +49,7 @@ export class ClientsController {
             return c.json(response);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -64,6 +66,7 @@ export class ClientsController {
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -81,6 +84,7 @@ export class ClientsController {
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -96,6 +100,7 @@ export class ClientsController {
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -138,6 +143,7 @@ export class ClientsController {
             return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }

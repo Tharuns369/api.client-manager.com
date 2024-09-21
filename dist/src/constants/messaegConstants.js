@@ -45,7 +45,8 @@ const SERVICES_MESSAGES = {
     SERVICE_COUNT: "Successfully Fetched Services Count.",
     SERVICE_NOT_FOUND: "Service Not Found With given Id",
     SERVICE_UPDATE_SUCCESS: "Service Updated Successfully",
-    SERVICE_ID_INVALID: "Invalid Service ID"
+    SERVICE_ID_INVALID: "Invalid Service ID",
+    SERVICE_ADDED_SUCCESS: "Service Added Successfully"
 };
 const VALIDATION_MESSAGES = {
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
@@ -108,4 +109,15 @@ const INVOICE_VALIDATION_MESSAGES = {
     INVOICE_ALREADY_EXISTS: 'An invoice with this service ID already exists.',
     INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
 };
-export { VALIDATION_MESSAGES, USER_MESSAGES, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_MESSAGES, SERVICES_MESSAGES, CLIENT_VALIDATION_MESSAGES, INVOICE_VALIDATION_MESSAGES };
+const SERVICE_VALIDATION_MESSAGES = {
+    TITLE_REQUIRED: "Title is required.",
+    TITLE_INVALID: "Title must be alphanumeric and cannot contain special characters.",
+    TYPE_REQUIRED: "Type is required.",
+    TYPE_INVALID: "Type must be alphanumeric and cannot contain special characters.",
+    CLIENT_ID_REQUIRED: "Client ID is required.",
+    CLIENT_ID_INVALID: "Client ID must be a valid integer.",
+    INVALID_STATUS: "Status must be either ACTIVE or INACTIVE.",
+    INVOICE_AMOUNT_REQUIRED: "Invoice amount is required.",
+    INVALID_INVOICE_AMOUNT: "Invoice amount must be a valid number with up to two decimal places.",
+};
+export { VALIDATION_MESSAGES, USER_MESSAGES, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_MESSAGES, SERVICES_MESSAGES, CLIENT_VALIDATION_MESSAGES, INVOICE_VALIDATION_MESSAGES, SERVICE_VALIDATION_MESSAGES };
