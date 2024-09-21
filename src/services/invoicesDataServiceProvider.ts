@@ -5,7 +5,7 @@ import { Invoice, invoices } from "../schemas/invoices";
 
 
 export class InvoicesDataServiceProvider {
-
+ 
   async getTotalInvoicesAmount() {
     const result = await db
       .select({
@@ -65,6 +65,7 @@ export class InvoicesDataServiceProvider {
 
   async editInvoice(id: number, body: Invoice) {
     return await updateRecordById(invoices, id, body);
-
   }
+
+
 }

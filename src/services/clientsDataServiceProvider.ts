@@ -8,6 +8,7 @@ import { services } from "../schemas/services";
 
 
 
+
 export class ClientsDataServiceProvider {
 
   async getTotalClientsCount() {
@@ -69,6 +70,16 @@ export class ClientsDataServiceProvider {
     const userRecord = await getRecordByColumnValue<Client>(clients, 'email', email);
 
     return userRecord;
+  }
+
+  async allClientsInvoiceAmountCount(){
+
+    const clientsAmountCount = await db.select({name: clients.name,totalInvoiceAmount: clients.total_invoice_amount})
+    .from(clients);
+
+    console.log("clientsAmountCount",clientsAmountCount);
+    
+    return clientsAmountCount;
   }
 
 

@@ -80,6 +80,7 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {
+            console.log(error);
             throw error;
         }
     }

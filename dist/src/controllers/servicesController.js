@@ -9,14 +9,11 @@ export class ServicesController {
     // async addService(c: Context) {
     //     try {
     //         const clientData = await c.req.json();
-    //         const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
-    //         const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
-    //         if (existingClient) {
-    //         throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
-    //         }
-    //         const newClient = await clientsDataServiceProvider.insertClient(clientData);
-    //         return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient); 
+    //         const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, clientData);
+    //         const newClient = await clientsServicesDataServiceProvider.insertClient(clientData);
+    //         return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newClient); 
     //     }catch (error) {
+    //         console.log(error);
     //         throw error
     //     }
     // }
@@ -58,10 +55,6 @@ export class ServicesController {
         catch (error) {
             throw error;
         }
-    }
-    async addService(c) {
-        const result = await clientsServicesDataServiceProvider.addService();
-        return c.json(result);
     }
     async updateService(c) {
         try {
