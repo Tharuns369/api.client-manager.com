@@ -4,27 +4,28 @@ import { invoices } from '../schemas/invoices';
 import { services } from '../schemas/services';
 import { eq } from 'drizzle-orm';
 
-const generateFakeInvoice = (serviceId: number, monthOffset: number) => {
+const generateFakeInvoice = (serviceId: number, clientId: number, monthOffset: number) => {
     const currentDate = new Date();
     const invoiceDate = new Date(currentDate.setMonth(currentDate.getMonth() - monthOffset));
 
     return {
-        serviceId: serviceId,
-        invoiceStatus: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
+        service_id: serviceId,
+        client_id: clientId,
+        invoice_status: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
         remarks: faker.lorem.sentence(),
-        invoiceDate: invoiceDate.toISOString(),
-        paymentDate: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }),
-        invoiceAmount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        invoice_date: invoiceDate.toISOString(),
+        payment_date: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }),
+        invoice_amount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2),
+        created_at: new Date(),
+        updated_at: new Date(),
     };
 };
 
-const generateInvoicesForService = (serviceId: number, numInvoices: number = 10) => {
+const generateInvoicesForService = (serviceId: number, clientId: number, numInvoices: number = 10) => {
     const fakeInvoices: any[] = [];
 
     for (let i = 0; i < numInvoices; i++) {
-        fakeInvoices.push(generateFakeInvoice(serviceId, i));
+        fakeInvoices.push(generateFakeInvoice(serviceId, clientId, i));
     }
 
     return fakeInvoices;
@@ -42,11 +43,12 @@ const insertInvoicesBatch = async (invoicesBatch: any) => {
 const insertInvoicesForClient = async (clientId: number, numInvoices: number = 10) => {
     try {
         const serviceRows = await db.select({
-            id: services.id
+            id: services.id,
+            client_id: services.client_id 
         }).from(services).where(eq(services.client_id, clientId));
 
         for (const service of serviceRows) {
-            const allInvoices = generateInvoicesForService(service.id, numInvoices);
+            const allInvoices = generateInvoicesForService(service.id, service.client_id, numInvoices);
 
             const batchSize = 1000;
             for (let i = 0; i < allInvoices.length; i += batchSize) {
@@ -54,7 +56,7 @@ const insertInvoicesForClient = async (clientId: number, numInvoices: number = 1
                 await insertInvoicesBatch(invoicesBatch);
             }
 
-            console.log(`Processed service with ID ${service.id}`);
+            console.log(`Processed service with ID ${service.id} for client ID ${clientId}`);
         }
     } catch (error) {
         console.error(`Error fetching services for client ID ${clientId}:`, error);
