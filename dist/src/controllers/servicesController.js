@@ -1,5 +1,5 @@
 import { ClientsServicesDataServiceProvider } from '../services/clientsServicesDataServiceProvider';
-import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
+import { SERVICES_MESSAGES } from '../constants/messaegConstants';
 import { sortHelper } from '../helpers/sortHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
@@ -10,24 +10,12 @@ export class ServicesController {
         try {
             const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();
             if (!totalClientCount) {
-                return c.json({
-                    status: false,
-                    message: SERVICES_MESSAGES.SERVICES_NOT_EXIST,
-                    data: []
-                }, 200);
+                return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICES_NOT_EXIST);
             }
-            return c.json({
-                status: true,
-                message: SERVICES_MESSAGES.SERVICE_COUNT,
-                data: totalClientCount
-            }, 200);
+            return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_COUNT, totalClientCount);
         }
         catch (error) {
-            console.error('Error at Services count:', error);
-            return c.json({
-                status: 'Error',
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            }, 500);
+            throw error;
         }
     }
     async listServices(c) {
@@ -42,11 +30,7 @@ export class ServicesController {
                 clientsServicesDataServiceProvider.getSrvicesCount()
             ]);
             if (!invoicesList || invoicesList.length === 0) {
-                return c.json({
-                    status: 'False',
-                    message: SERVICES_MESSAGES.SERVICES_NOT_FOUND,
-                    data: []
-                });
+                throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
             }
             const response = paginationHelper.getPaginationResponse({
                 page,
@@ -58,11 +42,7 @@ export class ServicesController {
             return c.json(response);
         }
         catch (error) {
-            console.error('Error at list of Services:', error);
-            return c.json({
-                status: 'Error',
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            }, 500);
+            throw error;
         }
     }
     async addService(c) {
@@ -71,9 +51,9 @@ export class ServicesController {
     }
     async updateService(c) {
         try {
-            const id = parseInt(c.req.param('id'), 10);
+            const id = +c.req.param('id');
             if (isNaN(id)) {
-                return ResponseHelper.sendErrorResponse(c, 400, 'Invalid Service ID');
+                return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
             }
             const body = await c.req.json();
             const service = await clientsServicesDataServiceProvider.getService(id);
@@ -89,37 +69,19 @@ export class ServicesController {
     }
     async deleteService(c) {
         try {
-            const queryId = c.req.param('id');
-            const id = Number(queryId);
+            const id = +c.req.param('id');
             if (isNaN(id)) {
-                return c.json({
-                    success: false,
-                    message: COMMON_VALIDATIONS.INVALID_CLIENT_ID,
-                    data: []
-                });
+                return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
             }
             const service = await clientsServicesDataServiceProvider.getService(id);
             if (!service) {
-                return c.json({
-                    success: false,
-                    message: SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id),
-                    data: []
-                });
+                return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id));
             }
             await clientsServicesDataServiceProvider.deleteService(id);
-            return c.json({
-                success: true,
-                message: SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS,
-                data: service
-            });
+            return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS, service);
         }
         catch (error) {
-            console.error('Error at delete Service:', error);
-            return c.json({
-                success: false,
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-                data: []
-            }, 500);
+            throw error;
         }
     }
 }

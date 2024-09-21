@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 
 export class ClientsDataServiceProvider {
@@ -35,8 +35,9 @@ export class ClientsDataServiceProvider {
     return clientData;
   }
 
-  async addClient() {
-    return { message: 'Client added successfully' };
+  async insertClient(clientData:Client) {
+    const insertedClient = await insertRecord<Client>(clients,clientData );
+    return insertedClient;
   }
 
   async editClient(id: number, body: Client) {
@@ -52,7 +53,10 @@ export class ClientsDataServiceProvider {
 
   }
 
-  async exportClients() {
-    return { message: 'Clients exported successfully' };
+  async findClientByEmail(email: string) {
+
+    const userRecord = await getRecordByColumnValue<Client>(clients, 'email', email);
+
+    return userRecord;
   }
 }

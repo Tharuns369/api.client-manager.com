@@ -3,6 +3,11 @@ import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstan
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
+import { NotFoundException } from '../exceptions/notFoundException';
+import { BadRequestException } from '../exceptions/badRequestException';
+import { clientValidationSchema } from '../validations/clientsValidations/addClientValidations';
+import validate from '../helpers/validationHelper';
+import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 export class ClientsController {
     async getTotalClients(c) {
@@ -29,7 +34,7 @@ export class ClientsController {
                 clientsDataServiceProvider.getclientsCount()
             ]);
             if (!invoicesList || invoicesList.length === 0) {
-                return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_NOT_FOUND);
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_NOT_FOUND);
             }
             const response = paginationHelper.getPaginationResponse({
                 page,
@@ -46,35 +51,29 @@ export class ClientsController {
     }
     async getClient(c) {
         try {
-            const queryId = c.req.param('id');
-            const id = Number(queryId);
+            const id = +c.req.param('id');
             if (isNaN(id)) {
-                return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+                throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
             }
             const client = await clientsDataServiceProvider.getClient(id);
             if (!client) {
                 return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
-            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS);
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
         }
         catch (error) {
             throw error;
         }
     }
-    async addClient(c) {
-        const result = await clientsDataServiceProvider.addClient();
-        return c.json(result);
-    }
     async deleteClient(c) {
         try {
-            const queryId = c.req.param('id');
-            const id = Number(queryId);
+            const id = +c.req.param('id');
             if (isNaN(id)) {
-                return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+                throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
             }
             const client = await clientsDataServiceProvider.getClient(id);
             if (!client) {
-                return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
             await clientsDataServiceProvider.deleteClient(id);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_DELETED_SUCCESS);
@@ -83,20 +82,31 @@ export class ClientsController {
             throw error;
         }
     }
-    async exportClients(c) {
-        const result = await clientsDataServiceProvider.exportClients();
-        return c.json(result);
-    }
     async updateClient(c) {
         try {
-            const id = parseInt(c.req.param('id'), 10);
+            const id = +c.req.param('id');
             const body = await c.req.json();
             const client = await clientsDataServiceProvider.getClient(id);
             if (!client) {
-                return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
             await clientsDataServiceProvider.editClient(id, body);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async addClient(c) {
+        try {
+            const clientData = await c.req.json();
+            const validatedData = await validate(clientValidationSchema, clientData);
+            const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
+            if (existingClient) {
+                throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
+            }
+            const newClient = await clientsDataServiceProvider.insertClient(clientData);
+            return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
         }
         catch (error) {
             throw error;

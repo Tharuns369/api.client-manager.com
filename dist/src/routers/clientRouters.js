@@ -10,5 +10,5 @@ clientsRouter.get('/:id', authMiddleware.checkAndValidateAuthToken, clientsContr
 clientsRouter.post('/', authMiddleware.checkAndValidateAuthToken, clientsController.addClient);
 clientsRouter.patch('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.updateClient);
 clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.deleteClient);
-clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
+// clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 export default clientsRouter;
