@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS "invoice_files" (
 CREATE TABLE IF NOT EXISTS "invoices" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"service_id" integer NOT NULL,
+	"client_id" integer NOT NULL,
 	"invoice_status" "invoice_status" DEFAULT 'PENDING',
 	"remarks" text,
 	"invoice_date" date NOT NULL,
@@ -74,12 +75,13 @@ CREATE TABLE IF NOT EXISTS "services" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
+	"id" serial PRIMARY KEY NOT NULL,
 	"first_name" varchar NOT NULL,
 	"last_name" varchar NOT NULL,
 	"email" text NOT NULL,
 	"phone" text NOT NULL,
 	"password" varchar NOT NULL,
-	"user_type" "user_type" DEFAULT 'ADMIN' NOT NULL,
+	"user_type" "user_type" DEFAULT 'ADMIN',
 	"status" "status" DEFAULT 'ACTIVE',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,

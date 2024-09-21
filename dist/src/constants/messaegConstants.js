@@ -22,7 +22,9 @@ const CLIENT_MESSAGES = {
     CLIENT_ID_NOT_FOUND: (id) => `Client with ID ${id} does not exist`,
     CLIENT_FETCH_SUCCESS: "Client Fetches Successfully.",
     CLIENTS_NOT_EXIST: "No Clients",
-    CLIENT_UPDATE_SUCCESS: "Client Updated Successfully"
+    CLIENT_UPDATE_SUCCESS: "Client Updated Successfully",
+    CLIENT_BASED_SERVICES_FETCH_SUCCESS: "Client based services fetched successfully.",
+    CLIENT_BASED_INVOICES_FETCH_SUCCESS: "Client based invoices fetched successfully."
 };
 const INVOICES_MESSAGES = {
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",

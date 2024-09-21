@@ -2,6 +2,10 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
+import { invoices } from "../schemas/invoices";
+import { services } from "../schemas/services";
+
+
 
 export class ClientsDataServiceProvider {
 
@@ -40,7 +44,7 @@ export class ClientsDataServiceProvider {
   }
 
   async editClient(id: number, body: Client) {
-    return await updateRecordById(clients,id, body);
+    return await updateRecordById(clients, id, body);
 
   }
 
@@ -54,5 +58,47 @@ export class ClientsDataServiceProvider {
 
   async exportClients() {
     return { message: 'Clients exported successfully' };
+  }
+
+
+  async getClientsWiseServices(clientId: number) {
+    const result = await db.query.clients.findMany({
+      where: (clients, { eq }) => (eq(clients.id, clientId)),
+      columns: {},
+      with: {
+        services: {
+          columns: {
+            id: true,
+            invoice_amount: true,
+            title: true,
+            type: true,
+            client_id: true
+          }
+        }
+      }
+    });
+
+    return result;
+  }
+
+  async getClientsWiseInvoices(clientId: number) {
+    const result = await db.query.clients.findMany({
+      where: (clients, { eq }) => (eq(clients.id, clientId)),
+      columns: {},
+      with: {
+        invoices: {
+          columns: {
+            id: true,
+            invoice_amount: true,
+            invoice_date: true,
+            invoice_status: true,
+            payment_date: true,
+            client_id: true
+          }
+        }
+      }
+    });
+
+    return result;
   }
 }

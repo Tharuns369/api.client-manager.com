@@ -1,1 +1,0 @@
-ALTER TABLE "clients" ADD COLUMN "test" text;

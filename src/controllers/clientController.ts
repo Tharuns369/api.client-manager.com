@@ -73,7 +73,7 @@ export class ClientsController {
         return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
       }
 
-      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS,client);
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
 
     } catch (error) {
       throw error;
@@ -133,6 +133,39 @@ export class ClientsController {
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
 
     } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getClientsWiseServices(c: Context) {
+    try {
+
+      const clientId = +c.req.param('id');
+
+      const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
+
+    }
+    catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getClientWiseInvoices(c: Context) {
+    try {
+
+      const clientId = +c.req.param('id');
+
+      const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseInvoices(clientId);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_INVOICES_FETCH_SUCCESS, clientsWiseServicesData);
+
+    }
+    catch (error) {
+      console.log(error);
       throw error;
     }
   }

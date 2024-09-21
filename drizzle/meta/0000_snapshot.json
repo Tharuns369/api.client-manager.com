@@ -1,5 +1,5 @@
 {
-  "id": "e1cc6e92-44ba-4027-8a14-e149e94d6499",
+  "id": "9d38c008-7b7a-4314-a46f-69098001e023",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -281,6 +281,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "client_id": {
+          "name": "client_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "invoice_status": {
           "name": "invoice_status",
           "type": "invoice_status",
@@ -491,6 +497,12 @@
       "name": "users",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "first_name": {
           "name": "first_name",
           "type": "varchar",
@@ -526,7 +538,7 @@
           "type": "user_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'ADMIN'"
         },
         "status": {
