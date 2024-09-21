@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { getRecordByColumnValue, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { db } from "../db/index";
 import { Invoice, invoices } from "../schemas/invoices";
 
@@ -52,14 +52,15 @@ export class InvoicesDataServiceProvider {
     return { message: 'Invoice uploaded successfully' };
   }
 
-  async addInvoice() {
-    return { message: 'Invoice added successfully' };
-  }
-
   async getInvoice(id: number) {
     const userData = await getRecordByColumnValue<Invoice>(invoices, 'id', id);
 
     return userData;
+  }
+
+  async insertInvoice(invoiceData:Invoice ) {
+    const insertedClient = await insertRecord<Invoice>(invoices,invoiceData );
+    return insertedClient;
   }
 
   async editInvoice(id: number, body: Invoice) {

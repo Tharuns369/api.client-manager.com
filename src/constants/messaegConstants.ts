@@ -114,12 +114,26 @@ const CLIENT_VALIDATION_MESSAGES = {
     // TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a valid number with precision and scale',
     TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a number',
 
-};
+  };
 
+   const INVOICE_VALIDATION_MESSAGES = {
+   SERVICE_ID_REQUIRED: 'Service ID is required.',
+  SERVICE_ID_INVALID: 'Service ID must be a positive integer.',
+  INVALID_INVOICE_STATUS: 'Invalid invoice status.',
+  REMARKS_INVALID: 'Invalid remarks format.',
+  INVOICE_DATE_REQUIRED: 'Invoice date is required.',
+  INVALID_INVOICE_DATE: 'Invalid invoice date format.',
+  INVOICE_DATE_MINIMUM: 'Invoice date must be today or later.',
+  PAYMENT_DATE_INVALID: 'Invalid payment date format.',
+  INVOICE_AMOUNT_REQUIRED: 'Invoice amount is required.',
+  INVALID_INVOICE_AMOUNT: 'Invalid invoice amount format. Must be a valid number with up to 2 decimal places.',
+  INVOICE_ALREADY_EXISTS: 'An invoice with this service ID already exists.',
+  INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
+  };
+  
+  
 
 export {
-
-    VALIDATION_MESSAGES, USER_MESSAGES, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_MESSAGES, SERVICES_MESSAGES,
-
-    CLIENT_VALIDATION_MESSAGES
-};
+    VALIDATION_MESSAGES,USER_MESSAGES,COMMON_VALIDATIONS,CLIENT_MESSAGES,INVOICES_MESSAGES,SERVICES_MESSAGES,CLIENT_VALIDATION_MESSAGES,
+    INVOICE_VALIDATION_MESSAGES
+}
