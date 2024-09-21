@@ -111,7 +111,12 @@ export class ClientsController {
     async getClientWiseInvoices(c) {
         try {
             const clientId = +c.req.param('id');
-            const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseInvoices(clientId);
+            const query = c.req.query();
+            let invoiceStatus;
+            if (query.invoice_status === 'PENDING' || query.invoice_status === 'COMPLETED') {
+                invoiceStatus = query.invoice_status;
+            }
+            const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseInvoices(clientId, query.from_date, query.to_date, invoiceStatus);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_INVOICES_FETCH_SUCCESS, clientsWiseServicesData);
         }
         catch (error) {

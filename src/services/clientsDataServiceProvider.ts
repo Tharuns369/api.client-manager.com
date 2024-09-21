@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
@@ -39,8 +39,8 @@ export class ClientsDataServiceProvider {
     return clientData;
   }
 
-  async insertClient(clientData:Client) {
-    const insertedClient = await insertRecord<Client>(clients,clientData );
+  async insertClient(clientData: Client) {
+    const insertedClient = await insertRecord<Client>(clients, clientData);
     return insertedClient;
   }
 
@@ -85,7 +85,7 @@ export class ClientsDataServiceProvider {
     return result;
   }
 
-  async getClientsWiseInvoices(clientId: number) {
+  async getClientsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
     const result = await db.query.clients.findMany({
       where: (clients, { eq }) => (eq(clients.id, clientId)),
       columns: {},
@@ -98,8 +98,16 @@ export class ClientsDataServiceProvider {
             invoice_status: true,
             payment_date: true,
             client_id: true
-          }
+          },
+          where: (invoices) =>
+            and(
+              fromDate && toDate ? between(invoices.invoice_date, fromDate, toDate) : undefined,
+              invoiceStatus ? eq(invoices.invoice_status, invoiceStatus) : undefined
+            ),
+          orderBy: (invoices, { desc }) => [desc(invoices.invoice_date)]
+
         }
+
       }
     });
 
