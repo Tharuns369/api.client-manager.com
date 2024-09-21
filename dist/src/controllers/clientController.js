@@ -8,7 +8,9 @@ import { BadRequestException } from '../exceptions/badRequestException';
 import { clientValidationSchema } from '../validations/clientsValidations/addClientValidations';
 import validate from '../helpers/validationHelper';
 import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
+import { SearchFilter } from '../helpers/filterHelper';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
+const searchFilter = new SearchFilter();
 export class ClientsController {
     async getTotalClients(c) {
         try {

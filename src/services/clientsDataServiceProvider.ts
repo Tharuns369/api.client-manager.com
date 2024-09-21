@@ -32,6 +32,8 @@ export class ClientsDataServiceProvider {
       .from(clients);
     return result[0].count;
   }
+  
+  
 
   async getClient(id: number) {
     const clientData = await getRecordByColumnValue<Client>(clients, 'id', id);
