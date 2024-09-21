@@ -1,10 +1,13 @@
 import { Context } from "hono";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
-import { COMMON_VALIDATIONS, INVOICES_MESSAGES } from "../constants/messaegConstants";
+import { COMMON_VALIDATIONS, INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { NotFoundException } from "../exceptions/notFoundException";
+import { InvoiceValidationInput, invoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import validate from "../helpers/validationHelper";
+import { ResourceAlreadyExistsException } from "../exceptions/resourceAlreadyExistsException";
 
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
 
@@ -62,8 +65,27 @@ export class InvoiceController {
     }
 
     async addInvoice(c: Context) {
-        return c.json({ message: "Invoice added successfully" });
-    }
+        try {
+          const invoiceData = await c.req.json();
+          
+          const validatedData: InvoiceValidationInput = await validate(invoiceValidationSchema, invoiceData);
+          
+          const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.service_id);
+
+          if (existingInvoice) {
+            throw new ResourceAlreadyExistsException("service_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
+          }
+      
+          const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
+      
+          return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_ADDED_SUCCESS, newInvoice);
+          
+        } catch (error) {
+          console.error('Error in addInvoice:', error);
+          throw error;
+        }
+      }
+      
 
     async updateInvoice(c: Context) {
         try {
