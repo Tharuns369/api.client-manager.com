@@ -11,20 +11,11 @@ const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
 export class InvoiceController {
     async getTotalInvoicesAmount(c: Context) {
         try {
-        const result = await invoicesDataServiceProvider.getTotalInvoicesAmount();
-            
+            const result = await invoicesDataServiceProvider.getTotalInvoicesAmount();
             const amountInINR = result.totalAmount; 
-            return c.json({
-                status: true,
-                message: INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS,
-                data: amountInINR
-            }, 200);
+            return ResponseHelper.sendSuccessResponse(c, 200,INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS,amountInINR);
         } catch (error) {
-            console.error('Error fetching total invoices amount:', error);
-            return c.json({
-                status: false,
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            }, 500);
+            throw error
         }
     }
 
@@ -43,12 +34,8 @@ export class InvoiceController {
             invoicesDataServiceProvider.getInvoiceCount()
             ]);
     
-            if (!invoicesList || invoicesList.length === 0) {
-                return c.json({
-                    status: 'False',
-                    message: INVOICES_MESSAGES.INVOICES_NOT_FOUND,
-                    data: []
-                });
+            if ( invoicesList.length === 0) {
+                throw new NotFoundException( INVOICES_MESSAGES.INVOICES_NOT_FOUND)
             }
     
             const response = paginationHelper.getPaginationResponse({
@@ -62,11 +49,7 @@ export class InvoiceController {
             return c.json(response);
     
         } catch (error) {
-            console.error('Error at list of invoices:', error);
-            return c.json({
-                status: 'Error',
-                message: COMMON_VALIDATIONS.SOMETHING_WENT_WRONG,
-            }, 500);
+            throw error
            }
         }
 
@@ -84,7 +67,7 @@ export class InvoiceController {
 
     async updateInvoice(c: Context) {
         try {
-            const id = parseInt(c.req.param('id'), 10); 
+            const id = +c.req.param('id');
             
             const body = await c.req.json();
 

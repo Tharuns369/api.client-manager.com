@@ -4,6 +4,11 @@ import { CLIENT_MESSAGES, COMMON_VALIDATIONS } from '../constants/messaegConstan
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { sortHelper } from '../helpers/sortHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
+import { NotFoundException } from '../exceptions/notFoundException';
+import { BadRequestException } from '../exceptions/badRequestException';
+import { ClientValidationInput, clientValidationSchema } from '../validations/clientsValidations/addClientValidations';
+import validate from '../helpers/validationHelper';
+import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 
 export class ClientsController {
@@ -38,7 +43,7 @@ export class ClientsController {
       ]);
 
       if (!invoicesList || invoicesList.length === 0) {
-        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_NOT_FOUND);
+        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_NOT_FOUND);
 
       }
 
@@ -53,18 +58,17 @@ export class ClientsController {
       return c.json(response);
 
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
   async getClient(c: Context) {
     try {
-      const queryId = c.req.param('id');
-      const id = Number(queryId);
+      const id = +c.req.param('id');
 
       if (isNaN(id)) {
 
-        return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
       }
 
       const client: any = await clientsDataServiceProvider.getClient(id);
@@ -80,25 +84,18 @@ export class ClientsController {
     }
   }
 
-  async addClient(c: Context) {
-    const result = await clientsDataServiceProvider.addClient();
-    return c.json(result);
-  }
-
-
   async deleteClient(c: Context) {
     try {
-      const queryId = c.req.param('id');
-      const id = Number(queryId);
+      const id = +c.req.param('id');
 
       if (isNaN(id)) {
-        return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
       }
 
       const client = await clientsDataServiceProvider.getClient(id);
 
       if (!client) {
-        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
       }
 
       await clientsDataServiceProvider.deleteClient(id);
@@ -111,21 +108,16 @@ export class ClientsController {
   }
 
 
-  async exportClients(c: Context) {
-    const result = await clientsDataServiceProvider.exportClients();
-    return c.json(result);
-  }
-
   async updateClient(c: Context) {
     try {
-      const id = parseInt(c.req.param('id'), 10);
+      const id = +c.req.param('id');
 
       const body = await c.req.json();
 
       const client: any = await clientsDataServiceProvider.getClient(id);
 
       if (!client) {
-        return ResponseHelper.sendErrorResponse(c, 404, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
       }
 
       await clientsDataServiceProvider.editClient(id, body);
@@ -169,4 +161,23 @@ export class ClientsController {
       throw error;
     }
   }
+  async addClient(c: Context) {
+    try {
+      const clientData = await c.req.json();
+
+      const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
+
+      const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
+      if (existingClient) {
+        throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
+      }
+
+      const newClient = await clientsDataServiceProvider.insertClient(clientData);
+
+      return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
+

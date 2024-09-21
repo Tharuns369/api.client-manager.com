@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
 export class ClientsDataServiceProvider {
     async getTotalClientsCount() {
@@ -27,8 +27,9 @@ export class ClientsDataServiceProvider {
         const clientData = await getRecordByColumnValue(clients, 'id', id);
         return clientData;
     }
-    async addClient() {
-        return { message: 'Client added successfully' };
+    async insertClient(clientData) {
+        const insertedClient = await insertRecord(clients, clientData);
+        return insertedClient;
     }
     async editClient(id, body) {
         return await updateRecordById(clients, id, body);
@@ -39,8 +40,9 @@ export class ClientsDataServiceProvider {
             .where(eq(clients.id, id));
         return result.rowCount;
     }
-    async exportClients() {
-        return { message: 'Clients exported successfully' };
+    async findClientByEmail(email) {
+        const userRecord = await getRecordByColumnValue(clients, 'email', email);
+        return userRecord;
     }
     async getClientsWiseServices(clientId) {
         const result = await db.query.clients.findMany({

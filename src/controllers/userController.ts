@@ -86,7 +86,6 @@ export class UserController {
 
   async getProfile(c: Context) {
     try {
-
       const userId = +c.req.param('id');
 
       const userData: any = await usersDataServiceProvider.findUserById(userId);
