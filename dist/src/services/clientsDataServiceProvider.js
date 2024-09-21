@@ -49,12 +49,11 @@ export class ClientsDataServiceProvider {
             where: (clients, { eq }) => (eq(clients.id, clientId)),
             columns: {},
             with: {
-                services: {
+                clientServices: {
                     columns: {
                         id: true,
                         invoice_amount: true,
                         title: true,
-                        type: true,
                         client_id: true
                     }
                 }

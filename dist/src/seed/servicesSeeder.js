@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { db } from '../db/index';
-import { services, } from '../schemas/services';
+import { clientServices, } from '../schemas/clientServices';
 import { clients } from '../schemas/clients';
 export const generateFakeService = (clientId) => {
     return {
@@ -29,7 +29,7 @@ export const insertServicesForClients = async (numClients, servicesPerClient = 5
         for (const client of clientRows) {
             const servicesBatch = generateServicesForClient(client.id, servicesPerClient);
             try {
-                await db.insert(services).values(servicesBatch);
+                await db.insert(clientServices).values(servicesBatch);
                 console.log(`Inserted ${servicesPerClient} services for client with ID ${client.id}`);
             }
             catch (error) {

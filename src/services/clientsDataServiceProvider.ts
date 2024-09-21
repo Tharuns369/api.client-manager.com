@@ -3,7 +3,7 @@ import { db } from "../db";
 import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
-import { services } from "../schemas/services";
+import { clientServices } from "../schemas/clientServices";
 
 
 
@@ -32,8 +32,8 @@ export class ClientsDataServiceProvider {
       .from(clients);
     return result[0].count;
   }
-  
-  
+
+
 
   async getClient(id: number) {
     const clientData = await getRecordByColumnValue<Client>(clients, 'id', id);
@@ -72,12 +72,11 @@ export class ClientsDataServiceProvider {
       where: (clients, { eq }) => (eq(clients.id, clientId)),
       columns: {},
       with: {
-        services: {
+        clientServices: {
           columns: {
             id: true,
             invoice_amount: true,
             title: true,
-            type: true,
             client_id: true
           }
         }

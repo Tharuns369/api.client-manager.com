@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { db } from '../db/index';
 import { invoices } from '../schemas/invoices';
-import { services } from '../schemas/services';
+import { clientServices } from '../schemas/clientServices';
 import { eq } from 'drizzle-orm';
 
 const generateFakeInvoice = (serviceId: number, monthOffset: number) => {
@@ -42,8 +42,8 @@ const insertInvoicesBatch = async (invoicesBatch: any) => {
 const insertInvoicesForClient = async (clientId: number, numInvoices: number = 10) => {
     try {
         const serviceRows = await db.select({
-            id: services.id
-        }).from(services).where(eq(services.client_id, clientId));
+            id: clientServices.id
+        }).from(clientServices).where(eq(clientServices.client_id, clientId));
 
         for (const service of serviceRows) {
             const allInvoices = generateInvoicesForService(service.id, numInvoices);
