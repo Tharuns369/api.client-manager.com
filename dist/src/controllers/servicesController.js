@@ -37,7 +37,7 @@ export class ServicesController {
             const query = c.req.query();
             const page = parseInt(query.page || '1');
             const limit = parseInt(query.limit || '10');
-            const sortString = sortHelper.resultsSort(query);
+            const sortString = sortHelper.sort(query);
             const skip = (page - 1) * limit;
             const [invoicesList, totalCount] = await Promise.all([
                 clientsServicesDataServiceProvider.getServices(limit, skip, sortString),

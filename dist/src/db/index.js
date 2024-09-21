@@ -3,8 +3,9 @@ import pg from "pg";
 import { ConfigData } from "../config/appConfig";
 const { Pool } = pg;
 import * as clientSchema from "../schemas/clients";
-import * as serviceSchema from "../schemas/clientServices";
+import * as clientsServiceSchema from "../schemas/clientServices";
 import * as invoiceSchema from "../schemas/invoices";
+import * as servicesSchema from "../schemas/services";
 import * as invoicesFileSchema from "../schemas/invoicefiles";
 import * as usersSchema from "../schemas/users";
 const pool = new Pool({
@@ -19,5 +20,5 @@ const pool = new Pool({
     },
 });
 export const db = drizzle(pool, {
-    schema: { ...clientSchema, ...serviceSchema, ...invoiceSchema, ...invoicesFileSchema, ...usersSchema }
+    schema: { ...clientSchema, ...clientsServiceSchema, ...servicesSchema, ...invoiceSchema, ...invoicesFileSchema, ...usersSchema }
 });

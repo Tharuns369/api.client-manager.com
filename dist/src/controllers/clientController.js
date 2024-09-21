@@ -8,9 +8,9 @@ import { BadRequestException } from '../exceptions/badRequestException';
 import { clientValidationSchema } from '../validations/clientsValidations/addClientValidations';
 import validate from '../helpers/validationHelper';
 import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
-import { SearchFilter } from '../helpers/filterHelper';
+import { FilterHelper } from '../helpers/filterHelper';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
-const searchFilter = new SearchFilter();
+const filterHelper = new FilterHelper();
 export class ClientsController {
     async getTotalClients(c) {
         try {
@@ -29,15 +29,13 @@ export class ClientsController {
             const query = c.req.query();
             const page = parseInt(query.page || '1');
             const limit = parseInt(query.limit || '10');
-            const sortString = sortHelper.resultsSort(query);
             const skip = (page - 1) * limit;
+            const sort = sortHelper.sort(query);
+            const filters = filterHelper.clients(query);
             const [invoicesList, totalCount] = await Promise.all([
-                clientsDataServiceProvider.getClientsWithPagenation(limit, skip, sortString),
-                clientsDataServiceProvider.getclientsCount()
+                clientsDataServiceProvider.getClientsWithPagenation({ skip, limit, filters, sort }),
+                clientsDataServiceProvider.getclientsCount(filters)
             ]);
-            if (!invoicesList || invoicesList.length === 0) {
-                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_NOT_FOUND);
-            }
             const response = paginationHelper.getPaginationResponse({
                 page,
                 count: totalCount,
@@ -57,7 +55,7 @@ export class ClientsController {
             if (isNaN(id)) {
                 throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
             }
-            const client = await clientsDataServiceProvider.getClient(id);
+            const client = await clientsDataServiceProvider.getClientById(id);
             if (!client) {
                 return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
@@ -73,7 +71,7 @@ export class ClientsController {
             if (isNaN(id)) {
                 throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
             }
-            const client = await clientsDataServiceProvider.getClient(id);
+            const client = await clientsDataServiceProvider.getClientById(id);
             if (!client) {
                 throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
@@ -88,7 +86,7 @@ export class ClientsController {
         try {
             const id = +c.req.param('id');
             const body = await c.req.json();
-            const client = await clientsDataServiceProvider.getClient(id);
+            const client = await clientsDataServiceProvider.getClientById(id);
             if (!client) {
                 throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
@@ -102,6 +100,10 @@ export class ClientsController {
     async getClientsWiseServices(c) {
         try {
             const clientId = +c.req.param('id');
+            const client = await clientsDataServiceProvider.getClientById(clientId);
+            if (!client) {
+                return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
+            }
             const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
         }

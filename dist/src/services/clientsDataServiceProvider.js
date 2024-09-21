@@ -2,28 +2,34 @@ import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
+import { clientServices } from "../schemas/clientServices";
+import { services } from "../schemas/services";
 export class ClientsDataServiceProvider {
     async getTotalClientsCount() {
         const clientsCount = await getTotalRecordsCount(clients);
         return clientsCount[0]?.count || 0;
     }
-    async getClientsWithPagenation(limit, skip, sortString) {
-        const rawQuery = sql `
-        SELECT *
-        FROM clients
-        ORDER BY ${sql.raw(sortString)} 
-        LIMIT ${limit}
-        OFFSET ${skip}
-    `;
-        const result = await db.execute(rawQuery);
-        return result.rows;
+    async getClientsWithPagenation({ skip, limit, filters, sort }) {
+        const query = db.select().from(clients);
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        if (sort) {
+            query.orderBy(sql `${sql.raw(sort)}`);
+        }
+        query.limit(limit).offset(skip);
+        const data = await query.execute();
+        return data;
     }
-    async getclientsCount() {
-        const result = await db.select({ count: sql `COUNT(*)` })
-            .from(clients);
-        return result[0].count;
+    async getclientsCount(filters) {
+        const query = db.select({ count: sql `COUNT(*)` }).from(clients);
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        const data = await query.execute();
+        return data[0].count;
     }
-    async getClient(id) {
+    async getClientById(id) {
         const clientData = await getRecordByColumnValue(clients, 'id', id);
         return clientData;
     }
@@ -45,20 +51,15 @@ export class ClientsDataServiceProvider {
         return userRecord;
     }
     async getClientsWiseServices(clientId) {
-        const result = await db.query.clients.findMany({
-            where: (clients, { eq }) => (eq(clients.id, clientId)),
-            columns: {},
-            with: {
-                clientServices: {
-                    columns: {
-                        id: true,
-                        invoice_amount: true,
-                        title: true,
-                        client_id: true
-                    }
-                }
-            }
-        });
+        const result = await db.select({
+            id: clientServices.id,
+            client_id: clientServices.client_id,
+            title: clientServices.title,
+            type: services.type,
+            invoice_amount: clientServices.invoice_amount,
+            created_at: clientServices.created_at,
+            updated_at: clientServices.updated_at
+        }).from(clientServices).where(eq(clientServices.client_id, clientId)).innerJoin(services, eq(clientServices.service_id, services.id));
         return result;
     }
     async getClientsWiseInvoices(clientId, fromDate, toDate, invoiceStatus) {

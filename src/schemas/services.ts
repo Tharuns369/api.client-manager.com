@@ -20,6 +20,8 @@ export const servicesAndClientServicesRelations = relations(services, ({ many })
     clientServices: many(clientServices),
 }));
 
+
+
 export type Service = typeof services.$inferSelect;
 export type NewService = typeof services.$inferInsert;
 export type ServiceTable = typeof services;

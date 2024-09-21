@@ -1,17 +1,23 @@
-export class SearchFilter {
-    searchClientFilter(clientQuery, filters) {
-        const conditions = [];
-        if (filters.name) {
-            console.log("filters.name", filters.name);
-            conditions.push(`name ILIKE '%${filters.name}%'`);
-            console.log("filters.name", filters.name);
+export class FilterHelper {
+    clients(query) {
+        let filter = [];
+        const { from_date: fromDate, to_date: toDate, status: status, search_string: searchString, } = query;
+        if (fromDate && toDate) {
+            filter.push(`created_at BETWEEN '${fromDate}' AND '${toDate}'`);
         }
-        if (filters.email) {
-            conditions.push(`email ILIKE '%${filters.email}%'`);
+        if (searchString) {
+            filter.push(`name ILIKE '%${searchString}%' OR email ILIKE '%${searchString}%'`);
         }
-        if (conditions.length > 0) {
-            clientQuery.whereClause = conditions.join(' AND ');
+        if (!status) {
+            filter.push(`status = 'ACTIVE'`);
         }
-        return clientQuery;
+        else {
+            filter.push(`status = ${status}`);
+        }
+        let queryString;
+        if (filter.length > 0) {
+            queryString = filter.join("AND ");
+        }
+        return queryString;
     }
 }

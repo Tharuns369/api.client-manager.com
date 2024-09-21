@@ -12,71 +12,71 @@ const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvide
 export class ServicesController {
 
 
-    // async addService(c: Context) {
-    //     try {
-    //         const clientData = await c.req.json();
+  // async addService(c: Context) {
+  //     try {
+  //         const clientData = await c.req.json();
 
-    //         const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
+  //         const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
 
-    //         const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
-    //         if (existingClient) {
-    //         throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
-    //         }
+  //         const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
+  //         if (existingClient) {
+  //         throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
+  //         }
 
-    //         const newClient = await clientsDataServiceProvider.insertClient(clientData);
+  //         const newClient = await clientsDataServiceProvider.insertClient(clientData);
 
-    //         return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient); 
-    //     }catch (error) {
-    //         throw error
-    //     }
-    // }
+  //         return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient); 
+  //     }catch (error) {
+  //         throw error
+  //     }
+  // }
 
   async getTotalServices(c: Context) {
     try {
-    const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();
-    if(!totalClientCount){
-        return ResponseHelper.sendSuccessResponse(c, 200,SERVICES_MESSAGES.SERVICES_NOT_EXIST)        
-    }
+      const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();
+      if (!totalClientCount) {
+        return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICES_NOT_EXIST);
+      }
 
-    return ResponseHelper.sendSuccessResponse(c, 200,SERVICES_MESSAGES.SERVICE_COUNT,totalClientCount);
+      return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_COUNT, totalClientCount);
     }
     catch (error) {
-       throw error
-      }
+      throw error;
+    }
   }
 
 
   async listServices(c: Context) {
     try {
-        
-        const query = c.req.query();
-        const page: number = parseInt(query.page || '1');
-        const limit: number = parseInt(query.limit || '10');
-        const sortString: string = sortHelper.resultsSort(query);
 
-        const skip: number = (page - 1) * limit;
+      const query = c.req.query();
+      const page: number = parseInt(query.page || '1');
+      const limit: number = parseInt(query.limit || '10');
+      const sortString: string = sortHelper.sort(query);
 
-        const [invoicesList, totalCount]: any = await Promise.all([
-            clientsServicesDataServiceProvider.getServices(limit, skip, sortString),
-            clientsServicesDataServiceProvider.getSrvicesCount()
-        ]);
+      const skip: number = (page - 1) * limit;
 
-        if (!invoicesList || invoicesList.length === 0) {
-            throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
-        }
+      const [invoicesList, totalCount]: any = await Promise.all([
+        clientsServicesDataServiceProvider.getServices(limit, skip, sortString),
+        clientsServicesDataServiceProvider.getSrvicesCount()
+      ]);
 
-        const response = paginationHelper.getPaginationResponse({
-            page,
-            count: totalCount, 
-            limit,
-            data: invoicesList,
-            message: SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS
-        });
-        return c.json(response);
+      if (!invoicesList || invoicesList.length === 0) {
+        throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
+      }
+
+      const response = paginationHelper.getPaginationResponse({
+        page,
+        count: totalCount,
+        limit,
+        data: invoicesList,
+        message: SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS
+      });
+      return c.json(response);
     } catch (error) {
-       throw error
-       }
+      throw error;
     }
+  }
 
 
   async addService(c: Context) {
@@ -86,49 +86,49 @@ export class ServicesController {
 
   async updateService(c: Context) {
     try {
-        const id = +c.req.param('id');
+      const id = +c.req.param('id');
 
-        if (isNaN(id)) {
-            return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
-        }
-        
-        const body = await c.req.json();
+      if (isNaN(id)) {
+        return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
+      }
 
-        const service = await clientsServicesDataServiceProvider.getService(id);
+      const body = await c.req.json();
 
-        if (!service) {
-            throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
-          }
+      const service = await clientsServicesDataServiceProvider.getService(id);
 
-        const updatedService = await clientsServicesDataServiceProvider.editService(id, body);
+      if (!service) {
+        throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
+      }
 
-        return ResponseHelper.sendSuccessResponse(c, 200,SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS,updatedService);
+      const updatedService = await clientsServicesDataServiceProvider.editService(id, body);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS, updatedService);
 
     } catch (error) {
-        throw error;
-      }
-   }
-   
+      throw error;
+    }
+  }
+
   async deleteService(c: Context) {
     try {
-        const id = +c.req.param('id');
+      const id = +c.req.param('id');
 
-        if (isNaN(id)) {
-            return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
-        }
-
-        const service = await clientsServicesDataServiceProvider.getService(id);
-
-        if (!service ) {
-            return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id))
+      if (isNaN(id)) {
+        return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
       }
 
-        await clientsServicesDataServiceProvider.deleteService(id);
+      const service = await clientsServicesDataServiceProvider.getService(id);
 
-        return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS,service) 
- 
+      if (!service) {
+        return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_ID_NOT_FOUND(id));
+      }
+
+      await clientsServicesDataServiceProvider.deleteService(id);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_DELETED_SUCCESS, service);
+
     } catch (error) {
-       throw error
+      throw error;
     }
   }
 

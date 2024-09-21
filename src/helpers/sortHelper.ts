@@ -1,8 +1,8 @@
-
 export const sortHelper = {
-    resultsSort(query: Record<string, string>){
-        const { order_by: orderBy = 'created_at', order_type: orderType = 'desc' } = query;
+    sort: (query: any) => {
+        const sortBy = query.sort_by || 'created_at';
+        const sortType = query.sort_type || 'desc';
 
-        return `${orderBy} ${orderType}`;
+        return `${sortBy} ${sortType}`;
     }
 };

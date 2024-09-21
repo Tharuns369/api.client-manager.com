@@ -4,6 +4,7 @@ import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecor
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
 import { clientServices } from "../schemas/clientServices";
+import { services } from "../schemas/services";
 
 
 
@@ -15,27 +16,31 @@ export class ClientsDataServiceProvider {
     return clientsCount[0]?.count || 0;
   }
 
-  async getClientsWithPagenation(limit: number, skip: number, sortString: string) {
-    const rawQuery = sql`
-        SELECT *
-        FROM clients
-        ORDER BY ${sql.raw(sortString)} 
-        LIMIT ${limit}
-        OFFSET ${skip}
-    `;
-    const result = await db.execute(rawQuery);
-    return result.rows;
+  async getClientsWithPagenation({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
+    const query = db.select().from(clients);
+    if (filters) {
+      query.where(sql`${sql.raw(filters)}`);
+    }
+    if (sort) {
+      query.orderBy(sql`${sql.raw(sort)}`);
+    }
+    query.limit(limit).offset(skip);
+    const data = await query.execute();
+    return data;
   }
 
-  async getclientsCount() {
-    const result = await db.select({ count: sql<number>`COUNT(*)` })
-      .from(clients);
-    return result[0].count;
+  async getclientsCount(filters?: string) {
+    const query = db.select({ count: sql<number>`COUNT(*)` }).from(clients);
+    if (filters) {
+      query.where(sql`${sql.raw(filters)}`);
+    }
+    const data = await query.execute();
+    return data[0].count;
   }
 
 
 
-  async getClient(id: number) {
+  async getClientById(id: number) {
     const clientData = await getRecordByColumnValue<Client>(clients, 'id', id);
 
     return clientData;
@@ -68,22 +73,20 @@ export class ClientsDataServiceProvider {
 
 
   async getClientsWiseServices(clientId: number) {
-    const result = await db.query.clients.findMany({
-      where: (clients, { eq }) => (eq(clients.id, clientId)),
-      columns: {},
-      with: {
-        clientServices: {
-          columns: {
-            id: true,
-            invoice_amount: true,
-            title: true,
-            client_id: true
-          }
-        }
-      }
-    });
+
+    const result = await db.select({
+      id: clientServices.id,
+      client_id: clientServices.client_id,
+      title: clientServices.title,
+      type: services.type,
+      invoice_amount: clientServices.invoice_amount,
+      created_at: clientServices.created_at,
+      updated_at: clientServices.updated_at
+
+    }).from(clientServices).where(eq(clientServices.client_id, clientId)).innerJoin(services, eq(clientServices.service_id, services.id));
 
     return result;
+
   }
 
   async getClientsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
