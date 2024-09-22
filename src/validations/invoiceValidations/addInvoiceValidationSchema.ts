@@ -6,7 +6,7 @@ export enum invoiceStatusEnum {
   COMPLETED = 'COMPLETED',
 }
 
-export const invoiceItemValidationSchema = v.object({
+export const addinvoiceItemValidationSchema = v.object({
   service_id: v.pipe(
     v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
     v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
@@ -39,6 +39,5 @@ export const invoiceItemValidationSchema = v.object({
   invoice_amount: v.number(INVOICE_VALIDATION_MESSAGES.INVOICE_AMOUNT_REQUIRED)
 });
 
-export const InvoiceValidationSchema = v.array(invoiceItemValidationSchema);
+export type AddInvoiceItemValidationSchema = v.InferInput<typeof addinvoiceItemValidationSchema>;
 
-export type InvoiceValidationInput = v.InferInput<typeof InvoiceValidationSchema>;

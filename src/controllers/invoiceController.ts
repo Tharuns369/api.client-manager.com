@@ -7,7 +7,6 @@ import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
-import { InvoiceValidationInput, InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
 import { InvoiceFileValidationInput, invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
 import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
@@ -26,7 +25,7 @@ export class InvoiceController {
         try {
             const invoiceData = await c.req.json();
 
-            const validatedData: InvoiceValidationInput = await validate(InvoiceValidationSchema, invoiceData);
+            const validatedData: InvoiceFileValidationInput = await validate(invoiceFileValidationSchema, invoiceData);
 
             const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
 

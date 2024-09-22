@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import { INVOICE_FILES_VALIDATION_MESSAGES, } from '../../constants/messaegConstants';
+import { INVOICE_FILES_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 export enum invoiceStatusEnum {
     PENDING = 'PENDING',
