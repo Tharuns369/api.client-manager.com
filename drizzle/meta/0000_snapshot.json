@@ -1,5 +1,5 @@
 {
-  "id": "1e0404c5-ac92-4e8e-8a8b-9e978964b704",
+  "id": "8ef6e370-bb64-4bcb-be7e-f9f8285a0f07",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -166,6 +166,114 @@
         }
       }
     },
+    "public.client_services": {
+      "name": "client_services",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client_id": {
+          "name": "client_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "service_id": {
+          "name": "service_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'ACTIVE'"
+        },
+        "invoice_amount": {
+          "name": "invoice_amount",
+          "type": "numeric(100, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "title_idx": {
+          "name": "title_idx",
+          "columns": [
+            {
+              "expression": "title",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_id_idx": {
+          "name": "client_id_idx",
+          "columns": [
+            {
+              "expression": "client_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_services_status_idx": {
+          "name": "client_services_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.invoice_files": {
       "name": "invoice_files",
       "schema": "",
@@ -275,8 +383,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "service_id": {
-          "name": "service_id",
+        "client_service_id": {
+          "name": "client_service_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -335,11 +443,11 @@
         }
       },
       "indexes": {
-        "service_id_idx": {
-          "name": "service_id_idx",
+        "client_service_id_idx": {
+          "name": "client_service_id_idx",
           "columns": [
             {
-              "expression": "service_id",
+              "expression": "client_service_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -380,21 +488,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "type": {
           "name": "type",
           "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "client_id": {
-          "name": "client_id",
-          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -428,41 +524,11 @@
         }
       },
       "indexes": {
-        "type_idx": {
-          "name": "type_idx",
+        "services_type_idx": {
+          "name": "services_type_idx",
           "columns": [
             {
               "expression": "type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "title_idx": {
-          "name": "title_idx",
-          "columns": [
-            {
-              "expression": "title",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "client_id_idx": {
-          "name": "client_id_idx",
-          "columns": [
-            {
-              "expression": "client_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

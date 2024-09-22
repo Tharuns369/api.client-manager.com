@@ -12,7 +12,7 @@ export class ServicesController {
         try {
             const clientData = await c.req.json();
             const validatedData = await validate(serviceValidationSchema, clientData);
-            const newClient = await clientsServicesDataServiceProvider.insertClient(clientData);
+            const newClient = await clientsServicesDataServiceProvider.insertService(clientData);
             return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newClient);
         }
         catch (error) {

@@ -20,7 +20,7 @@ export class ServicesController {
 
             const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, clientData);
 
-            const newClient = await clientsServicesDataServiceProvider.insertClient(clientData);
+            const newClient = await clientsServicesDataServiceProvider.insertService(clientData);
 
             return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newClient); 
         }catch (error) {
@@ -127,5 +127,17 @@ export class ServicesController {
        throw error
     }
   }
+
+//   async servicesWiseInvoiceCount(){
+//     try {
+//         const  clientsAmountCount = await clientsServicesDataServiceProvider.allInvoicesCount();
+        
+//         return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
+          
+//       } catch (error) {
+//         console.log(error)
+//         throw error
+//       }
+//    }
 
 }

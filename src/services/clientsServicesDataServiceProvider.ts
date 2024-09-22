@@ -4,6 +4,7 @@ import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "
 import { ClientService, clientServices } from "../schemas/clientServices";
 import { insertRecord } from "../db/abstractions";
 import { Service, services } from "../schemas/services";
+import { invoices } from "../schemas/invoices";
 
 export class ClientsServicesDataServiceProvider {
   async getTotalServicesCount() {
@@ -32,9 +33,9 @@ export class ClientsServicesDataServiceProvider {
 
   }
 
-  async insertClient(serviceData:Service) {
-    const insertedClient = await insertRecord<Service>(services,serviceData );
-    return insertedClient;
+  async insertService(serviceData:Service) {
+    // const insertedClient = await insertRecord<Service>(services,serviceData );
+    // return insertedClient;
   }
 
 
@@ -55,4 +56,8 @@ export class ClientsServicesDataServiceProvider {
   async editService(id: number, body: ClientService) {
     return await updateRecordById(clientServices, id, body);
   }
+
+  // async allInvoicesCount(){
+  //   return await db.select({:invoices.id,totalInvoiceAmount: invoices.client_service_id}).from(invoices);    
+  // }
 }

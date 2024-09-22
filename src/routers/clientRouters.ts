@@ -17,7 +17,7 @@ clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsCo
 // clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 clientsRouter.get('/:id/services', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseServices);
 clientsRouter.get('/:id/invoices', authMiddleware.checkAndValidateAuthToken, clientsController.getClientWiseInvoices);
-clientsRouter.get ('/invoice-amount',authMiddleware.checkAndValidateAuthToken,clientsController.getClientsWiseInvoiceAmountCount);
+clientsRouter.get ('/invoice/amount',authMiddleware.checkAndValidateAuthToken,clientsController.getClientsWiseInvoiceAmountCount);
 
 // clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 

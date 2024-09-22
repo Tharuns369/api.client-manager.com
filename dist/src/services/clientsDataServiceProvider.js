@@ -44,6 +44,12 @@ export class ClientsDataServiceProvider {
         const userRecord = await getRecordByColumnValue(clients, 'email', email);
         return userRecord;
     }
+    async allClientsInvoiceAmountCount() {
+        const clientsAmountCount = await db.select({ name: clients.name, totalInvoiceAmount: clients.total_invoice_amount })
+            .from(clients);
+        console.log("clientsAmountCount", clientsAmountCount);
+        return clientsAmountCount;
+    }
     async getClientsWiseServices(clientId) {
         const result = await db.query.clients.findMany({
             where: (clients, { eq }) => (eq(clients.id, clientId)),

@@ -162,10 +162,8 @@ export class ClientsController {
 
   async getClientsWiseInvoiceAmountCount(c:Context){
     try {
-      console.log("try");
       
       const  clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
-      console.log("clientsAmountCount",clientsAmountCount);
       
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
         
