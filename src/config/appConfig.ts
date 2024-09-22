@@ -17,9 +17,16 @@ export const ConfigData: Config = {
   },
   JWT: {
     token_secret: "DRXqa9r4UsjO5F0wMybN2BdTiKGmzAoLs82jjj#wsjld",
-    token_life: 86400000, 
+    token_life: 86400000,
     refresh_token_secret: "wXyjKsdjlj#12ZpuoDsmg1MLP8CaHkfO2bUhrF6W",
-    refresh_token_life: 172800000, 
+    refresh_token_life: 172800000,
+  },
+  S3: {
+    access_key_id: process.env.AWS_S3_ACCESS_KEY_ID!,
+    secret_access_key: process.env.AWS_S3_SECRET_ACCESS_KEY!,
+    s3_bucket: process.env.AWS_S3_BUCKET!,
+    bucket_region: process.env.AWS_S3_BUCKET_REGION!,
+
   }
 
 };

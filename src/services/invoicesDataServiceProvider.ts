@@ -1,11 +1,13 @@
 import { sql } from "drizzle-orm";
-import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, insertRecords, updateRecordById } from "../db/abstractions";
 import { db } from "../db/index";
 import { Invoice, invoices } from "../schemas/invoices";
+import { InvoiceFile, invoiceFiles } from "../schemas/invoicefiles";
+import { InvoiceFileValidationInput } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
 
 
 export class InvoicesDataServiceProvider {
- 
+
   async getTotalInvoicesAmount() {
     const result = await db
       .select({
@@ -25,31 +27,37 @@ export class InvoicesDataServiceProvider {
     return { services: [{ id: 1, totalAmount: 1500 }, { id: 2, totalAmount: 3500 }] };
   }
 
-  async getInvoices(limit: number, skip: number, sortString: string) {
 
-    const rawQuery = sql`
-        SELECT *
-        FROM invoices
-        ORDER BY ${sql.raw(sortString)} 
-        LIMIT ${limit}
-        OFFSET ${skip}
-    `;
-    const result = await db.execute(rawQuery);
-    return result.rows;
+  async getInvoices({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
+    const query = db.select().from(invoices);
+    if (filters) {
+      query.where(sql`${sql.raw(filters)}`);
+    }
+    if (sort) {
+      query.orderBy(sql`${sql.raw(sort)}`);
+    }
+    query.limit(limit).offset(skip);
+    const data = await query.execute();
+    return data;
   }
 
-  async getInvoiceCount() {
-    const result = await db.select({ count: sql<number>`COUNT(*)` })
-      .from(invoices);
-    return result[0].count;
+  async getInvoiceCount(filters?: string) {
+    const query = db.select({ count: sql<number>`COUNT(*)` }).from(invoices);
+    if (filters) {
+      query.where(sql`${sql.raw(filters)}`);
+    }
+    const data = await query.execute();
+    return data[0].count;
   }
+
+
 
   async viewInvoice(id: string) {
     return { invoice: { id, amount: 1000 } };
   }
 
-  async uploadInvoice() {
-    return { message: 'Invoice uploaded successfully' };
+  async addInvoiceFile(invoiceFileData: any) {
+    return await insertRecord<InvoiceFile>(invoiceFiles, invoiceFileData);
   }
 
   async getInvoice(id: number) {
@@ -58,8 +66,8 @@ export class InvoicesDataServiceProvider {
     return userData;
   }
 
-  async insertInvoice(invoiceData:Invoice ) {
-    const insertedClient = await insertRecord<Invoice>(invoices,invoiceData );
+  async insertInvoice(invoiceData: Invoice) {
+    const insertedClient = await insertRecords<Invoice[]>(invoices, invoiceData);
     return insertedClient;
   }
 

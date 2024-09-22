@@ -21,7 +21,7 @@ export const insertRecord = async <R extends DbRecord>(table: DbTable, record: N
 };
 
 
-export const updateRecordById= async (
+export const updateRecordById = async (
     table: DbTable,
     id: number,
     updateData: NewDbRecord
@@ -32,6 +32,12 @@ export const updateRecordById= async (
         .returning();
 
     return respData[0];
+};
+
+export const insertRecords = async <R extends DbRecord[]>(table: DbTable, record: NewDbRecord) => {
+    const respData = await db.insert(table).values(record).returning(); 3;
+    return respData as R;
+
 };
 
 

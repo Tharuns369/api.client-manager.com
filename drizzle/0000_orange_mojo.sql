@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS "client_services" (
 CREATE TABLE IF NOT EXISTS "invoice_files" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"client_id" integer NOT NULL,
+	"invoice_id" integer NOT NULL,
 	"file_name" varchar NOT NULL,
 	"key" varchar NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
@@ -63,7 +64,8 @@ CREATE TABLE IF NOT EXISTS "invoice_files" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "invoices" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"client_service_id" integer NOT NULL,
+	"name" text,
+	"service_id" integer NOT NULL,
 	"client_id" integer NOT NULL,
 	"invoice_status" "invoice_status" DEFAULT 'PENDING',
 	"remarks" text,
@@ -105,7 +107,7 @@ CREATE INDEX IF NOT EXISTS "client_id_idx" ON "client_services" USING btree ("cl
 CREATE INDEX IF NOT EXISTS "client_services_status_idx" ON "client_services" USING btree ("status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "key_idx" ON "invoice_files" USING btree ("key");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "invoice_files_client_id_idx" ON "invoice_files" USING btree ("client_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_service_id_idx" ON "invoices" USING btree ("client_service_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_invoice_id_idx" ON "invoices" USING btree ("client_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "invoice_status_idx" ON "invoices" USING btree ("invoice_status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "services_type_idx" ON "services" USING btree ("type");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "services_status_idx" ON "services" USING btree ("status");--> statement-breakpoint

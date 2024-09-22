@@ -17,3 +17,8 @@ export const updateRecordById = async (table, id, updateData) => {
         .returning();
     return respData[0];
 };
+export const insertRecords = async (table, record) => {
+    const respData = await db.insert(table).values(record).returning();
+    3;
+    return respData;
+};
