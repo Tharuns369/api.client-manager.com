@@ -1,8 +1,6 @@
 import { db } from ".";
 import { DbRecord, DbTable, NewDbRecord } from "../utils/types";
-
-import { count, eq, getTableName, sql } from "drizzle-orm";
-
+import { eq, getTableName, sql } from "drizzle-orm";
 
 export const getRecordByColumnValue = async <R extends DbRecord>(
     table: DbTable,
@@ -14,14 +12,15 @@ export const getRecordByColumnValue = async <R extends DbRecord>(
     return respData[0] as R;
 };
 
-export const insertRecord = async <R extends DbRecord>(table: DbTable, record: NewDbRecord) => {
-    const respData = await db.insert(table).values(record).returning(); 3;
+export const insertRecord = async <R extends DbRecord>(
+    table: DbTable,
+    record: NewDbRecord
+) => {
+    const respData = await db.insert(table).values(record).returning();
     return respData[0] as R;
-
 };
 
-
-export const updateRecordById= async (
+export const updateRecordById = async (
     table: DbTable,
     id: number,
     updateData: NewDbRecord
@@ -30,8 +29,18 @@ export const updateRecordById= async (
         .set(updateData)
         .where(eq(table.id, id))
         .returning();
-
     return respData[0];
 };
 
+export const getAllRecords = async <R extends DbRecord>(table: DbTable) => {
+    const respData = await db.select().from(table).execute();
+    return respData as R[];
+};
 
+export const deleteRecordById = async (table: DbTable,id: number
+) => {
+    const respData = await db.delete(table)
+        .where(eq(table.id, id))
+        .returning();
+    return respData[0];
+};

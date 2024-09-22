@@ -18,7 +18,7 @@ app.route('/' + ConfigData.VERSION + '/users', userRoutes);
 app.route('/' + ConfigData.VERSION + '/clients', clientsRouter);
 app.route('/' + ConfigData.VERSION + '/services', servicesRouter);
 app.route('/' + ConfigData.VERSION + '/invoices', invoicesRouter);
-app.route('/' + ConfigData.VERSION + '/clients/:id/services', clientServicesRouter);
+app.route('/' + ConfigData.VERSION + '/clients/services', clientServicesRouter);
 
 
 

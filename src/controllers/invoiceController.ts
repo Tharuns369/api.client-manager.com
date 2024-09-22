@@ -72,11 +72,11 @@ export class InvoiceController {
 
             const validatedData: InvoiceValidationInput = await validate(invoiceValidationSchema, invoiceData);
 
-            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.service_id);
+            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.client_id);
 
-            if (existingInvoice) {
-                throw new ResourceAlreadyExistsException("service_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
-            }
+            // if (existingInvoice) {
+            //     throw new ResourceAlreadyExistsException("client_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
+            // }
 
             const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
 

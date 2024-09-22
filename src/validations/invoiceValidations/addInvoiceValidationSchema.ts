@@ -7,7 +7,7 @@ export enum invoiceStatusEnum {
 }
 
 export const invoiceValidationSchema = v.object({
-  service_id: v.pipe(
+  client_id: v.pipe(
     v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
     v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
   ),

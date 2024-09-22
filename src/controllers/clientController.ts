@@ -13,6 +13,7 @@ import { FilterHelper } from '../helpers/filterHelper';
 
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 const filterHelper = new FilterHelper();
+
 export class ClientsController {
 
   async addClient(c: Context) {
@@ -158,12 +159,8 @@ export class ClientsController {
 
 
   async getClientsWiseInvoiceAmountCount(c: Context) {
-    try {
-      console.log("try");
-
-      const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
-      console.log("clientsAmountCount", clientsAmountCount);
-
+    try {      
+      const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();     
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
 
     } catch (error) {
@@ -214,6 +211,18 @@ export class ClientsController {
 
     }
     catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+
+  async exportClientsAsJson(c: Context) {
+    try {
+      const clients = await clientsDataServiceProvider.getAllClients();
+
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
+    } catch (error) {
       console.log(error);
       throw error;
     }
