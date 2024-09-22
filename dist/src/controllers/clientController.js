@@ -30,7 +30,8 @@ export class ClientsController {
     }
     async getTotalClients(c) {
         try {
-            const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
+            const filters = await filterHelper.clients(c.req.query());
+            const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);
             if (!totalClientCount) {
                 return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
             }

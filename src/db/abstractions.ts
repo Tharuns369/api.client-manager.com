@@ -35,9 +35,3 @@ export const updateRecordById= async (
 };
 
 
-export const getTotalRecordsCount = async (
-    table: DbTable,
-) => {
-    const respData = await db.select({ count: count() }).from(table);;
-    return respData;
-};

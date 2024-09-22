@@ -1,6 +1,6 @@
 import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, getTotalRecordsCount, insertRecord, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
 import { clientServices } from "../schemas/clientServices";
@@ -11,11 +11,6 @@ import { services } from "../schemas/services";
 
 export class ClientsDataServiceProvider {
 
-  async getTotalClientsCount() {
-    const clientsCount = await getTotalRecordsCount(clients);
-
-    return clientsCount[0]?.count || 0;
-  }
 
   async getClientsWithPagenation({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
     const query = db.select().from(clients);
@@ -38,7 +33,6 @@ export class ClientsDataServiceProvider {
     const data = await query.execute();
     return data[0].count;
   }
-
 
 
   async getClientById(id: number) {

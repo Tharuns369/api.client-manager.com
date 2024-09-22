@@ -20,4 +20,25 @@ export class FilterHelper {
         }
         return queryString;
     }
+    services(query) {
+        let filter = [];
+        const { from_date: fromDate, to_date: toDate, status: status, search_string: searchString, } = query;
+        if (fromDate && toDate) {
+            filter.push(`created_at BETWEEN '${fromDate}' AND '${toDate}'`);
+        }
+        if (searchString) {
+            filter.push(`type ILIKE '%${searchString}%'`);
+        }
+        if (!status) {
+            filter.push(`status = 'ACTIVE'`);
+        }
+        else {
+            filter.push(`status = ${status}`);
+        }
+        let queryString;
+        if (filter.length > 0) {
+            queryString = filter.join("AND ");
+        }
+        return queryString;
+    }
 }

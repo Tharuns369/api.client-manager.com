@@ -3,6 +3,7 @@ import { InvoiceFile, InvoiceFileTable, NewInvoiceFile } from "../schemas/invoic
 import { Invoice, InvoiceTable, NewInvoice } from "../schemas/invoices";
 import { NewClientService, ClientService, ClientServiceTable } from "../schemas/clientServices";
 import { NewUser, User, UserTable } from "../schemas/users";
+import { NewService, Service, ServiceTable } from "../schemas/services";
 
 interface DbConfig {
     host: string;
@@ -26,6 +27,6 @@ export interface Config {
     JWT: Jwt;
 }
 
-export type DbTable = UserTable | ClientTable | ClientServiceTable | InvoiceTable | InvoiceFileTable;
-export type NewDbRecord = NewUser | NewClient | NewClientService | NewInvoice | NewInvoiceFile;
-export type DbRecord = User | Client | ClientService | Invoice | InvoiceFile;
+export type DbTable = UserTable | ClientTable | ClientServiceTable | InvoiceTable | InvoiceFileTable | ServiceTable;
+export type NewDbRecord = NewUser | NewClient | NewClientService | NewInvoice | NewInvoiceFile | NewService;
+export type DbRecord = User | Client | ClientService | Invoice | InvoiceFile | Service;

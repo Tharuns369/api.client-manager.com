@@ -61,7 +61,9 @@ export class InvoiceController {
     }
 
     async uploadInvoice(c: Context) {
-        return c.json({ message: "Invoice uploaded successfully" });
+
+        
+
     }
 
     async addInvoice(c: Context) {

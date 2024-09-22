@@ -50,7 +50,6 @@ export class InvoiceController {
         return c.json({ message: "Invoice details fetched", invoice: { id: 1, amount: 200 } });
     }
     async uploadInvoice(c) {
-        return c.json({ message: "Invoice uploaded successfully" });
     }
     async addInvoice(c) {
         try {
