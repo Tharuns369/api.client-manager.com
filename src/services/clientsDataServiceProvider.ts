@@ -1,6 +1,6 @@
 import { and, between, eq, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
+import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
 import { clientServices } from "../schemas/clientServices";
@@ -23,6 +23,11 @@ export class ClientsDataServiceProvider {
     query.limit(limit).offset(skip);
     const data = await query.execute();
     return data;
+  }
+
+  async getAllClients(){
+    const allClientServices = await getAllRecords(clients);
+    return allClientServices;
   }
 
   async getclientsCount(filters?: string) {

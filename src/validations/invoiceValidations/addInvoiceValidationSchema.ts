@@ -27,19 +27,18 @@ export const invoiceItemValidationSchema = v.object({
   invoice_date: v.pipe(
     v.string(INVOICE_VALIDATION_MESSAGES.INVOICE_DATE_REQUIRED),
     v.transform((dateStr) => new Date(dateStr)),
-    v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) // Ensure it's a valid date
+    v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) 
   ),
   payment_date: v.optional(
     v.pipe(
       v.string(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE),
       v.transform((dateStr) => new Date(dateStr)),
-      v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) // Add this validation to ensure it's a valid date
+      v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) 
     )
   ),
   invoice_amount: v.number(INVOICE_VALIDATION_MESSAGES.INVOICE_AMOUNT_REQUIRED)
 });
 
-// Wrap the individual item schema in an array validator
 export const InvoiceValidationSchema = v.array(invoiceItemValidationSchema);
 
 export type InvoiceValidationInput = v.InferInput<typeof InvoiceValidationSchema>;

@@ -29,7 +29,8 @@ const CLIENT_MESSAGES = {
     CLIENT_BASED_SERVICES_FETCH_SUCCESS: "Client based services fetched successfully.",
     CLIENT_BASED_INVOICES_FETCH_SUCCESS: "Client based invoices fetched successfully.",
     CLIENT_ADDED_SUCCESS: "Client added successfully",
-    CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists"
+    CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists",
+    CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully"
 
 };
 
@@ -165,9 +166,33 @@ const SERVICE_VALIDATION_MESSAGES = {
     INVALID_INVOICE_AMOUNT: "Invoice amount must be a valid number with up to two decimal places.",
 };
 
+const CLIENT_SERVICES_MESSAGES = {
+    FETCH_SUCCESS: "Client services fetched successfully.",
+    FETCH_BY_ID_SUCCESS: (id: number) => `Client service with ID ${id} fetched successfully.`,
+    DELETE_SUCCESS: (id: number) => `Client service with ID ${id} deleted successfully.`,
+    ID_NOT_FOUND: (id: number) => `Client service with ID ${id} not found.`,
+    INVALID_ID: "Invalid client service ID.",
+    ADD_SUCCESS: "Client service added successfully.",
+
+};
+
+
+const CLIENT_SERVICES_VALIDATION_MESSAGES = {
+    CLIENT_ID_REQUIRED: 'Client ID is required.',
+    CLIENT_ID_INVALID: 'Client ID must be a valid integer.',
+    SERVICE_ID_REQUIRED: 'Service ID is required.',
+    SERVICE_ID_INVALID: 'Service ID must be a valid integer.',
+    TITLE_REQUIRED: 'Title is required.',
+    TITLE_INVALID: 'Title must be a non-empty string.',
+    STATUS_INVALID: 'Status must be either ACTIVE or INACTIVE.',
+    INVOICE_AMOUNT_REQUIRED: 'Invoice amount is required.',
+    INVOICE_AMOUNT_INVALID: 'Invoice amount must be a valid number.',
+};
+
+
+
 
 export {
     VALIDATION_MESSAGES, USER_MESSAGES, COMMON_VALIDATIONS, CLIENT_MESSAGES, INVOICES_MESSAGES, SERVICES_MESSAGES, CLIENT_VALIDATION_MESSAGES,
-    INVOICE_VALIDATION_MESSAGES, SERVICE_VALIDATION_MESSAGES,
-    INVOICE_FILES_VALIDATION_MESSAGES
+    INVOICE_VALIDATION_MESSAGES, SERVICE_VALIDATION_MESSAGES, CLIENT_SERVICES_MESSAGES, CLIENT_SERVICES_VALIDATION_MESSAGES, INVOICE_FILES_VALIDATION_MESSAGES
 };

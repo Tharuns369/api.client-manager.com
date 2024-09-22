@@ -119,9 +119,7 @@ export class ClientsController {
     }
     async getClientsWiseInvoiceAmountCount(c) {
         try {
-            console.log("try");
             const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
-            console.log("clientsAmountCount", clientsAmountCount);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
         }
         catch (error) {
@@ -154,6 +152,16 @@ export class ClientsController {
             }
             const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseInvoices(clientId, query.from_date, query.to_date, invoiceStatus);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_INVOICES_FETCH_SUCCESS, clientsWiseServicesData);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    async exportClientsAsJson(c) {
+        try {
+            const clients = await clientsDataServiceProvider.getAllClients();
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
         }
         catch (error) {
             console.log(error);

@@ -1,6 +1,6 @@
 import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
-import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
+import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
 import { clientServices } from "../schemas/clientServices";
 import { services } from "../schemas/services";
@@ -16,6 +16,10 @@ export class ClientsDataServiceProvider {
         query.limit(limit).offset(skip);
         const data = await query.execute();
         return data;
+    }
+    async getAllClients() {
+        const allClientServices = await getAllRecords(clients);
+        return allClientServices;
     }
     async getclientsCount(filters) {
         const query = db.select({ count: sql `COUNT(*)` }).from(clients);
