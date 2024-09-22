@@ -6,7 +6,11 @@ export enum invoiceStatusEnum {
   COMPLETED = 'COMPLETED',
 }
 
-export const invoiceValidationSchema = v.object({
+export const invoiceItemValidationSchema = v.object({
+  service_id: v.pipe(
+    v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
+    v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
+  ),
   client_id: v.pipe(
     v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
     v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
@@ -23,16 +27,18 @@ export const invoiceValidationSchema = v.object({
   invoice_date: v.pipe(
     v.string(INVOICE_VALIDATION_MESSAGES.INVOICE_DATE_REQUIRED),
     v.transform((dateStr) => new Date(dateStr)),
-    v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE)
+    v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) 
   ),
   payment_date: v.optional(
     v.pipe(
       v.string(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE),
       v.transform((dateStr) => new Date(dateStr)),
-      v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE)
+      v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE) 
     )
   ),
   invoice_amount: v.number(INVOICE_VALIDATION_MESSAGES.INVOICE_AMOUNT_REQUIRED)
 });
 
-export type InvoiceValidationInput = v.InferInput<typeof invoiceValidationSchema>;
+export const InvoiceValidationSchema = v.array(invoiceItemValidationSchema);
+
+export type InvoiceValidationInput = v.InferInput<typeof InvoiceValidationSchema>;

@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { index, numeric, pgEnum, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { clientServices } from './clientServices';
+import { invoices } from './invoices';
 export const statusEnum = pgEnum('status', ['ACTIVE', 'INACTIVE']);
 
 export const services = pgTable('services', {
@@ -18,6 +19,7 @@ export const services = pgTable('services', {
 });
 export const servicesAndClientServicesRelations = relations(services, ({ many }) => ({
     clientServices: many(clientServices),
+    invoices: many(invoices)
 }));
 
 

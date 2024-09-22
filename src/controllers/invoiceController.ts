@@ -7,15 +7,46 @@ import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
-import { InvoiceValidationInput, invoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { InvoiceValidationInput, InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { InvoiceFileValidationInput, invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { FileHelper } from "../helpers/fileHelper";
+import { S3FileService } from "../services/s3DataServiceProvider";
+import { FilterHelper } from "../helpers/filterHelper";
+
+const s3FileService = new S3FileService();
+const filterHelper = new FilterHelper();
 
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
+const fileHelper = new FileHelper();
 
 export class InvoiceController {
+
+
+    async addInvoice(c: Context) {
+        try {
+            const invoiceData = await c.req.json();
+
+            const validatedData: InvoiceValidationInput = await validate(InvoiceValidationSchema, invoiceData);
+
+            const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
+
+            return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_ADDED_SUCCESS, newInvoice);
+
+        } catch (error) {
+            console.error('Error in addInvoice:', error);
+            throw error;
+        }
+    }
+
     async getTotalInvoicesAmount(c: Context) {
         try {
-            const result = await invoicesDataServiceProvider.getTotalInvoicesAmount();
-            const amountInINR = result.totalAmount;
+
+            const query = c.req.query();
+
+            const filters = filterHelper.invoices(query);
+
+            const result = await invoicesDataServiceProvider.getInvoiceCount(filters);
+            const amountInINR = result;
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS, amountInINR);
         } catch (error) {
             throw error;
@@ -28,13 +59,14 @@ export class InvoiceController {
             const query = c.req.query();
             const page: number = parseInt(query.page || '1');
             const limit: number = parseInt(query.limit || '10');
-            const sortString: string = sortHelper.sort(query);
-
             const skip: number = (page - 1) * limit;
+            const sort: string = sortHelper.sort(query);
+
+            const filters = filterHelper.invoices(query);
 
             const [invoicesList, totalCount]: any = await Promise.all([
-                invoicesDataServiceProvider.getInvoices(limit, skip, sortString),
-                invoicesDataServiceProvider.getInvoiceCount()
+                invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort }),
+                invoicesDataServiceProvider.getInvoiceCount(filters)
             ]);
 
             if (invoicesList.length === 0) {
@@ -62,30 +94,40 @@ export class InvoiceController {
 
     async uploadInvoice(c: Context) {
 
-        
-
-    }
-
-    async addInvoice(c: Context) {
         try {
-            const invoiceData = await c.req.json();
 
-            const validatedData: InvoiceValidationInput = await validate(invoiceValidationSchema, invoiceData);
+            const inputBody = await c.req.json();
 
-            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.client_id);
+            const validatedData: InvoiceFileValidationInput = await validate(invoiceFileValidationSchema, inputBody);
 
-            // if (existingInvoice) {
-            //     throw new ResourceAlreadyExistsException("client_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
-            // }
+            const fileName = await fileHelper.fileNameHelper(validatedData.file_name);
 
-            const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
+            const slug = 'client_invoices' + '/' + validatedData.client_id;
 
-            return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_ADDED_SUCCESS, newInvoice);
+            const targetUrl = await s3FileService.generatePresignedUrl(
+                fileName,
+                'put',
+                slug
+            );
 
-        } catch (error) {
-            console.error('Error in addInvoice:', error);
+            validatedData.key = fileName;
+            await invoicesDataServiceProvider.addInvoiceFile(validatedData);
+
+            let data = {
+                key: fileName,
+                file_name: validatedData.file_name,
+                size: validatedData.size,
+                upload_url: targetUrl,
+            };
+
+            return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_UPLOADED_SUCCESS, data);
+
+        }
+        catch (error) {
+            console.log(error);
             throw error;
         }
+
     }
 
 

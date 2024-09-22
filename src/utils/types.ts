@@ -21,10 +21,19 @@ interface Jwt {
     refresh_token_life: number;
 }
 
+interface S3 {
+    access_key_id: string;
+    secret_access_key: string;
+    bucket_region: string;
+    s3_bucket: string;
+
+}
+
 export interface Config {
     VERSION: string;
     DB: DbConfig;
     JWT: Jwt;
+    S3: S3;
 }
 
 export type DbTable = UserTable | ClientTable | ClientServiceTable | InvoiceTable | InvoiceFileTable | ServiceTable;

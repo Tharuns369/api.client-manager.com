@@ -1,5 +1,5 @@
 {
-  "id": "8ef6e370-bb64-4bcb-be7e-f9f8285a0f07",
+  "id": "2bd2a866-6234-4235-a01d-faedabae07ea",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -290,6 +290,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "invoice_id": {
+          "name": "invoice_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "file_name": {
           "name": "file_name",
           "type": "varchar",
@@ -383,8 +389,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "client_service_id": {
-          "name": "client_service_id",
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "service_id": {
+          "name": "service_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -443,11 +455,11 @@
         }
       },
       "indexes": {
-        "client_service_id_idx": {
-          "name": "client_service_id_idx",
+        "client_invoice_id_idx": {
+          "name": "client_invoice_id_idx",
           "columns": [
             {
-              "expression": "client_service_id",
+              "expression": "client_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

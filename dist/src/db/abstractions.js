@@ -16,6 +16,7 @@ export const updateRecordById = async (table, id, updateData) => {
         .returning();
     return respData[0];
 };
+<<<<<<< HEAD
 export const getAllRecords = async (table) => {
     const respData = await db.select().from(table).execute();
     return respData;
@@ -26,3 +27,10 @@ export const deleteRecordById = async (table, id) => {
         .returning();
     return respData[0];
 };
+=======
+export const insertRecords = async (table, record) => {
+    const respData = await db.insert(table).values(record).returning();
+    3;
+    return respData;
+};
+>>>>>>> c08e6cb0bf71bdc0fc09d7c07dafdea819eacb1b
