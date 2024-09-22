@@ -1,78 +1,55 @@
 import { faker } from '@faker-js/faker';
-import { db } from '../db/index';
-import { invoices } from '../schemas/invoices';
-import { clientServices } from '../schemas/clientServices';
-import { eq } from 'drizzle-orm';
+import { clients } from '../schemas/clients'; 
+import { db } from '../db'; 
+async function seedClients() {
+  const clientData: {
+    name: string;
+    poc: string;
+    role: string;
+    email: string;
+    phone: string;
+    secondary_phone: string;
+    status: "ACTIVE" | "INACTIVE";
+    remarks: string;
+    bussiness_url: string;
+    address: string;
+    state: string;
+    city: string;
+    gst: boolean;
+    country: string;
+    total_invoice_amount: string; 
+    created_at: Date;
+    updated_at: Date;
+  }[] = [];
 
-const generateFakeInvoice = (serviceId: number, monthOffset: number) => {
-    const currentDate = new Date();
-    const invoiceDate = new Date(currentDate.setMonth(currentDate.getMonth() - monthOffset));
-
-    return {
-        serviceId: serviceId,
-        invoiceStatus: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
-        remarks: faker.lorem.sentence(),
-        invoiceDate: invoiceDate.toISOString(),
-        paymentDate: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }),
-        invoiceAmount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-};
-
-const generateInvoicesForService = (serviceId: number, numInvoices: number = 10) => {
-    const fakeInvoices: any[] = [];
-
-    for (let i = 0; i < numInvoices; i++) {
-        fakeInvoices.push(generateFakeInvoice(serviceId, i));
-    }
-
-    return fakeInvoices;
-};
-
-const insertInvoicesBatch = async (invoicesBatch: any) => {
-    try {
-        await db.insert(invoices).values(invoicesBatch);
-        console.log(`Inserted ${invoicesBatch.length} invoices.`);
-    } catch (error) {
-        console.error('Error inserting invoices batch:', error);
-    }
-};
-
-const insertInvoicesForClient = async (clientId: number, numInvoices: number = 10) => {
-    try {
-        const serviceRows = await db.select({
-            id: clientServices.id
-        }).from(clientServices).where(eq(clientServices.client_id, clientId));
-
-        for (const service of serviceRows) {
-            const allInvoices = generateInvoicesForService(service.id, numInvoices);
-
-            const batchSize = 1000;
-            for (let i = 0; i < allInvoices.length; i += batchSize) {
-                const invoicesBatch = allInvoices.slice(i, i + batchSize);
-                await insertInvoicesBatch(invoicesBatch);
-            }
-
-            console.log(`Processed service with ID ${service.id}`);
-        }
-    } catch (error) {
-        console.error(`Error fetching services for client ID ${clientId}:`, error);
-    }
-};
-
-const insertInvoicesForClients = async (clientIds: number[], numInvoices: number = 10) => {
-    for (const clientId of clientIds) {
-        await insertInvoicesForClient(clientId, numInvoices);
-    }
-};
-
-const clientIds = Array.from({ length: 1001 }, (_, i) => i + 1);
-const numInvoices = 10;
-insertInvoicesForClients(clientIds, numInvoices)
-    .then(() => {
-        console.log(`Successfully inserted invoices for ${clientIds.length} clients.`);
-    })
-    .catch((error) => {
-        console.error('Error inserting invoices:', error);
+  for (let i = 0; i < 1000; i++) {
+    clientData.push({
+      name: faker.company.name(),
+      poc: faker.person.fullName(),
+      role: faker.person.jobTitle(),
+      email: faker.internet.email(),
+      phone: faker.phone.number(),
+      secondary_phone: faker.phone.number(),
+      status: faker.helpers.arrayElement(['ACTIVE', 'INACTIVE']),
+      remarks: faker.lorem.sentence(),
+      bussiness_url: faker.internet.url(),
+      address: faker.location.streetAddress(),
+      state: faker.location.state(),
+      city: faker.location.city(),
+      gst: faker.datatype.boolean(),
+      country: faker.address.country(),
+      total_invoice_amount: parseFloat((Math.random() * (50000 - 1000) + 1000).toFixed(2)).toString(), 
+      created_at: new Date(),
+      updated_at: new Date(),
     });
+  }
+
+  try {
+    await db.insert(clients).values(clientData);
+    console.log('Successfully seeded 1000 clients.');
+  } catch (error) {
+    console.error('Error seeding clients:', error);
+  }
+}
+
+seedClients();

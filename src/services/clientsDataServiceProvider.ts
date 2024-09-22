@@ -69,10 +69,7 @@ export class ClientsDataServiceProvider {
   async allClientsInvoiceAmountCount(){
 
     const clientsAmountCount = await db.select({name: clients.name,totalInvoiceAmount: clients.total_invoice_amount})
-    .from(clients);
-
-    console.log("clientsAmountCount",clientsAmountCount);
-    
+    .from(clients);    
     return clientsAmountCount;
   }
 
