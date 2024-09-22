@@ -72,16 +72,6 @@ export class InvoiceController {
     }
     async uploadInvoice(c) {
         try {
-<<<<<<< HEAD
-            const invoiceData = await c.req.json();
-            const validatedData = await validate(invoiceValidationSchema, invoiceData);
-            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.client_id);
-            // if (existingInvoice) {
-            //     throw new ResourceAlreadyExistsException("client_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
-            // }
-            const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
-            return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_ADDED_SUCCESS, newInvoice);
-=======
             const inputBody = await c.req.json();
             const validatedData = await validate(invoiceFileValidationSchema, inputBody);
             const fileName = await fileHelper.fileNameHelper(validatedData.file_name);
@@ -96,7 +86,6 @@ export class InvoiceController {
                 upload_url: targetUrl,
             };
             return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_UPLOADED_SUCCESS, data);
->>>>>>> c08e6cb0bf71bdc0fc09d7c07dafdea819eacb1b
         }
         catch (error) {
             console.log(error);
