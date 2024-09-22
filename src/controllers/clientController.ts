@@ -35,8 +35,6 @@ export class ClientsController {
     }
   }
 
-
-
   async getTotalClients(c: Context) {
     try {
 
