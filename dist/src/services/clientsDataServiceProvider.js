@@ -53,7 +53,10 @@ export class ClientsDataServiceProvider {
     async allClientsInvoiceAmountCount() {
         const clientsAmountCount = await db.select({ name: clients.name, totalInvoiceAmount: clients.total_invoice_amount })
             .from(clients);
+<<<<<<< HEAD
         console.log("clientsAmountCount", clientsAmountCount);
+=======
+>>>>>>> features/seed
         return clientsAmountCount;
     }
     async getClientsWiseServices(clientId) {

@@ -28,6 +28,26 @@ export class ClientsController {
             throw error;
         }
     }
+<<<<<<< HEAD
+=======
+    async getClient(c) {
+        try {
+            const id = +c.req.param('id');
+            if (isNaN(id)) {
+                throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+            }
+            const client = await clientsDataServiceProvider.getClient(id);
+            if (!client) {
+                return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+            }
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+>>>>>>> features/seed
     async getTotalClients(c) {
         try {
             const totalClientCount = await clientsDataServiceProvider.getTotalClientsCount();
@@ -66,17 +86,23 @@ export class ClientsController {
             throw error;
         }
     }
-    async getClient(c) {
+    async updateClient(c) {
         try {
             const id = +c.req.param('id');
+<<<<<<< HEAD
             if (isNaN(id)) {
                 throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
             }
             const client = await clientsDataServiceProvider.getClientById(id);
+=======
+            const body = await c.req.json();
+            const client = await clientsDataServiceProvider.getClient(id);
+>>>>>>> features/seed
             if (!client) {
-                return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
-            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
+            await clientsDataServiceProvider.editClient(id, body);
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
         }
         catch (error) {
             throw error;
@@ -100,8 +126,9 @@ export class ClientsController {
             throw error;
         }
     }
-    async updateClient(c) {
+    async getClientsWiseInvoiceAmountCount(c) {
         try {
+<<<<<<< HEAD
             const id = +c.req.param('id');
             const body = await c.req.json();
             const client = await clientsDataServiceProvider.getClientById(id);
@@ -110,6 +137,10 @@ export class ClientsController {
             }
             await clientsDataServiceProvider.editClient(id, body);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
+=======
+            const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
+>>>>>>> features/seed
         }
         catch (error) {
             console.log(error);

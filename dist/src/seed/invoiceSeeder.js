@@ -1,35 +1,26 @@
 import { faker } from '@faker-js/faker';
-import { db } from '../db/index';
-import { invoices } from '../schemas/invoices';
+import { db } from '../db';
 import { clientServices } from '../schemas/clientServices';
-import { eq } from 'drizzle-orm';
-const generateFakeInvoice = (serviceId, clientId, monthOffset) => {
-    const currentDate = new Date();
-    const invoiceDate = new Date(currentDate.setMonth(currentDate.getMonth() - monthOffset));
-    return {
-        service_id: serviceId,
-        client_id: clientId,
-        invoice_status: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
-        remarks: faker.lorem.sentence(),
-        invoice_date: invoiceDate.toISOString(),
-        payment_date: faker.helpers.maybe(() => faker.date.past().toISOString(), { probability: 0.5 }),
-        invoice_amount: faker.number.int({ min: 1000, max: 50000 }).toFixed(2),
-        created_at: new Date(),
-        updated_at: new Date(),
-    };
-};
-const generateInvoicesForService = (serviceId, clientId, numInvoices = 10) => {
-    const fakeInvoices = [];
-    for (let i = 0; i < numInvoices; i++) {
-        fakeInvoices.push(generateFakeInvoice(serviceId, clientId, i));
+import { invoices } from '../schemas/invoices';
+function getPastMonthDate(monthsAgo) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - monthsAgo);
+    return date.toISOString().split('T')[0];
+}
+function chunkArray(array, chunkSize) {
+    const result = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        result.push(array.slice(i, i + chunkSize));
     }
-    return fakeInvoices;
-};
-const insertInvoicesBatch = async (invoicesBatch) => {
-    try {
-        await db.insert(invoices).values(invoicesBatch);
-        console.log(`Inserted ${invoicesBatch.length} invoices.`);
+    return result;
+}
+async function seedInvoices() {
+    const existingClientServices = await db.select().from(clientServices);
+    if (existingClientServices.length === 0) {
+        console.log('No client services found. Seeder aborted.');
+        return;
     }
+<<<<<<< HEAD
     catch (error) {
         console.error('Error inserting invoices batch:', error);
     }
@@ -47,23 +38,35 @@ const insertInvoicesForClient = async (clientId, numInvoices = 10) => {
                 await insertInvoicesBatch(invoicesBatch);
             }
             console.log(`Processed service with ID ${service.id} for client ID ${clientId}`);
+=======
+    const invoicesData = [];
+    existingClientServices.forEach(clientService => {
+        for (let monthsAgo = 1; monthsAgo <= 5; monthsAgo++) {
+            invoicesData.push({
+                client_service_id: clientService.id,
+                client_id: clientService.client_id,
+                invoice_status: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
+                remarks: faker.lorem.sentence(),
+                invoice_date: getPastMonthDate(monthsAgo),
+                payment_date: getPastMonthDate(monthsAgo),
+                invoice_amount: parseFloat((Math.random() * (5000 - 100) + 100).toFixed(2)).toString(),
+                created_at: new Date(),
+                updated_at: new Date(),
+            });
+        }
+    });
+    const batchSize = 1000;
+    const batchedInvoices = chunkArray(invoicesData, batchSize);
+    for (let i = 0; i < batchedInvoices.length; i++) {
+        try {
+            await db.insert(invoices).values(batchedInvoices[i]);
+            console.log(`Batch ${i + 1}: Seeded ${batchedInvoices[i].length} invoices.`);
+        }
+        catch (error) {
+            console.error(`Error seeding batch ${i + 1}:`, error);
+>>>>>>> features/seed
         }
     }
-    catch (error) {
-        console.error(`Error fetching services for client ID ${clientId}:`, error);
-    }
-};
-const insertInvoicesForClients = async (clientIds, numInvoices = 10) => {
-    for (const clientId of clientIds) {
-        await insertInvoicesForClient(clientId, numInvoices);
-    }
-};
-const clientIds = Array.from({ length: 1001 }, (_, i) => i + 1);
-const numInvoices = 10;
-insertInvoicesForClients(clientIds, numInvoices)
-    .then(() => {
-    console.log(`Successfully inserted invoices for ${clientIds.length} clients.`);
-})
-    .catch((error) => {
-    console.error('Error inserting invoices:', error);
-});
+    console.log(`Successfully seeded ${invoicesData.length} invoices.`);
+}
+seedInvoices();

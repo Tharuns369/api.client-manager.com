@@ -124,4 +124,16 @@ export class ServicesController {
     }
   }
 
+//   async servicesWiseInvoiceCount(){
+//     try {
+//         const  clientsAmountCount = await clientsServicesDataServiceProvider.allInvoicesCount();
+        
+//         return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
+          
+//       } catch (error) {
+//         console.log(error)
+//         throw error
+//       }
+//    }
+
 }

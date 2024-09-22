@@ -23,10 +23,17 @@ export class ClientsServicesDataServiceProvider {
             .from(clientServices);
         return result[0].count;
     }
+<<<<<<< HEAD
     // async insertClient(serviceData:Service) {
     //   const insertedClient = await insertRecord<Service>(services,serviceData );
     //   return insertedClient;
     // }
+=======
+    async insertService(serviceData) {
+        // const insertedClient = await insertRecord<Service>(services,serviceData );
+        // return insertedClient;
+    }
+>>>>>>> features/seed
     async deleteService(id) {
         const result = await db
             .delete(clientServices)

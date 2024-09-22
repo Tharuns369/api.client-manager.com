@@ -13,6 +13,10 @@ clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsCo
 // clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 clientsRouter.get('/:id/services', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseServices);
 clientsRouter.get('/:id/invoices', authMiddleware.checkAndValidateAuthToken, clientsController.getClientWiseInvoices);
+<<<<<<< HEAD
 clientsRouter.get('/invoice-amount', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseInvoiceAmountCount);
+=======
+clientsRouter.get('/invoice/amount', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseInvoiceAmountCount);
+>>>>>>> features/seed
 // clientsRouter.get('/export', authMiddleware.checkAndValidateAuthToken, clientsController.exportClients);
 export default clientsRouter;

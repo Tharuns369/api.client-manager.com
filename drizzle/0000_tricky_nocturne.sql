@@ -38,6 +38,17 @@ CREATE TABLE IF NOT EXISTS "clients" (
 	CONSTRAINT "clients_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "client_services" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title" varchar,
+	"client_id" integer NOT NULL,
+	"service_id" integer NOT NULL,
+	"status" "status" DEFAULT 'ACTIVE',
+	"invoice_amount" numeric(100, 2),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "invoice_files" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"client_id" integer NOT NULL,
@@ -52,7 +63,7 @@ CREATE TABLE IF NOT EXISTS "invoice_files" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "invoices" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"service_id" integer NOT NULL,
+	"client_service_id" integer NOT NULL,
 	"client_id" integer NOT NULL,
 	"invoice_status" "invoice_status" DEFAULT 'PENDING',
 	"remarks" text,
@@ -65,9 +76,7 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "services" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"title" varchar NOT NULL,
 	"type" varchar NOT NULL,
-	"client_id" integer NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
 	"invoice_amount" numeric(100, 2),
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -91,13 +100,14 @@ CREATE TABLE IF NOT EXISTS "users" (
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "name_idx" ON "clients" USING btree ("name");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "client_status_idx" ON "clients" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "title_idx" ON "client_services" USING btree ("title");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_id_idx" ON "client_services" USING btree ("client_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_services_status_idx" ON "client_services" USING btree ("status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "key_idx" ON "invoice_files" USING btree ("key");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "invoice_files_client_id_idx" ON "invoice_files" USING btree ("client_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "service_id_idx" ON "invoices" USING btree ("service_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_service_id_idx" ON "invoices" USING btree ("client_service_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "invoice_status_idx" ON "invoices" USING btree ("invoice_status");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "type_idx" ON "services" USING btree ("type");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "title_idx" ON "services" USING btree ("title");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_id_idx" ON "services" USING btree ("client_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "services_type_idx" ON "services" USING btree ("type");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "services_status_idx" ON "services" USING btree ("status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "email_idx" ON "users" USING btree ("email");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_type_idx" ON "users" USING btree ("user_type");

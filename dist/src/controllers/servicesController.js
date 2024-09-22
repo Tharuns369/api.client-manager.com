@@ -6,6 +6,7 @@ import { ResponseHelper } from '../helpers/responseHelper';
 import { NotFoundException } from '../exceptions/notFoundException';
 const clientsServicesDataServiceProvider = new ClientsServicesDataServiceProvider();
 export class ServicesController {
+<<<<<<< HEAD
     // async addService(c: Context) {
     //     try {
     //         const clientData = await c.req.json();
@@ -17,6 +18,20 @@ export class ServicesController {
     //         throw error
     //     }
     // }
+=======
+    async addService(c) {
+        try {
+            const clientData = await c.req.json();
+            const validatedData = await validate(serviceValidationSchema, clientData);
+            const newClient = await clientsServicesDataServiceProvider.insertService(clientData);
+            return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newClient);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+>>>>>>> features/seed
     async getTotalServices(c) {
         try {
             const totalClientCount = await clientsServicesDataServiceProvider.getTotalServicesCount();

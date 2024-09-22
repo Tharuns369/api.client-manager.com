@@ -4,6 +4,7 @@ import { getRecordByColumnValue, getTotalRecordsCount, updateRecordById } from "
 import { ClientService, clientServices } from "../schemas/clientServices";
 import { insertRecord } from "../db/abstractions";
 import { Service, services } from "../schemas/services";
+import { invoices } from "../schemas/invoices";
 
 export class ClientsServicesDataServiceProvider {
   async getTotalServicesCount() {
@@ -55,4 +56,8 @@ export class ClientsServicesDataServiceProvider {
   async editService(id: number, body: ClientService) {
     return await updateRecordById(clientServices, id, body);
   }
+
+  // async allInvoicesCount(){
+  //   return await db.select({:invoices.id,totalInvoiceAmount: invoices.client_service_id}).from(invoices);    
+  // }
 }
