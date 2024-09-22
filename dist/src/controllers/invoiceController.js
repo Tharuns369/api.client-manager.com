@@ -1,6 +1,5 @@
 import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
-import { ResourceAlreadyExistsException } from "../exceptions/resourceAlreadyExistsException";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
@@ -55,10 +54,10 @@ export class InvoiceController {
         try {
             const invoiceData = await c.req.json();
             const validatedData = await validate(invoiceValidationSchema, invoiceData);
-            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.service_id);
-            if (existingInvoice) {
-                throw new ResourceAlreadyExistsException("service_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
-            }
+            const existingInvoice = await invoicesDataServiceProvider.getInvoice(validatedData.client_id);
+            // if (existingInvoice) {
+            //     throw new ResourceAlreadyExistsException("client_id", INVOICE_VALIDATION_MESSAGES.INVOICE_ALREADY_EXISTS);
+            // }
             const newInvoice = await invoicesDataServiceProvider.insertInvoice(invoiceData);
             return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_ADDED_SUCCESS, newInvoice);
         }
