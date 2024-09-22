@@ -84,4 +84,14 @@ export class ClientsDataServiceProvider {
         });
         return result;
     }
+    async updateInvoiceAmountByClientIds(data) {
+        const clientId = data[0].client_id; // Assuming all client IDs are the same
+        const totalInvoiceAmount = data.reduce((sum, input) => sum + parseFloat(input.invoice_amount.toString()), 0);
+        return await db.update(clients)
+            .set({
+            total_invoice_amount: sql `${clients.total_invoice_amount} + ${totalInvoiceAmount}::numeric`,
+            updated_at: new Date()
+        })
+            .where(eq(clients.id, clientId));
+    }
 }

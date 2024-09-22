@@ -85,18 +85,16 @@ export class FilterHelper {
     }
 
     if (searchString) {
-      filter.push(`type ILIKE '%${searchString}%'`);
+      filter.push(`name ILIKE '%${searchString}%'`);
     }
 
-    if (clientId)
-    {
+    if (clientId) {
       filter.push(`client_id = ${clientId}`);
     }
 
-    if (!status) {
-      filter.push(`status = 'ACTIVE'`);
-    } else {
-      filter.push(`status = ${status}`);
+    if (status) {
+      filter.push(`invoice_status = ${status}`);
+
     }
 
     let queryString;

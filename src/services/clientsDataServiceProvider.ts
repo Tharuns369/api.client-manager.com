@@ -1,4 +1,4 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, between, eq, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
@@ -66,10 +66,10 @@ export class ClientsDataServiceProvider {
     return userRecord;
   }
 
-  async allClientsInvoiceAmountCount(){
+  async allClientsInvoiceAmountCount() {
 
-    const clientsAmountCount = await db.select({name: clients.name,totalInvoiceAmount: clients.total_invoice_amount})
-    .from(clients);    
+    const clientsAmountCount = await db.select({ name: clients.name, totalInvoiceAmount: clients.total_invoice_amount })
+      .from(clients);
     return clientsAmountCount;
   }
 
@@ -119,4 +119,19 @@ export class ClientsDataServiceProvider {
 
     return result;
   }
+
+
+  async updateInvoiceAmountByClientIds(data: any[]) {
+    const clientId = data[0].client_id; // Assuming all client IDs are the same
+    const totalInvoiceAmount = data.reduce((sum: number, input: { invoice_amount: string | number; }) =>
+      sum + parseFloat(input.invoice_amount.toString()), 0);
+
+    return await db.update(clients)
+      .set({
+        total_invoice_amount: sql`${clients.total_invoice_amount} + ${totalInvoiceAmount}::numeric`,
+        updated_at: new Date()
+      })
+      .where(eq(clients.id, clientId));
+  }
 }
+

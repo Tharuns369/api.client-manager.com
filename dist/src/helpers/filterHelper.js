@@ -48,16 +48,13 @@ export class FilterHelper {
             filter.push(`created_at BETWEEN '${fromDate}' AND '${toDate}'`);
         }
         if (searchString) {
-            filter.push(`type ILIKE '%${searchString}%'`);
+            filter.push(`name ILIKE '%${searchString}%'`);
         }
         if (clientId) {
             filter.push(`client_id = ${clientId}`);
         }
-        if (!status) {
-            filter.push(`status = 'ACTIVE'`);
-        }
-        else {
-            filter.push(`status = ${status}`);
+        if (status) {
+            filter.push(`invoice_status = ${status}`);
         }
         let queryString;
         if (filter.length > 0) {

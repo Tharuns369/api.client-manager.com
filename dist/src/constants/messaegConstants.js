@@ -111,6 +111,7 @@ const INVOICE_VALIDATION_MESSAGES = {
     INVOICE_ALREADY_EXISTS: 'An invoice with this service ID already exists.',
     INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
     INVOICE_UPLOADED_SUCCESS: 'Invoice uploaded successfully.',
+    INVOICE_DOWNLOADED_SUCCESS: 'Invoice uploaded successfully.',
 };
 const INVOICE_FILES_VALIDATION_MESSAGES = {
     FILE_NAME_INVALID: 'File name must be a string',
@@ -119,6 +120,8 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
     SIZE_NOT_INTEGER: 'File size must be an integer',
     CLIENT_ID_REQUIRED: 'Client id is required',
     INVALID_CLIENT_ID: 'Invalid client id',
+    INVOICE_ID_REQUIRED: 'Client id is required',
+    INVALID_INVOICE_ID: 'Invalid client id',
     INVALID_KEY: 'Invalid key'
 };
 const SERVICE_VALIDATION_MESSAGES = {

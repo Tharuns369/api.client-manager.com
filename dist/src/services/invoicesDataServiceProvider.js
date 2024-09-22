@@ -1,8 +1,10 @@
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import { getRecordByColumnValue, insertRecord, insertRecords, updateRecordById } from "../db/abstractions";
 import { db } from "../db/index";
 import { invoices } from "../schemas/invoices";
 import { invoiceFiles } from "../schemas/invoicefiles";
+import { services } from "../schemas/services";
+import { clients } from "../schemas/clients";
 export class InvoicesDataServiceProvider {
     async getTotalInvoicesAmount() {
         const result = await db
@@ -19,7 +21,19 @@ export class InvoicesDataServiceProvider {
         return { services: [{ id: 1, totalAmount: 1500 }, { id: 2, totalAmount: 3500 }] };
     }
     async getInvoices({ skip, limit, filters, sort }) {
-        const query = db.select().from(invoices);
+        const query = db.select({
+            id: invoices.id,
+            name: invoices.name,
+            client_id: invoices.client_id,
+            service_id: invoices.service_id,
+            client_name: clients.name,
+            service_name: services.type,
+            invoice_amount: invoices.invoice_amount,
+            invoice_status: invoices.invoice_status,
+            invoice_date: invoices.invoice_date,
+            payment_date: invoices.payment_date,
+            created_at: invoices.created_at
+        }).from(invoices).innerJoin(services, eq(invoices.service_id, services.id)).innerJoin(clients, eq(invoices.client_id, clients.id));
         if (filters) {
             query.where(sql `${sql.raw(filters)}`);
         }
@@ -44,7 +58,7 @@ export class InvoicesDataServiceProvider {
     async addInvoiceFile(invoiceFileData) {
         return await insertRecord(invoiceFiles, invoiceFileData);
     }
-    async getInvoice(id) {
+    async getInvoiceById(id) {
         const userData = await getRecordByColumnValue(invoices, 'id', id);
         return userData;
     }
@@ -54,5 +68,9 @@ export class InvoicesDataServiceProvider {
     }
     async editInvoice(id, body) {
         return await updateRecordById(invoices, id, body);
+    }
+    async getInvoiceFileById(id) {
+        const invoiceFileData = await getRecordByColumnValue(invoiceFiles, 'id', id);
+        return invoiceFileData;
     }
 }

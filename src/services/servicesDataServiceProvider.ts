@@ -1,5 +1,5 @@
 
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, updateRecordById } from "../db/abstractions";
@@ -45,6 +45,27 @@ export class ServiceDataServiceProvider {
         return await updateRecordById(services, id, body);
     }
 
+    async updateInvoiceAmountByServiceIds(data: any) {
 
+        const invoiceAmountChunks: SQL[] = [];
+        const ids: number[] = [];
+
+        invoiceAmountChunks.push(sql`(case`);
+        for (const input of data) {
+            invoiceAmountChunks.push(sql`when id = ${input.service_id} then  ${services.invoice_amount} +  ${input.invoice_amount}::numeric`);
+            ids.push(input.service_id);
+        }
+        invoiceAmountChunks.push(sql`end)`);
+
+        const finalInvoiceAmountSql: SQL = sql.join(invoiceAmountChunks, sql.raw(' '));
+
+        // Execute the update query
+        return await db.update(services)
+            .set({
+                invoice_amount: finalInvoiceAmountSql,
+                updated_at: new Date()
+            })
+            .where(inArray(services.id, ids));
+    }
 
 }
