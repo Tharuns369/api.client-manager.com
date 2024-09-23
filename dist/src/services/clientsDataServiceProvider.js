@@ -2,6 +2,7 @@ import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
+import { invoices } from "../schemas/invoices";
 import { clientServices } from "../schemas/clientServices";
 import { services } from "../schemas/services";
 export class ClientsDataServiceProvider {
@@ -68,6 +69,19 @@ export class ClientsDataServiceProvider {
         return result;
     }
     async getClientsWiseInvoices(clientId, fromDate, toDate, invoiceStatus) {
+        const result = await db.select({
+            id: invoices.id,
+            client_id: invoices.client_id,
+            title: invoices.name,
+            type: services.type,
+            invoice_amount: invoices.invoice_amount,
+            created_at: invoices.created_at,
+            updated_at: invoices.updated_at,
+            remarks: invoices.remarks
+        }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id));
+        return result;
+    }
+    async getClintsWiseInvoices(clientId, fromDate, toDate, invoiceStatus) {
         const result = await db.query.clients.findMany({
             where: (clients, { eq }) => (eq(clients.id, clientId)),
             columns: {},
@@ -79,7 +93,7 @@ export class ClientsDataServiceProvider {
                         invoice_date: true,
                         invoice_status: true,
                         payment_date: true,
-                        client_id: true
+                        client_id: true,
                     },
                     where: (invoices) => and(fromDate && toDate ? between(invoices.invoice_date, fromDate, toDate) : undefined, invoiceStatus ? eq(invoices.invoice_status, invoiceStatus) : undefined),
                     orderBy: (invoices, { desc }) => [desc(invoices.invoice_date)]
