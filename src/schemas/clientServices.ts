@@ -11,7 +11,7 @@ export const clientServices = pgTable('client_services', {
     client_id: integer('client_id').notNull(),
     service_id: integer('service_id').notNull(),
     status: statusEnum('status').default("ACTIVE"),
-    invoice_amount: numeric('invoice_amount', { precision: 100, scale: 2 }),
+    invoice_amount: numeric('invoice_amount', { precision: 100, scale: 2 }).default('0'),
     created_at: timestamp('created_at').notNull().defaultNow(),
     updated_at: timestamp('updated_at').notNull().defaultNow(),
 }, (table: any) => {

@@ -71,7 +71,17 @@ export class InvoiceController {
         }
     }
     async viewInvoice(c) {
-        return c.json({ message: "Invoice details fetched", invoice: { id: 1, amount: 200 } });
+        try {
+            const id = +c.req.param('id');
+            const invoice = await invoicesDataServiceProvider.getInvoiceByIdWithPopulate(id);
+            if (!invoice) {
+                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
+            }
+            return ResponseHelper.sendSuccessResponse(c, 200, "Invoice fetched successfully", invoice);
+        }
+        catch (error) {
+            throw error;
+        }
     }
     async uploadInvoice(c) {
         try {
@@ -126,6 +136,20 @@ export class InvoiceController {
                 download_url: downloadUrl
             };
             return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_DOWNLOADED_SUCCESS, data);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getInvoiceFiles(c) {
+        try {
+            const id = +c.req.param('id');
+            const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
+            if (!invoice) {
+                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
+            }
+            const files = await invoicesDataServiceProvider.getInvoiceFiles(id);
+            return ResponseHelper.sendSuccessResponse(c, 201, "Invoice files fetched successfully", files);
         }
         catch (error) {
             throw error;

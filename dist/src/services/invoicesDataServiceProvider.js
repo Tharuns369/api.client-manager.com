@@ -81,4 +81,24 @@ export class InvoicesDataServiceProvider {
         const data = await query.execute();
         return data[0].totalAmount || 0; // Return 0 if no matching records
     }
+    async getInvoiceByIdWithPopulate(id) {
+        const data = await db.select({
+            id: invoices.id,
+            name: invoices.name,
+            client_id: invoices.client_id,
+            service_id: invoices.service_id,
+            client_name: clients.name,
+            service_name: services.type,
+            invoice_amount: invoices.invoice_amount,
+            invoice_status: invoices.invoice_status,
+            invoice_date: invoices.invoice_date,
+            payment_date: invoices.payment_date,
+            created_at: invoices.created_at
+        }).from(invoices).innerJoin(services, eq(invoices.service_id, services.id)).innerJoin(clients, eq(invoices.client_id, clients.id)).where(eq(invoices.id, id)).execute();
+        return data;
+    }
+    async getInvoiceFiles(id) {
+        const res = await db.select().from(invoiceFiles).where(eq(invoiceFiles.invoice_id, id));
+        return res;
+    }
 }

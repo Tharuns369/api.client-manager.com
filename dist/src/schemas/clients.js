@@ -20,7 +20,7 @@ export const clients = pgTable('clients', {
     city: varchar('city'),
     gst: boolean('gst').default(false),
     country: varchar('country'),
-    total_invoice_amount: numeric('total_invoice_amount', { precision: 100, scale: 2 }),
+    total_invoice_amount: numeric('total_invoice_amount', { precision: 100, scale: 2 }).default('0'),
     created_at: timestamp('created_at').notNull().defaultNow(),
     updated_at: timestamp('updated_at').notNull().defaultNow()
 }, (table) => {
