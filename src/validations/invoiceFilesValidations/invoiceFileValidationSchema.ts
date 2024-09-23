@@ -13,7 +13,7 @@ export const invoiceFileValidationSchema = v.object({
     ),
     size: v.optional(
         v.pipe(
-            v.number(INVOICE_FILES_VALIDATION_MESSAGES.INVALID_SIZE), // Add a validation message for invalid size
+            v.number(INVOICE_FILES_VALIDATION_MESSAGES.INVALID_SIZE), 
             v.integer(INVOICE_FILES_VALIDATION_MESSAGES.SIZE_NOT_INTEGER)
         )
     ),

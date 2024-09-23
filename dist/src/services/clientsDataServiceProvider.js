@@ -103,7 +103,7 @@ export class ClientsDataServiceProvider {
         return result;
     }
     async updateInvoiceAmountByClientIds(data) {
-        const clientId = data[0].client_id; // Assuming all client IDs are the same
+        const clientId = data[0].client_id;
         const totalInvoiceAmount = data.reduce((sum, input) => sum + parseFloat(input.invoice_amount.toString()), 0);
         return await db.update(clients)
             .set({

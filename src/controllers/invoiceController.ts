@@ -1,18 +1,19 @@
 import { Context } from "hono";
 import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
-import { FileHelper } from "../helpers/fileHelper";
 import { FilterHelper } from "../helpers/filterHelper";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
-import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
+import { InvoiceValidationInput, InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { InvoiceFileValidationInput, invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
-import { InvoiceFileValidationInput, invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
-import { InvoiceValidationInput, InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
+import { UpdateInvoiceValidationSchema, updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
 
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
@@ -128,7 +129,6 @@ export class InvoiceController {
             );
 
             validatedData.key = fileName;
-            console.log("validatedData", validatedData);
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
 
             let data = {
@@ -154,6 +154,9 @@ export class InvoiceController {
             const id = +c.req.param('id');
 
             const body = await c.req.json();
+
+            const validatedData: UpdateInvoiceValidationSchema = await validate(updateInvoiceValidationSchema, body);
+
 
             const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
 

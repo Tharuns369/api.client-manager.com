@@ -1,17 +1,18 @@
 import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
-import { FileHelper } from "../helpers/fileHelper";
 import { FilterHelper } from "../helpers/filterHelper";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
-import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
+import { InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
-import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
-import { InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
+import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
+import { updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
@@ -88,7 +89,6 @@ export class InvoiceController {
             const slug = 'client_invoices' + '/' + validatedData.client_id;
             const targetUrl = await s3FileService.generatePresignedUrl(fileName, 'put', slug);
             validatedData.key = fileName;
-            console.log("validatedData", validatedData);
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
             let data = {
                 key: fileName,
@@ -107,6 +107,7 @@ export class InvoiceController {
         try {
             const id = +c.req.param('id');
             const body = await c.req.json();
+            const validatedData = await validate(updateInvoiceValidationSchema, body);
             const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
             if (!invoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
