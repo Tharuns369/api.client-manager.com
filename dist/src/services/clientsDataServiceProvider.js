@@ -52,7 +52,7 @@ export class ClientsDataServiceProvider {
         return userRecord;
     }
     async allClientsInvoiceAmountCount() {
-        const clientsAmountCount = await db.select({ name: clients.name, totalInvoiceAmount: clients.total_invoice_amount })
+        const clientsAmountCount = await db.select({ client_name: clients.client_name, totalInvoiceAmount: clients.total_invoice_amount })
             .from(clients);
         return clientsAmountCount;
     }
@@ -115,7 +115,7 @@ export class ClientsDataServiceProvider {
     async getClientsForDashBoard(filters) {
         const query = db.select({
             id: clients.id,
-            client_name: clients.name,
+            client_name: clients.client_name,
             invoice_amount: clients.total_invoice_amount
         }).from(clients);
         if (filters) {

@@ -7,10 +7,10 @@ export enum ClientServiceStatusEnum {
 }
 
 export const clientServiceValidationSchema = v.object({
-    title: v.pipe(
-        v.string(CLIENT_SERVICES_VALIDATION_MESSAGES.TITLE_REQUIRED),
-        v.minLength(1, CLIENT_SERVICES_VALIDATION_MESSAGES.TITLE_INVALID)
-      ),  
+  title: v.pipe(
+    v.string(CLIENT_SERVICES_VALIDATION_MESSAGES.TITLE_REQUIRED),
+    v.minLength(1, CLIENT_SERVICES_VALIDATION_MESSAGES.TITLE_INVALID)
+  ),
   client_id: v.pipe(
     v.number(CLIENT_SERVICES_VALIDATION_MESSAGES.CLIENT_ID_REQUIRED),
     v.integer(CLIENT_SERVICES_VALIDATION_MESSAGES.CLIENT_ID_INVALID)

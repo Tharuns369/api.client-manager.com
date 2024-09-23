@@ -1,17 +1,17 @@
 import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
+import { FileHelper } from "../helpers/fileHelper";
+import { FilterHelper } from "../helpers/filterHelper";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
-import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
-import { InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
-import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
-import { FileHelper } from "../helpers/fileHelper";
-import { S3FileService } from "../services/s3DataServiceProvider";
-import { FilterHelper } from "../helpers/filterHelper";
-import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
 import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
+import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
+import { S3FileService } from "../services/s3DataServiceProvider";
+import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
+import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
@@ -52,13 +52,10 @@ export class InvoiceController {
             const skip = (page - 1) * limit;
             const sort = sortHelper.sort(query);
             const filters = filterHelper.invoices(query);
-            const [invoicesList, totalCount] = await Promise.all([
-                invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort }),
-                invoicesDataServiceProvider.getInvoiceCount(filters)
-            ]);
+            const invoicesList = await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
             const response = paginationHelper.getPaginationResponse({
                 page,
-                count: totalCount,
+                count: invoicesList.length,
                 limit,
                 data: invoicesList,
                 message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS

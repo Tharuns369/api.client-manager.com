@@ -31,31 +31,33 @@ export class InvoicesDataServiceProvider {
 
 
   async getInvoices({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
-    const query = db.select(
-      {
-        id: invoices.id,
-        name: invoices.name,
-        client_id: invoices.client_id,
-        service_id: invoices.service_id,
-        client_name: clients.name,
-        service_name: services.type,
-        invoice_amount: invoices.invoice_amount,
-        invoice_status: invoices.invoice_status,
-        invoice_date: invoices.invoice_date,
-        payment_date: invoices.payment_date,
-        created_at: invoices.created_at
 
-      }
-    ).from(invoices).innerJoin(services, eq(invoices.service_id, services.id)).innerJoin(clients, eq(invoices.client_id, clients.id));
-    if (filters) {
-      query.where(sql`${sql.raw(filters)}`);
-    }
-    if (sort) {
-      query.orderBy(sql`${sql.raw(sort)}`);
-    }
-    query.limit(limit).offset(skip);
-    const data = await query.execute();
-    return data;
+    let query = sql`
+    SELECT 
+        i.id,
+        i.invoice_amount,
+        i.invoice_status,
+        i.created_at,
+        sr.id as service_id,
+        sr.type as service_name,
+        c.id as client_id,
+        c.client_name,
+        c.company_name as client_company_name
+    FROM invoices as i
+    JOIN clients as c 
+        ON i.client_id = c.id
+    JOIN services as sr 
+        ON i.client_id = sr.id
+    ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
+    ${sort ? sql`ORDER BY ${sql.raw(sort)}` : sql``}
+    LIMIT ${limit}
+    OFFSET ${skip}
+      `;
+
+    const data = await db.execute(query);
+
+    return data.rows;
+
   }
 
   async getInvoiceCount(filters?: string) {
@@ -120,7 +122,8 @@ export class InvoicesDataServiceProvider {
         name: invoices.name,
         client_id: invoices.client_id,
         service_id: invoices.service_id,
-        client_name: clients.name,
+        client_name: clients.client_name,
+        company_name: clients.company_name,
         service_name: services.type,
         invoice_amount: invoices.invoice_amount,
         invoice_status: invoices.invoice_status,
