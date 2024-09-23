@@ -235,7 +235,7 @@ export class ClientsController {
 
       const query = c.req.query();
 
-      const filters = filterHelper.services(query);
+      const filters = filterHelper.clients(query);
 
       const invoicesList: any = await clientsDataServiceProvider.getClientsForDashBoard(filters);
 

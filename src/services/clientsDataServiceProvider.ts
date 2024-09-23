@@ -149,7 +149,6 @@ export class ClientsDataServiceProvider {
       }
     ).from(clients);
 
-    // Apply filters if present
     if (filters) {
       query.where(sql`${sql.raw(filters)}`);
     }
