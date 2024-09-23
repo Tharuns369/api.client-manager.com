@@ -41,7 +41,7 @@ export class ClientsController {
 
       const filters = await filterHelper.clients(c.req.query());
 
-      const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);
+      const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);      
 
       if (!totalClientCount) {
         return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
@@ -219,10 +219,7 @@ export class ClientsController {
 
   async exportClientsAsJson(c: Context) {
     try {
-      const clients = await clientsDataServiceProvider.getAllClients();
-      console.log(clients);
-      
-
+      const clients = await clientsDataServiceProvider.getAllClients();      
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
     } catch (error) {
       console.log(error);
