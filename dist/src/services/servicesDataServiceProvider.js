@@ -1,8 +1,12 @@
 import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "../db";
 import { services } from "../schemas/services";
-import { getRecordByColumnValue, updateRecordById } from "../db/abstractions";
+import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 export class ServiceDataServiceProvider {
+    async insertService(serviceData) {
+        const insertedService = await insertRecord(services, serviceData);
+        return insertedService;
+    }
     async getServices({ skip, limit, filters, sort }) {
         const query = db.select().from(services);
         if (filters) {
@@ -43,7 +47,6 @@ export class ServiceDataServiceProvider {
         }
         invoiceAmountChunks.push(sql `end)`);
         const finalInvoiceAmountSql = sql.join(invoiceAmountChunks, sql.raw(' '));
-        // Execute the update query
         return await db.update(services)
             .set({
             invoice_amount: finalInvoiceAmountSql,

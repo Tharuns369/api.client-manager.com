@@ -36,6 +36,12 @@ export const getAllRecords = async <R extends DbRecord>(table: DbTable) => {
     const respData = await db.select().from(table).execute();
     return respData as R[];
 };
+export const insertRecords = async <R extends DbRecord[]>(table: DbTable, record: NewDbRecord) => {
+    const respData = await db.insert(table).values(record).returning(); 3;
+    return respData as R;
+
+};
+
 
 export const deleteRecordById = async (table: DbTable,id: number
 ) => {
@@ -43,11 +49,4 @@ export const deleteRecordById = async (table: DbTable,id: number
         .where(eq(table.id, id))
         .returning();
     return respData[0];
-};
-
-
-export const insertRecords = async <R extends DbRecord[]>(table: DbTable, record: NewDbRecord) => {
-    const respData = await db.insert(table).values(record).returning(); 3;
-    return respData as R;
-
 };
