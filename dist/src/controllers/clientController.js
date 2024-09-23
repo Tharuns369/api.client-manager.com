@@ -161,7 +161,6 @@ export class ClientsController {
     async exportClientsAsJson(c) {
         try {
             const clients = await clientsDataServiceProvider.getAllClients();
-            console.log(clients);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
         }
         catch (error) {

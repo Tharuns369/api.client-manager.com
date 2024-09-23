@@ -54,4 +54,7 @@ export class ServiceDataServiceProvider {
         })
             .where(inArray(services.id, ids));
     }
+    async listDropDown() {
+        return await db.select({ id: services.id, name: services.type }).from(services);
+    }
 }
