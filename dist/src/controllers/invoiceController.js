@@ -37,9 +37,8 @@ export class InvoiceController {
         try {
             const query = c.req.query();
             const filters = filterHelper.invoices(query);
-            const result = await invoicesDataServiceProvider.getInvoiceCount(filters);
-            const amountInINR = result;
-            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS, amountInINR);
+            let result = await invoicesDataServiceProvider.getInvoiceAmountSum(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.TOTAL_AMOUNT_FETCHED_SUCCESS, result);
         }
         catch (error) {
             throw error;

@@ -138,5 +138,6 @@ export class ClientsDataServiceProvider {
       })
       .where(eq(clients.id, clientId));
   }
+
 }
 

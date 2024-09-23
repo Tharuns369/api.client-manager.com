@@ -73,4 +73,12 @@ export class InvoicesDataServiceProvider {
         const invoiceFileData = await getRecordByColumnValue(invoiceFiles, 'id', id);
         return invoiceFileData;
     }
+    async getInvoiceAmountSum(filters) {
+        const query = db.select({ totalAmount: sql `SUM(invoice_amount)` }).from(invoices);
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        const data = await query.execute();
+        return data[0].totalAmount || 0; // Return 0 if no matching records
+    }
 }
