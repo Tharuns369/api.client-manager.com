@@ -5,9 +5,24 @@ import { ResponseHelper } from '../helpers/responseHelper';
 import { sortHelper } from '../helpers/sortHelper';
 import { FilterHelper } from '../helpers/filterHelper';
 import { ServiceDataServiceProvider } from '../services/servicesDataServiceProvider';
+import { serviceValidationSchema } from '../validations/serviceValidations/addServiceValidation';
+import validate from '../helpers/validationHelper';
+import { serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
 const filterHelper = new FilterHelper();
 export class ServicesController {
+    async addService(c) {
+        try {
+            const serviceData = await c.req.json();
+            const validatedData = await validate(serviceValidationSchema, serviceData);
+            const newService = await servicesDataServiceProvider.insertService(serviceData);
+            return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async getTotalServices(c) {
         try {
             const filters = await filterHelper.services(c.req.query());
@@ -56,6 +71,7 @@ export class ServicesController {
                 return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
             }
             const body = await c.req.json();
+            const validatedData = await validate(serviceUpdateValidationSchema, body);
             const service = await servicesDataServiceProvider.getServiceById(id);
             if (!service) {
                 throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
