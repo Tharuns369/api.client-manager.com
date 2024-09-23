@@ -104,7 +104,6 @@ export class ClientsDataServiceProvider {
             client_name: clients.name,
             invoice_amount: clients.total_invoice_amount
         }).from(clients);
-        // Apply filters if present
         if (filters) {
             query.where(sql `${sql.raw(filters)}`);
         }
