@@ -136,6 +136,8 @@ const INVOICE_VALIDATION_MESSAGES = {
     INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
     INVOICE_UPLOADED_SUCCESS: 'Invoice uploaded successfully.',
     INVOICE_DOWNLOADED_SUCCESS: 'Invoice uploaded successfully.',
+    NAME_REQUIRED: 'Invoice name is required.',
+    NAME_TOO_SHORT: 'Invoice name cannot be empty.',
 
 
 };
