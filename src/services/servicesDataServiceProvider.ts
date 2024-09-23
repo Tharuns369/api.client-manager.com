@@ -1,5 +1,5 @@
 
-import { eq, inArray, SQL, sql } from "drizzle-orm";
+import { eq, inArray, name, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
@@ -93,6 +93,9 @@ export class ServiceDataServiceProvider {
         // Execute the query and return the data
         const data = await query.execute();
         return data;
+    }
+    async listDropDown(){
+        return await db.select({ id: services.id,name: services.type}).from(services);
     }
 
 }

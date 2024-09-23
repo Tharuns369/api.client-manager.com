@@ -111,4 +111,13 @@ export class ServicesController {
             throw error;
         }
     }
+    async getlistServiceForDropDown(c) {
+        try {
+            const listServices = await servicesDataServiceProvider.listDropDown();
+            return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS, listServices);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

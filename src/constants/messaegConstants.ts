@@ -58,6 +58,7 @@ const SERVICES_MESSAGES = {
     SERVICE_UPDATE_SUCCESS: "Service Updated Successfully",
     SERVICE_ID_INVALID: "Invalid Service ID",
     SERVICE_ADDED_SUCCESS: "Service Added Successfully"
+    
 
 
 };
