@@ -14,6 +14,7 @@ import { S3FileService } from "../services/s3DataServiceProvider";
 import { FilterHelper } from "../helpers/filterHelper";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
 import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
+import { UpdateInvoiceValidationSchema, updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
 
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
@@ -132,7 +133,6 @@ export class InvoiceController {
             );
 
             validatedData.key = fileName;
-            console.log("validatedData", validatedData);
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
 
             let data = {
@@ -158,6 +158,9 @@ export class InvoiceController {
             const id = +c.req.param('id');
 
             const body = await c.req.json();
+
+            const validatedData: UpdateInvoiceValidationSchema = await validate(updateInvoiceValidationSchema, body);
+
 
             const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
 
