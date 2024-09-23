@@ -97,6 +97,24 @@ export class ClientsDataServiceProvider {
   }
 
   async getClientsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
+
+    const result = await db.select({
+      id: invoices.id,
+      client_id: invoices.client_id,
+      title: invoices.name,
+      type: services.type,
+      invoice_amount: invoices.invoice_amount,
+      created_at: invoices.created_at,
+      updated_at: invoices.updated_at,
+      remarks: invoices.remarks
+
+    }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id));
+
+    return result;
+
+  }
+
+  async getClintsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
     const result = await db.query.clients.findMany({
       where: (clients, { eq }) => (eq(clients.id, clientId)),
       columns: {},
@@ -108,7 +126,8 @@ export class ClientsDataServiceProvider {
             invoice_date: true,
             invoice_status: true,
             payment_date: true,
-            client_id: true
+            client_id: true,
+
           },
           where: (invoices) =>
             and(

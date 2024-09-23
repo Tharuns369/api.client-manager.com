@@ -32,9 +32,6 @@ export class ClientsController {
         try {
             const filters = await filterHelper.clients(c.req.query());
             const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);
-            if (!totalClientCount) {
-                return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_NOT_EXIST);
-            }
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT, totalClientCount);
         }
         catch (error) {
@@ -75,7 +72,7 @@ export class ClientsController {
             }
             const client = await clientsDataServiceProvider.getClientById(id);
             if (!client) {
-                return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
             }
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
         }
@@ -132,7 +129,7 @@ export class ClientsController {
             const clientId = +c.req.param('id');
             const client = await clientsDataServiceProvider.getClientById(clientId);
             if (!client) {
-                return ResponseHelper.sendErrorResponse(c, 200, CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
+                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
             }
             const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
