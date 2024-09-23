@@ -12,6 +12,7 @@ import { S3FileService } from "../services/s3DataServiceProvider";
 import { FilterHelper } from "../helpers/filterHelper";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
 import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
+import { updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
 const invoicesDataServiceProvider = new InvoicesDataServiceProvider();
@@ -91,7 +92,6 @@ export class InvoiceController {
             const slug = 'client_invoices' + '/' + validatedData.client_id;
             const targetUrl = await s3FileService.generatePresignedUrl(fileName, 'put', slug);
             validatedData.key = fileName;
-            console.log("validatedData", validatedData);
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
             let data = {
                 key: fileName,
@@ -110,6 +110,7 @@ export class InvoiceController {
         try {
             const id = +c.req.param('id');
             const body = await c.req.json();
+            const validatedData = await validate(updateInvoiceValidationSchema, body);
             const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
             if (!invoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
