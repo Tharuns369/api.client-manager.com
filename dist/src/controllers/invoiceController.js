@@ -153,4 +153,16 @@ export class InvoiceController {
             throw error;
         }
     }
+    async latestInvoices(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.invoices(query);
+            const invoicesList = await invoicesDataServiceProvider.getFiveLatestInvoices(filters);
+            return ResponseHelper.sendSuccessResponse(c, 201, "latest invoices fetched successfully", invoicesList);
+        }
+        catch (error) {
+            console.log("error", error);
+            throw error;
+        }
+    }
 }

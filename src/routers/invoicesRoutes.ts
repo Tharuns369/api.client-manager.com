@@ -14,6 +14,9 @@ invoicesRouter.post('/', invoicesController.addInvoice);
 invoicesRouter.patch('/:id', invoicesController.updateInvoice);
 invoicesRouter.get('/files/:id/download', invoicesController.downloadInvoice);
 
-invoicesRouter.get('/:id/invoice-files', invoicesController.getInvoiceFiles)
+invoicesRouter.get('/:id/invoice-files', invoicesController.getInvoiceFiles);
+
+invoicesRouter.get('/latest/five', invoicesController.latestInvoices);
+
 
 export default invoicesRouter;
