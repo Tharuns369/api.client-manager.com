@@ -10,7 +10,7 @@ export const clients = pgTable('clients', {
     id: serial('id').primaryKey(),
     client_name: varchar('client_name').notNull(),
     client_phone: varchar('client_phone'),
-    client_email: varchar('client_phone'),
+    client_email: varchar('client_email'),
     company_name: varchar('company_name').notNull(),
     poc: varchar('poc').notNull(),
     email: varchar('email').notNull().unique(),
