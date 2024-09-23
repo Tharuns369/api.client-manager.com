@@ -159,8 +159,8 @@ export class ClientsController {
 
 
   async getClientsWiseInvoiceAmountCount(c: Context) {
-    try {      
-      const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();     
+    try {
+      const clientsAmountCount = await clientsDataServiceProvider.allClientsInvoiceAmountCount();
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsAmountCount);
 
     } catch (error) {
@@ -221,7 +221,7 @@ export class ClientsController {
     try {
       const clients = await clientsDataServiceProvider.getAllClients();
       console.log(clients);
-      
+
 
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
     } catch (error) {
@@ -230,6 +230,22 @@ export class ClientsController {
     }
   }
 
+  async listClientsWiseInvoicesAmount(c: Context) {
+    try {
+
+      const query = c.req.query();
+
+      const filters = filterHelper.services(query);
+
+      const invoicesList: any = await clientsDataServiceProvider.getClientsForDashBoard(filters);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, "Clients wise invoice amount fetched successfuly", invoicesList);
+
+
+    } catch (error) {
+      throw error;
+    }
+  }
 
 }
 

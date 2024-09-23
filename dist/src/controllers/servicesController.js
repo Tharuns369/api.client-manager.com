@@ -100,4 +100,15 @@ export class ServicesController {
             throw error;
         }
     }
+    async listServicesWiseInvoicesAmount(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.services(query);
+            const invoicesList = await servicesDataServiceProvider.getServiceForDashBoard(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Services wise invoice amount fetched successfuly", invoicesList);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

@@ -23,8 +23,8 @@ export class ServicesController {
 
       const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, serviceData);
 
-     
-        const newService = await servicesDataServiceProvider.insertService(serviceData);
+
+      const newService = await servicesDataServiceProvider.insertService(serviceData);
 
       return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
     } catch (error) {
@@ -138,6 +138,25 @@ export class ServicesController {
       throw error;
     }
   }
+
+
+  async listServicesWiseInvoicesAmount(c: Context) {
+    try {
+
+      const query = c.req.query();
+
+      const filters = filterHelper.services(query);
+
+      const invoicesList: any = await servicesDataServiceProvider.getServiceForDashBoard(filters);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, "Services wise invoice amount fetched successfuly", invoicesList);
+
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 

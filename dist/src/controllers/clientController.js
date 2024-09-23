@@ -169,4 +169,15 @@ export class ClientsController {
             throw error;
         }
     }
+    async listClientsWiseInvoicesAmount(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.services(query);
+            const invoicesList = await clientsDataServiceProvider.getClientsForDashBoard(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Clients wise invoice amount fetched successfuly", invoicesList);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

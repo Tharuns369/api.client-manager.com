@@ -25,7 +25,7 @@ export class ClientsDataServiceProvider {
     return data;
   }
 
-  async getAllClients(){
+  async getAllClients() {
     const allClientServices = await getAllRecords(clients);
     return allClientServices;
   }
@@ -139,5 +139,27 @@ export class ClientsDataServiceProvider {
       .where(eq(clients.id, clientId));
   }
 
+
+  async getClientsForDashBoard(filters?: string) {
+    const query = db.select(
+      {
+        id: clients.id,
+        client_name: clients.name,
+        invoice_amount: clients.total_invoice_amount
+      }
+    ).from(clients);
+
+    // Apply filters if present
+    if (filters) {
+      query.where(sql`${sql.raw(filters)}`);
+    }
+
+    // Order by invoice_amount in descending order and limit the result to 5
+    query.orderBy(sql`total_invoice_amount DESC`).limit(5);
+
+    // Execute the query and return the data
+    const data = await query.execute();
+    return data;
+  }
 }
 

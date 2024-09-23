@@ -14,4 +14,5 @@ clientsRouter.get('/:id/services', authMiddleware.checkAndValidateAuthToken, cli
 clientsRouter.get('/:id/invoices', authMiddleware.checkAndValidateAuthToken, clientsController.getClientWiseInvoices);
 clientsRouter.get('/invoice/amount', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseInvoiceAmountCount);
 clientsRouter.get('/export/json', authMiddleware.checkAndValidateAuthToken, clientsController.exportClientsAsJson);
+clientsRouter.get('/dashboard/invoice-amount', clientsController.listClientsWiseInvoicesAmount);
 export default clientsRouter;

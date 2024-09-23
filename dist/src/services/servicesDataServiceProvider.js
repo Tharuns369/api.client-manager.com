@@ -54,4 +54,20 @@ export class ServiceDataServiceProvider {
         })
             .where(inArray(services.id, ids));
     }
+    async getServiceForDashBoard(filters) {
+        const query = db.select({
+            id: services.id,
+            type: services.type,
+            invoice_amount: services.invoice_amount
+        }).from(services);
+        // Apply filters if present
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        // Order by invoice_amount in descending order and limit the result to 5
+        query.orderBy(sql `invoice_amount DESC`).limit(5);
+        // Execute the query and return the data
+        const data = await query.execute();
+        return data;
+    }
 }
