@@ -31,11 +31,3 @@ export const deleteRecordById = async (table, id) => {
         .returning();
     return respData[0];
 };
-<<<<<<< HEAD
-export const insertRecords = async (table, record) => {
-    const respData = await db.insert(table).values(record).returning();
-    3;
-    return respData;
-};
-=======
->>>>>>> features/update

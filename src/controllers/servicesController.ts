@@ -6,12 +6,34 @@ import { ResponseHelper } from '../helpers/responseHelper';
 import { sortHelper } from '../helpers/sortHelper';
 import { FilterHelper } from '../helpers/filterHelper';
 import { ServiceDataServiceProvider } from '../services/servicesDataServiceProvider';
+import { ServiceValidationInput, serviceValidationSchema } from '../validations/serviceValidations/addServiceValidation';
+import validate from '../helpers/validationHelper';
+import { ServiceUpdateValidationInput, serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
 
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
 
 const filterHelper = new FilterHelper();
 
 export class ServicesController {
+
+
+  async addService(c: Context) {
+    try {
+      const serviceData = await c.req.json();
+
+      const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, serviceData);
+
+     
+        const newService = await servicesDataServiceProvider.insertService(serviceData);
+
+      return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+
 
   async getTotalServices(c: Context) {
     try {
@@ -75,6 +97,9 @@ export class ServicesController {
       }
 
       const body = await c.req.json();
+
+      const validatedData: ServiceUpdateValidationInput = await validate(serviceUpdateValidationSchema, body);
+
 
       const service = await servicesDataServiceProvider.getServiceById(id);
 

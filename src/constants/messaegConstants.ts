@@ -158,7 +158,7 @@ const SERVICE_VALIDATION_MESSAGES = {
     TITLE_REQUIRED: "Title is required.",
     TITLE_INVALID: "Title must be alphanumeric and cannot contain special characters.",
     TYPE_REQUIRED: "Type is required.",
-    TYPE_INVALID: "Type must be alphanumeric and cannot contain special characters.",
+    TYPE_INVALID: "Type must be a characters.",
     CLIENT_ID_REQUIRED: "Client ID is required.",
     CLIENT_ID_INVALID: "Client ID must be a valid integer.",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE.",
