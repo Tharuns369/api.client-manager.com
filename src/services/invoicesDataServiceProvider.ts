@@ -54,9 +54,7 @@ export class InvoicesDataServiceProvider {
       query.orderBy(sql`${sql.raw(sort)}`);
     }
     query.limit(limit).offset(skip);
-    const data = await query.execute();
-    console.log("data",data);
-    
+    const data = await query.execute();    
     return data;
   }
 
@@ -81,7 +79,6 @@ export class InvoicesDataServiceProvider {
 
   async getInvoiceById(id: number) {
     const userData = await getRecordByColumnValue<Invoice>(invoices, 'id', id);
-
     return userData;
   }
 

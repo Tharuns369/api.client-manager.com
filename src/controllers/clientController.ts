@@ -216,9 +216,6 @@ export class ClientsController {
   async exportClientsAsJson(c: Context) {
     try {
       const clients = await clientsDataServiceProvider.getAllClients();
-      console.log(clients);
-
-
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
     } catch (error) {
       console.log(error);
@@ -244,13 +241,9 @@ export class ClientsController {
   }
 
   async dropDownForListOfClients(c: Context) {
-
     try {
-
     const  listClients = await clientsDataServiceProvider.listDropDown()
-
     return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
-
       } catch (error) {
         throw error
       }
