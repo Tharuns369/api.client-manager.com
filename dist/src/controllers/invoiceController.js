@@ -53,7 +53,6 @@ export class InvoiceController {
             const skip = (page - 1) * limit;
             const filters = filterHelper.invoices(query);
             const sort = sortHelper.sort(query);
-            console.log('filters', sort);
             await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
             const [invoicesList, totalCount] = await Promise.all([
                 invoicesDataServiceProvider.getInvoices({ skip, limit, filters, sort }),

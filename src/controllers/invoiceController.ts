@@ -71,7 +71,6 @@ export class InvoiceController {
             const filters = filterHelper.invoices(query);
             const sort = sortHelper.sort(query);
 
-            console.log('filters', sort);
             await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
 
             const [invoicesList, totalCount]: any = await Promise.all([
