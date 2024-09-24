@@ -32,33 +32,31 @@ export class InvoicesDataServiceProvider {
 
   async getInvoices({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
 
-    let query = sql`
+    const query = sql`
     SELECT 
         i.id,
         i.invoice_amount,
         i.invoice_status,
         i.created_at,
+        i.invoice_date,
         sr.id as service_id,
         sr.type as service_name,
         c.id as client_id,
         c.client_name,
         c.company_name as client_company_name
-    FROM invoices as i
-    JOIN clients as c 
-        ON i.client_id = c.id
-    JOIN services as sr 
-        ON i.client_id = sr.id
+    FROM ${invoices} AS i
+    JOIN ${clients} AS c ON i.client_id = c.id
+    JOIN ${services} AS sr ON i.service_id = sr.id
     ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
     ${sort ? sql`ORDER BY ${sql.raw(sort)}` : sql``}
     LIMIT ${limit}
     OFFSET ${skip}
-      `;
+    `;
 
     const data = await db.execute(query);
-
     return data.rows;
+}
 
-  }
 
   async getInvoiceCount(filters?: string) {
     const query = db.select({ count: sql<number>`COUNT(*)` }).from(invoices);

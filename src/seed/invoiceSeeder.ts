@@ -1,61 +1,72 @@
-// import { faker } from '@faker-js/faker';
-// import { db } from '../db';
-// import { clientServices } from '../schemas/clientServices';
-// import { invoices, NewInvoice } from '../schemas/invoices';
+import { db } from '../db';
+import { invoices } from '../schemas/invoices';
+import { clients } from '../schemas/clients';
+import { services } from '../schemas/services';
+import { faker } from '@faker-js/faker';
 
-// function getPastMonthDate(monthsAgo: number): string {
-//   const date = new Date();
-//   date.setMonth(date.getMonth() - monthsAgo);
-//   return date.toISOString().split('T')[0];
-// }
+const BATCH_SIZE = 1000;
 
-// function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-//   const result: T[][] = [];
-//   for (let i = 0; i < array.length; i += chunkSize) {
-//     result.push(array.slice(i, i + chunkSize));
-//   }
-//   return result;
-// }
+async function getClientAndServiceData() {
+    const clientIds = await db.select({ id: clients.id }).from(clients);
+    const serviceIds = await db.select({ id: services.id }).from(services);
+    return { clientIds, serviceIds };
+}
 
-// async function seedInvoices() {
-//   const existingClientServices = await db.select().from(clientServices);
+const getRandomInvoiceDate = (): Date => {
+    const start = new Date('2024-01-01');
+    const end = new Date('2024-08-31');
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+};
 
-//   if (existingClientServices.length === 0) {
-//     console.log('No client services found. Seeder aborted.');
-//     return;
-//   }
+const formatDateString = (date: Date) => {
+    return date.toISOString().split('T')[0];
+};
 
-//   const invoicesData: NewInvoice[] = [];
+const seedInvoices = async () => {
+    try {
+        const { clientIds, serviceIds } = await getClientAndServiceData();
+        let invoiceData: {
+            name: string;
+            service_id: number;
+            client_id: number;
+            invoice_status: 'PENDING' | 'COMPLETED';
+            remarks: string;
+            invoice_date: string;
+            payment_date: string | null;
+            invoice_amount: string;
+        }[] = [];
 
-//   existingClientServices.forEach(clientService => {
-//     for (let monthsAgo = 1; monthsAgo <= 5; monthsAgo++) {
-//       invoicesData.push({
-//         client_service_id: clientService.id,
-//         client_id: clientService.client_id,
-//         invoice_status: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
-//         remarks: faker.lorem.sentence(),
-//         invoice_date: getPastMonthDate(monthsAgo),
-//         payment_date: getPastMonthDate(monthsAgo),
-//         invoice_amount: parseFloat((Math.random() * (5000 - 100) + 100).toFixed(2)).toString(),
-//         created_at: new Date(),
-//         updated_at: new Date(),
-//       });
-//     }
-//   });
+        clientIds.forEach(async (client) => {
+            for (let i = 0; i < 8; i++) {
+                const randomService = faker.helpers.arrayElement(serviceIds);
+                invoiceData.push({
+                    name: `Invoice ${faker.number.int({ min: 1000, max: 9999 })}`,
+                    service_id: randomService.id,
+                    client_id: client.id,
+                    invoice_status: faker.helpers.arrayElement(['PENDING', 'COMPLETED']),
+                    remarks: faker.lorem.sentence(),
+                    invoice_date: formatDateString(getRandomInvoiceDate()),
+                    payment_date: Math.random() > 0.5 ? formatDateString(getRandomInvoiceDate()) : null,
+                    invoice_amount: (Math.random() * (5000 - 100) + 100).toFixed(2)
+                });
 
-//   const batchSize = 1000;
-//   const batchedInvoices = chunkArray(invoicesData, batchSize);
+                if (invoiceData.length === BATCH_SIZE) {
+                    console.log(`Inserting batch of ${invoiceData.length} invoices...`);
+                    await db.insert(invoices).values(invoiceData);
+                    invoiceData = [];  
+                }
+            }
+        });
 
-//   for (let i = 0; i < batchedInvoices.length; i++) {
-//     try {
-//       await db.insert(invoices).values(batchedInvoices[i]);
-//       console.log(`Batch ${i + 1}: Seeded ${batchedInvoices[i].length} invoices.`);
-//     } catch (error) {
-//       console.error(`Error seeding batch ${i + 1}:`, error);
-//     }
-//   }
+        if (invoiceData.length > 0) {
+            console.log(`Inserting final batch of ${invoiceData.length} invoices...`);
+            await db.insert(invoices).values(invoiceData);
+        }
 
-//   console.log(`Successfully seeded ${invoicesData.length} invoices.`);
-// }
+        console.log('Successfully seeded invoices.');
+    } catch (error) {
+        console.error('Error seeding invoices:', error);
+    }
+};
 
-// seedInvoices();
+seedInvoices();

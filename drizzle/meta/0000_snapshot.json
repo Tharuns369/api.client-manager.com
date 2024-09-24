@@ -1,5 +1,5 @@
 {
-  "id": "2bd2a866-6234-4235-a01d-faedabae07ea",
+  "id": "00c0a51f-c516-4d07-a7f7-a1a1bd1a8441",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,8 +14,26 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "client_name": {
+          "name": "client_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_phone": {
+          "name": "client_phone",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client_email": {
+          "name": "client_email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_name": {
+          "name": "company_name",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -25,12 +43,6 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
         },
         "email": {
           "name": "email",
@@ -105,7 +117,8 @@
           "name": "total_invoice_amount",
           "type": "numeric(100, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -123,11 +136,11 @@
         }
       },
       "indexes": {
-        "name_idx": {
-          "name": "name_idx",
+        "clientname_idx": {
+          "name": "clientname_idx",
           "columns": [
             {
-              "expression": "name",
+              "expression": "client_name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -206,7 +219,8 @@
           "name": "invoice_amount",
           "type": "numeric(100, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -326,7 +340,8 @@
           "name": "invoice_amount",
           "type": "numeric(100, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -437,7 +452,8 @@
           "name": "invoice_amount",
           "type": "numeric(100, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -518,7 +534,8 @@
           "name": "invoice_amount",
           "type": "numeric(100, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",

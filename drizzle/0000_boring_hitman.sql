@@ -18,9 +18,11 @@ END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "clients" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar NOT NULL,
+	"client_name" varchar NOT NULL,
+	"client_phone" varchar,
+	"client_email" varchar,
+	"company_name" varchar NOT NULL,
 	"poc" varchar NOT NULL,
-	"role" varchar,
 	"email" varchar NOT NULL,
 	"phone" varchar NOT NULL,
 	"secondary_phone" varchar,
@@ -32,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "clients" (
 	"city" varchar,
 	"gst" boolean DEFAULT false,
 	"country" varchar,
-	"total_invoice_amount" numeric(100, 2),
+	"total_invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "clients_email_unique" UNIQUE("email")
@@ -44,7 +46,7 @@ CREATE TABLE IF NOT EXISTS "client_services" (
 	"client_id" integer NOT NULL,
 	"service_id" integer NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
-	"invoice_amount" numeric(100, 2),
+	"invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -57,7 +59,7 @@ CREATE TABLE IF NOT EXISTS "invoice_files" (
 	"key" varchar NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
 	"size" integer NOT NULL,
-	"invoice_amount" numeric(100, 2),
+	"invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -71,7 +73,7 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 	"remarks" text,
 	"invoice_date" date NOT NULL,
 	"payment_date" date,
-	"invoice_amount" numeric(100, 2),
+	"invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -80,7 +82,7 @@ CREATE TABLE IF NOT EXISTS "services" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"type" varchar NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
-	"invoice_amount" numeric(100, 2),
+	"invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -100,7 +102,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	CONSTRAINT "users_password_unique" UNIQUE("password")
 );
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "name_idx" ON "clients" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "clientname_idx" ON "clients" USING btree ("client_name");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "client_status_idx" ON "clients" USING btree ("status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "title_idx" ON "client_services" USING btree ("title");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "client_id_idx" ON "client_services" USING btree ("client_id");--> statement-breakpoint
