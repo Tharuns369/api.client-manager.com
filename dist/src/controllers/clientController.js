@@ -158,7 +158,6 @@ export class ClientsController {
     async exportClientsAsJson(c) {
         try {
             const clients = await clientsDataServiceProvider.getAllClients();
-            console.log(clients);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_LIST_EXPORT_SUCCESS, clients);
         }
         catch (error) {
@@ -172,6 +171,15 @@ export class ClientsController {
             const filters = filterHelper.clients(query);
             const invoicesList = await clientsDataServiceProvider.getClientsForDashBoard(filters);
             return ResponseHelper.sendSuccessResponse(c, 200, "Clients wise invoice amount fetched successfuly", invoicesList);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async dropDownForListOfClients(c) {
+        try {
+            const listClients = await clientsDataServiceProvider.listDropDown();
+            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
         }
         catch (error) {
             throw error;

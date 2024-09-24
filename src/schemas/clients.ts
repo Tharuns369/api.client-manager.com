@@ -8,9 +8,11 @@ export const statusEnum = pgEnum('status', ['ACTIVE', 'INACTIVE']);
 
 export const clients = pgTable('clients', {
     id: serial('id').primaryKey(),
-    name: varchar('name').notNull(),
+    client_name: varchar('client_name').notNull(),
+    client_phone: varchar('client_phone'),
+    client_email: varchar('client_email'),
+    company_name: varchar('company_name').notNull(),
     poc: varchar('poc').notNull(),
-    role: varchar('role'),
     email: varchar('email').notNull().unique(),
     phone: varchar('phone').notNull(),
     secondary_phone: varchar('secondary_phone'),
@@ -28,7 +30,7 @@ export const clients = pgTable('clients', {
 
 }, (table: any) => {
     return {
-        nameIdx: index("name_idx").on(table.name),
+        clientNameIdx: index("clientname_idx").on(table.client_name),
         statusIdx: index("client_status_idx").on(table.status)
     };
 });

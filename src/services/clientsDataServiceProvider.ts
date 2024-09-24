@@ -73,7 +73,7 @@ export class ClientsDataServiceProvider {
 
   async allClientsInvoiceAmountCount() {
 
-    const clientsAmountCount = await db.select({ name: clients.name, totalInvoiceAmount: clients.total_invoice_amount })
+    const clientsAmountCount = await db.select({ client_name: clients.client_name, totalInvoiceAmount: clients.total_invoice_amount })
       .from(clients);
     return clientsAmountCount;
   }
@@ -163,7 +163,7 @@ export class ClientsDataServiceProvider {
     const query = db.select(
       {
         id: clients.id,
-        client_name: clients.name,
+        client_name: clients.client_name,
         invoice_amount: clients.total_invoice_amount
       }
     ).from(clients);
@@ -182,7 +182,7 @@ export class ClientsDataServiceProvider {
 
 
   async listDropDown(){
-    return await db.select({ id: clients.id,name: clients.name}).from(clients);
+    return await db.select({ id: clients.id,name: clients.client_name}).from(clients);
 }
 }
 

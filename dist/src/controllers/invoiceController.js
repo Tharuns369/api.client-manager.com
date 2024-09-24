@@ -1,5 +1,6 @@
 import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
+import { FilterHelper } from "../helpers/filterHelper";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
 import { ResponseHelper } from "../helpers/responseHelper";
 import { sortHelper } from "../helpers/sortHelper";
@@ -9,7 +10,6 @@ import { InvoiceValidationSchema } from "../validations/invoiceValidations/addIn
 import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
 import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
-import { FilterHelper } from "../helpers/filterHelper";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
 import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
 import { updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
@@ -53,13 +53,10 @@ export class InvoiceController {
             const skip = (page - 1) * limit;
             const sort = sortHelper.sort(query);
             const filters = filterHelper.invoices(query);
-            const [invoicesList, totalCount] = await Promise.all([
-                invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort }),
-                invoicesDataServiceProvider.getInvoiceCount(filters)
-            ]);
+            const invoicesList = await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
             const response = paginationHelper.getPaginationResponse({
                 page,
-                count: totalCount,
+                count: invoicesList.length,
                 limit,
                 data: invoicesList,
                 message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS
@@ -153,6 +150,18 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 201, "Invoice files fetched successfully", files);
         }
         catch (error) {
+            throw error;
+        }
+    }
+    async latestInvoices(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.invoices(query);
+            const invoicesList = await invoicesDataServiceProvider.getFiveLatestInvoices(filters);
+            return ResponseHelper.sendSuccessResponse(c, 201, "latest invoices fetched successfully", invoicesList);
+        }
+        catch (error) {
+            console.log("error", error);
             throw error;
         }
     }

@@ -113,11 +113,8 @@ const INVOICE_VALIDATION_MESSAGES = {
     INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
     INVOICE_UPLOADED_SUCCESS: 'Invoice uploaded successfully.',
     INVOICE_DOWNLOADED_SUCCESS: 'Invoice uploaded successfully.',
-<<<<<<< HEAD
     INVOICE_NAME_INVALID: 'Invalid Invoice name ',
-=======
     NAME_REQUIRED: 'Invoice name is required.',
->>>>>>> ed596cd1cc40c501b1dd32598b414bdc16178461
     NAME_TOO_SHORT: 'Invoice name cannot be empty.',
 };
 const INVOICE_FILES_VALIDATION_MESSAGES = {
