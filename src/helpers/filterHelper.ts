@@ -99,7 +99,6 @@ export class FilterHelper {
     }
 
     let queryString = filter.length > 0 ? filter.join(' AND ') : '';
-    console.log('queryString:', queryString);  
 
     return queryString;
 }

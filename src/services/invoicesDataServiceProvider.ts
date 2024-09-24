@@ -170,9 +170,6 @@ export class InvoicesDataServiceProvider {
       `;
 
       const data = await db.execute(query);
-
-      console.log('Data fetched:', data.rows);
-
       return data.rows;
 
     }
