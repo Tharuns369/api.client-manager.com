@@ -12,11 +12,11 @@ export class FilterHelper {
 
     if (fromDate && toDate) {
 
-      filter.push(`created_at BETWEEN '${fromDate}' AND '${toDate}'`);
+      filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
     if (searchString) {
-      filter.push(`name ILIKE '%${searchString}%' OR email ILIKE '%${searchString}%'`);
+      filter.push(`client_name ILIKE '%${searchString}%' OR poc ILIKE '%${searchString}%'`);
     }
 
     if (!status) {
@@ -46,7 +46,7 @@ export class FilterHelper {
 
     if (fromDate && toDate) {
 
-      filter.push(`created_at BETWEEN '${fromDate}' AND '${toDate}'`);
+      filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
     if (searchString) {
@@ -99,7 +99,6 @@ export class FilterHelper {
     }
 
     let queryString = filter.length > 0 ? filter.join(' AND ') : '';
-    console.log('queryString:', queryString);  
 
     return queryString;
   }

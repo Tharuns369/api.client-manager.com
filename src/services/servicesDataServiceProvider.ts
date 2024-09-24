@@ -97,7 +97,7 @@ export class ServiceDataServiceProvider {
 
     
     async listDropDown(){
-        return await db.select({ id: services.id,name: services.type}).from(services);
+        return await db.select({ id: services.id,name: services.type}).from(services).orderBy(services.type);
     }
 
 }

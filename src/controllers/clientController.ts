@@ -57,26 +57,24 @@ export class ClientsController {
       const page: number = parseInt(query.page || '1');
       const limit: number = parseInt(query.limit || '10');
       const skip: number = (page - 1) * limit;
-
+  
       const sort: string = sortHelper.sort(query);
-
       const filters = filterHelper.clients(query);
-
-      const [invoicesList, totalCount]: any = await Promise.all([
+  
+      const [clientsList, totalCount]: any = await Promise.all([
         clientsDataServiceProvider.getClientsWithPagenation({ skip, limit, filters, sort }),
         clientsDataServiceProvider.getclientsCount(filters)
       ]);
-
+  
       const response = paginationHelper.getPaginationResponse({
         page,
         count: totalCount,
         limit,
-        data: invoicesList,
+        data: clientsList,
         message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
       });
-
-      return c.json(response);
-
+        return c.json(response);
+  
     } catch (error) {
       throw error;
     }
