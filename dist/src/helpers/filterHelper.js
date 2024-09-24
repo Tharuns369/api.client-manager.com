@@ -60,7 +60,6 @@ export class FilterHelper {
             filter.push(`i.invoice_status = '${status}'`);
         }
         let queryString = filter.length > 0 ? filter.join(' AND ') : '';
-        console.log('queryString:', queryString);
         return queryString;
     }
 }
