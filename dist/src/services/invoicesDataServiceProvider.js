@@ -29,10 +29,10 @@ export class InvoicesDataServiceProvider {
         i.created_at,
         i.invoice_date,
         sr.id as service_id,
-        sr.type as service_name,
+        sr.type,
         c.id as client_id,
         c.client_name,
-        c.company_name as client_company_name
+        c.company_name
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
@@ -79,7 +79,7 @@ export class InvoicesDataServiceProvider {
             query.where(sql `${sql.raw(filters)}`);
         }
         const data = await query.execute();
-        return data[0].totalAmount || 0; // Return 0 if no matching records
+        return data[0].totalAmount || 0;
     }
     async getInvoiceByIdWithPopulate(id) {
         const data = await db.select({
@@ -103,27 +103,30 @@ export class InvoicesDataServiceProvider {
         return res;
     }
     async getFiveLatestInvoices(filters) {
+        console.log('Filters:', filters);
         let query = sql `
-    SELECT 
-        i.id,
-        i.invoice_amount,
-        i.invoice_status,
-        i.created_at,
-        sr.id as service_id,
-        sr.type as service_name,
-        c.id as client_id,
-        c.client_name,
-        c.company_name as client_company_name
-    FROM invoices as i
-    JOIN clients as c 
-        ON i.client_id = c.id
-    JOIN services as sr 
-        ON i.client_id = sr.id
-    ${filters ? sql `WHERE ${sql.raw(filters)}` : sql ``}
-    ORDER BY i.created_at DESC
-    limit 5
+      SELECT 
+          i.id,
+          i.invoice_amount,
+          i.invoice_status,
+          i.created_at,
+          i.invoice_date,
+          sr.id as service_id,
+          sr.type,
+          c.id as client_id,
+          c.client_name,
+          c.company_name
+      FROM invoices as i
+      JOIN clients as c 
+          ON i.client_id = c.id
+      JOIN services as sr 
+          ON i.service_id = sr.id  -- Fixed join condition
+      ${filters ? sql `WHERE ${sql.raw(filters)}` : sql ``}
+      ORDER BY i.created_at DESC
+      LIMIT 5
       `;
         const data = await db.execute(query);
+        console.log('Data fetched:', data.rows);
         return data.rows;
     }
 }
