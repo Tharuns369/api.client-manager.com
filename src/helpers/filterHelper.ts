@@ -99,9 +99,10 @@ export class FilterHelper {
 
     let queryString;
     if (filter.length > 0) {
-      queryString = filter.join("AND ");
+      queryString = filter.join(" AND ");
     }
-
+     console.log("queryString",queryString);
+     
     return queryString;
   }
 }

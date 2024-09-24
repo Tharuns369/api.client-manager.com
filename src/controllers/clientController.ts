@@ -243,5 +243,18 @@ export class ClientsController {
     }
   }
 
+  async dropDownForListOfClients(c: Context) {
+
+    try {
+
+    const  listClients = await clientsDataServiceProvider.listDropDown()
+
+    return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
+
+      } catch (error) {
+        throw error
+      }
+  }
+
 }
 

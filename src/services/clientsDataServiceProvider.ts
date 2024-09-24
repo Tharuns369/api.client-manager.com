@@ -179,5 +179,10 @@ export class ClientsDataServiceProvider {
     const data = await query.execute();
     return data;
   }
+
+
+  async listDropDown(){
+    return await db.select({ id: clients.id,name: clients.name}).from(clients);
+}
 }
 

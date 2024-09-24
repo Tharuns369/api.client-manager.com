@@ -94,6 +94,8 @@ export class ServiceDataServiceProvider {
         const data = await query.execute();
         return data;
     }
+
+    
     async listDropDown(){
         return await db.select({ id: services.id,name: services.type}).from(services);
     }

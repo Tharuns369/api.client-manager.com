@@ -55,6 +55,8 @@ export class InvoicesDataServiceProvider {
     }
     query.limit(limit).offset(skip);
     const data = await query.execute();
+    console.log("data",data);
+    
     return data;
   }
 
