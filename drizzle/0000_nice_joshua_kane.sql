@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "clients" (
 	"client_name" varchar NOT NULL,
 	"client_phone" varchar,
 	"client_email" varchar,
-	"company_name" varchar NOT NULL,
+	"company_name" varchar,
 	"poc" varchar NOT NULL,
 	"email" varchar NOT NULL,
 	"phone" varchar NOT NULL,

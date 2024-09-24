@@ -1,5 +1,5 @@
 {
-  "id": "00c0a51f-c516-4d07-a7f7-a1a1bd1a8441",
+  "id": "1057d9c3-7835-4c97-9f39-96958b36f342",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -36,7 +36,7 @@
           "name": "company_name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "poc": {
           "name": "poc",
