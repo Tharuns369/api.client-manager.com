@@ -102,6 +102,9 @@ export class FilterHelper {
     console.log('queryString:', queryString);  
 
     return queryString;
-}
+  }
+  
+
+  
 
 }
