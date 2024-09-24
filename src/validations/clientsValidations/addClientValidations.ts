@@ -5,15 +5,13 @@ const alphaRegex = /^[a-zA-Z\s]+$/;
 const phoneRegex = /^\d{10}$/;
 
 export enum StatusEnum {
-    ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE',
-  }
-
-  const amountRegex = /^\d+(\.\d{1,2})?$/;
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
 
 
 export const clientValidationSchema = v.object({
-  name: v.pipe(
+  client_name: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
     v.regex(alphaRegex, CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_INVALID)
@@ -70,8 +68,8 @@ export const clientValidationSchema = v.object({
     v.string(CLIENT_VALIDATION_MESSAGES.COUNTRY_INVALID)
   ),
   total_invoice_amount: v.optional(
-      v.number(CLIENT_VALIDATION_MESSAGES.TOTAL_INVOICE_AMOUNT_INVALID), 
-    )
+    v.number(CLIENT_VALIDATION_MESSAGES.TOTAL_INVOICE_AMOUNT_INVALID),
+  )
 });
 
 export type ClientValidationInput = v.InferInput<typeof clientValidationSchema>;
