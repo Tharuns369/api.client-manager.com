@@ -30,7 +30,8 @@ const CLIENT_MESSAGES = {
     CLIENT_BASED_INVOICES_FETCH_SUCCESS: "Client based invoices fetched successfully.",
     CLIENT_ADDED_SUCCESS: "Client added successfully",
     CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists",
-    CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully"
+    CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
+    CLIENT_ID_REQUIRED : "Client Id is Required"
 
 };
 
@@ -42,6 +43,7 @@ const INVOICES_MESSAGES = {
     TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
     INVOICE_NOT_FOUND: "Invoice Not Found With Id",
     INVOICE_UPDATE_SUCCESS: "Invoice Updated Successfully"
+
 
 
 };

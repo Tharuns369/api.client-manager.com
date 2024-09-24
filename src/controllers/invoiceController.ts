@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
+import { CLIENT_MESSAGES, INVOICE_VALIDATION_MESSAGES, INVOICES_MESSAGES } from "../constants/messaegConstants";
 import { NotFoundException } from "../exceptions/notFoundException";
 import { FilterHelper } from "../helpers/filterHelper";
 import { paginationHelper } from "../helpers/paginationResponseHelper";
@@ -254,4 +254,27 @@ export class InvoiceController {
             throw error;
         }
     }
+
+    async listInvoicesByClientId(c: Context) {
+        try {
+            const id = c.req.param('client_id'); 
+            
+            if (!id) {
+                return ResponseHelper.sendErrorResponse(c, 400, CLIENT_MESSAGES.CLIENT_ID_REQUIRED);
+            }
+            const invoicesList = await invoicesDataServiceProvider.getAllInvoicesByClientId(id);
+    
+            if (invoicesList.length === 0) {
+                return ResponseHelper.sendErrorResponse(c, 404, INVOICES_MESSAGES.INVOICES_NOT_FOUND);
+            }
+    
+            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS, invoicesList);
+    
+        } catch (error) {
+            console.error("Error fetching invoices:", error); 
+            throw error;
+        }
+    }
+    
+
 }

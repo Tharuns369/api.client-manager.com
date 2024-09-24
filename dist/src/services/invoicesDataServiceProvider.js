@@ -133,4 +133,26 @@ export class InvoicesDataServiceProvider {
         console.log('Data fetched:', data.rows);
         return data.rows;
     }
+    async getAllInvoicesByClientId(clientId) {
+        const query = sql `
+    SELECT 
+        i.id,
+        sr.type,
+        c.company_name,
+        c.id AS client_id,
+        c.client_name,
+        i.invoice_date,
+        i.invoice_status,
+        i.invoice_amount,
+        sr.id AS service_id,
+        i.created_at
+        
+    FROM ${invoices} AS i
+    JOIN ${clients} AS c ON i.client_id = c.id
+    JOIN ${services} AS sr ON i.service_id = sr.id
+    WHERE i.client_id = ${clientId}
+    `;
+        const data = await db.execute(query);
+        return data.rows;
+    }
 }
