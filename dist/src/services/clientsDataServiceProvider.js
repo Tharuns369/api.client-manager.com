@@ -128,6 +128,6 @@ export class ClientsDataServiceProvider {
         return data;
     }
     async listDropDown() {
-        return await db.select({ id: clients.id, name: clients.client_name }).from(clients);
+        return await db.select({ id: clients.id, Client_name: clients.client_name }).from(clients);
     }
 }
