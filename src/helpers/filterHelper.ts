@@ -101,6 +101,9 @@ export class FilterHelper {
     let queryString = filter.length > 0 ? filter.join(' AND ') : '';
 
     return queryString;
-}
+  }
+  
+
+  
 
 }

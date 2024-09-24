@@ -68,13 +68,20 @@ export class InvoiceController {
             const page: number = parseInt(query.page || '1');
             const limit: number = parseInt(query.limit || '10');
             const skip: number = (page - 1) * limit;
-            const filters = filterHelper.invoices(query);  
+            const filters = filterHelper.invoices(query);
             const sort = sortHelper.sort(query);
-            const invoicesList = await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
+
+            await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
+
+            const [invoicesList, totalCount]: any = await Promise.all([
+                invoicesDataServiceProvider.getInvoices({ skip, limit, filters, sort }),
+                invoicesDataServiceProvider.getInvoicesCount(filters)
+            ]);
+
 
             const response = paginationHelper.getPaginationResponse({
                 page,
-                count: invoicesList.length,
+                count: totalCount,
                 limit,
                 data: invoicesList,
                 message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS

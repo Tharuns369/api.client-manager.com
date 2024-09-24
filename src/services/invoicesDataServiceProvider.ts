@@ -55,17 +55,23 @@ export class InvoicesDataServiceProvider {
 
     const data = await db.execute(query);
     return data.rows;
-}
-
-
-  async getInvoiceCount(filters?: string) {
-    const query = db.select({ count: sql<number>`COUNT(*)` }).from(invoices);
-    if (filters) {
-      query.where(sql`${sql.raw(filters)}`);
-    }
-    const data = await query.execute();
-    return data[0].count;
   }
+
+
+  async getInvoicesCount(filters?: string) {
+    const query = sql`
+    SELECT 
+        COUNT(*) AS total_count
+    FROM ${invoices} AS i
+    JOIN ${clients} AS c ON i.client_id = c.id
+    JOIN ${services} AS sr ON i.service_id = sr.id
+    ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
+    `;
+
+    const data = await db.execute(query);
+    return data.rows[0]?.total_count || 0;
+  }
+
 
 
 
@@ -108,7 +114,7 @@ export class InvoicesDataServiceProvider {
     }
 
     const data = await query.execute();
-    return data[0].totalAmount || 0;  
+    return data[0].totalAmount || 0;
   }
 
   async getInvoiceByIdWithPopulate(id: number) {
@@ -145,9 +151,9 @@ export class InvoicesDataServiceProvider {
 
   async getFiveLatestInvoices(filters?: string) {
 
-      console.log('Filters:', filters);
+    console.log('Filters:', filters);
 
-      let query = sql`
+    let query = sql`
       SELECT 
           i.id,
           i.invoice_amount,
@@ -169,8 +175,11 @@ export class InvoicesDataServiceProvider {
       LIMIT 5
       `;
 
-      const data = await db.execute(query);
-      return data.rows;
+    const data = await db.execute(query);
 
-    }
+    console.log('Data fetched:', data.rows);
+
+    return data.rows;
+
+  }
 }
