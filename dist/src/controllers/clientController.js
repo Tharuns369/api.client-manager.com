@@ -47,7 +47,7 @@ export class ClientsController {
             const skip = (page - 1) * limit;
             const sort = sortHelper.sort(query);
             const filters = filterHelper.clients(query);
-            const [invoicesList, totalCount] = await Promise.all([
+            const [clientsList, totalCount] = await Promise.all([
                 clientsDataServiceProvider.getClientsWithPagenation({ skip, limit, filters, sort }),
                 clientsDataServiceProvider.getclientsCount(filters)
             ]);
@@ -55,7 +55,7 @@ export class ClientsController {
                 page,
                 count: totalCount,
                 limit,
-                data: invoicesList,
+                data: clientsList,
                 message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
             });
             return c.json(response);
