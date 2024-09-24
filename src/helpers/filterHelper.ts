@@ -67,7 +67,6 @@ export class FilterHelper {
     return queryString;
   }
 
-
   invoices(query: any) {
     let filter = [];
     const {
@@ -100,7 +99,7 @@ export class FilterHelper {
     }
 
     let queryString = filter.length > 0 ? filter.join(' AND ') : '';
-    console.log('queryString:', queryString);
+    console.log('queryString:', queryString);  
 
     return queryString;
 }
