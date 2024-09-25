@@ -9,7 +9,6 @@ export enum StatusEnum {
   INACTIVE = 'INACTIVE',
 }
 
-
 export const clientValidationSchema = v.object({
   client_name: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
@@ -20,6 +19,11 @@ export const clientValidationSchema = v.object({
     v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED),
     v.regex(alphaRegex, CLIENT_VALIDATION_MESSAGES.CLIENT_POC_INVALID)
+  ),
+  company_name: v.pipe(
+    v.string(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED),
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED),
+    v.regex(alphaRegex, CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_VALIDATIONAS)
   ),
   role: v.optional(
     v.pipe(

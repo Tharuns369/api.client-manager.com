@@ -187,5 +187,14 @@ export class ClientsDataServiceProvider {
         .from(clients)
         .orderBy(clients.client_name);
     }
+
+
+    async updateTotalInvoiceAmount(clientId: number, amountDifference: number) {
+      await db.update(clients)
+          .set({
+              total_invoice_amount: sql`total_invoice_amount + ${amountDifference}`,
+          })
+          .where(eq(clients.id,clientId));
+  }
 }
 
