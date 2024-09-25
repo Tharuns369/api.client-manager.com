@@ -96,6 +96,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     COUNTRY_INVALID: 'Country must be a valid string',
     // TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a valid number with precision and scale',
     TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a number',
+    COMPANY_NAME_REQUIRED: "Company Name is RAequired",
+    COMPANY_NAME_VALIDATIONAS: 'POC must only contain alphabets and spaces',
 };
 const INVOICE_VALIDATION_MESSAGES = {
     SERVICE_ID_REQUIRED: 'Service ID is required.',

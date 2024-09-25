@@ -112,11 +112,25 @@ export class InvoiceController {
             const id = +c.req.param('id');
             const body = await c.req.json();
             const validatedData = await validate(updateInvoiceValidationSchema, body);
-            const invoice = await invoicesDataServiceProvider.getInvoiceById(id);
-            if (!invoice) {
+            const oldInvoice = await invoicesDataServiceProvider.getInvoiceById(id);
+            if (!oldInvoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
+            const oldInvoiceAmount = parseFloat(oldInvoice.invoice_amount || '0');
+            const newInvoiceAmount = validatedData.invoice_amount || 0;
+            if (isNaN(oldInvoiceAmount) || isNaN(newInvoiceAmount)) {
+                throw new Error("Invalid invoice amounts.");
+            }
+            const amountDifference = newInvoiceAmount - oldInvoiceAmount;
             const updatedInvoice = await invoicesDataServiceProvider.editInvoice(id, body);
+            if (amountDifference > 0) {
+                await clientsDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.client_id, amountDifference);
+                await servicesDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.service_id, amountDifference);
+            }
+            else {
+                await servicesDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.service_id, amountDifference);
+                await clientsDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.client_id, amountDifference);
+            }
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {

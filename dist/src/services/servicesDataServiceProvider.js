@@ -73,4 +73,11 @@ export class ServiceDataServiceProvider {
     async listDropDown() {
         return await db.select({ id: services.id, name: services.type }).from(services).orderBy(services.type);
     }
+    async updateTotalInvoiceAmount(serviceId, amountDifference) {
+        await db.update(services)
+            .set({
+            invoice_amount: sql `invoice_amount + ${amountDifference}`,
+        })
+            .where(eq(services.id, serviceId));
+    }
 }
