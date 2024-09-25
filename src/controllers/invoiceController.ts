@@ -78,12 +78,32 @@ export class InvoiceController {
                 invoicesDataServiceProvider.getInvoicesCount(filters)
             ]);
 
+            const listInvoicesWithDownloadUrls = await Promise.all(
+                invoicesList.map(async (invoice: any) => {
+                    // Only generate the URL if the key is not null or undefined
+                    if (invoice.key) {
+                        const slug = 'client_invoices' + '/' + invoice.client_id;
+                        const download_url = await s3FileService.generatePresignedUrl(
+                            invoice.key,
+                            'get',
+                            slug,
+                        );
+                        invoice.url = download_url;
+                    } else {
+                        invoice.url = null; // Optionally set the URL to null if no key
+                    }
+
+                    return invoice;
+                }),
+            );
+
+
 
             const response = paginationHelper.getPaginationResponse({
                 page,
                 count: totalCount,
                 limit,
-                data: invoicesList,
+                data: listInvoicesWithDownloadUrls,
                 message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS
             });
 
@@ -273,24 +293,24 @@ export class InvoiceController {
 
     async listInvoicesByClientId(c: Context) {
         try {
-            const id = c.req.param('client_id'); 
-            
+            const id = c.req.param('client_id');
+
             if (!id) {
                 return ResponseHelper.sendErrorResponse(c, 400, CLIENT_MESSAGES.CLIENT_ID_REQUIRED);
             }
             const invoicesList = await invoicesDataServiceProvider.getAllInvoicesByClientId(id);
-    
+
             if (invoicesList.length === 0) {
                 return ResponseHelper.sendErrorResponse(c, 404, INVOICES_MESSAGES.INVOICES_NOT_FOUND);
             }
-    
+
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS, invoicesList);
-    
+
         } catch (error) {
-            console.error("Error fetching invoices:", error); 
+            console.error("Error fetching invoices:", error);
             throw error;
         }
     }
-    
+
 
 }

@@ -43,10 +43,12 @@ export class InvoicesDataServiceProvider {
         sr.type,
         c.id as client_id,
         c.client_name,
-        c.company_name
+        c.company_name,
+        if.key
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
+    LEFT JOIN ${invoiceFiles} AS if ON i.id = if.invoice_id
     ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
     ${sort ? sql`ORDER BY ${sql.raw(sort)}` : sql``}
     LIMIT ${limit}
@@ -183,7 +185,7 @@ export class InvoicesDataServiceProvider {
   }
 
 
-  async getAllInvoicesByClientId(clientId: string) { 
+  async getAllInvoicesByClientId(clientId: string) {
     const query = sql`
     SELECT 
         i.id,
@@ -204,7 +206,7 @@ export class InvoicesDataServiceProvider {
     `;
 
     const data = await db.execute(query);
-    return data.rows; 
+    return data.rows;
 
   }
 

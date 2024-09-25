@@ -1,7 +1,7 @@
 export class FilterHelper {
     clients(query) {
         let filter = [];
-        const { from_date: fromDate, to_date: toDate, status: status, search_string: searchString, } = query;
+        const { from_date: fromDate, to_date: toDate, status: status, client_id: clientId, search_string: searchString, } = query;
         if (fromDate && toDate) {
             filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
@@ -13,6 +13,9 @@ export class FilterHelper {
         }
         else {
             filter.push(`status = ${status}`);
+        }
+        if (clientId) {
+            filter.push(`id = ${clientId}`);
         }
         let queryString;
         if (filter.length > 0) {
