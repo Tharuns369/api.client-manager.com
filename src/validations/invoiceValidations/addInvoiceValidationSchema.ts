@@ -12,8 +12,8 @@ export const invoiceItemValidationSchema = v.object({
     v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
   ),
   client_id: v.pipe(
-    v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
-    v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
+    v.number(INVOICE_VALIDATION_MESSAGES.CLIENT_ID_REQUIRED),
+    v.integer(INVOICE_VALIDATION_MESSAGES.CLIENT_ID_INVALID)
   ),
   invoice_status: v.optional(
     v.enum(invoiceStatusEnum, INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_STATUS)
