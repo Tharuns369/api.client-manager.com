@@ -58,11 +58,23 @@ export class InvoiceController {
                 invoicesDataServiceProvider.getInvoices({ skip, limit, filters, sort }),
                 invoicesDataServiceProvider.getInvoicesCount(filters)
             ]);
+            const listInvoicesWithDownloadUrls = await Promise.all(invoicesList.map(async (invoice) => {
+                // Only generate the URL if the key is not null or undefined
+                if (invoice.key) {
+                    const slug = 'client_invoices' + '/' + invoice.client_id;
+                    const download_url = await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
+                    invoice.url = download_url;
+                }
+                else {
+                    invoice.url = null; // Optionally set the URL to null if no key
+                }
+                return invoice;
+            }));
             const response = paginationHelper.getPaginationResponse({
                 page,
                 count: totalCount,
                 limit,
-                data: invoicesList,
+                data: listInvoicesWithDownloadUrls,
                 message: INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS
             });
             return c.json(response);

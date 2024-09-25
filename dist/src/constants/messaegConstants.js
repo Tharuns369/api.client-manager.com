@@ -28,7 +28,7 @@ const CLIENT_MESSAGES = {
     CLIENT_ADDED_SUCCESS: "Client added successfully",
     CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists",
     CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
-    CLIENT_ID_REQUIRED: "Client Id is Required"
+    CLIENT_ID_REQUIRED: "Client Id is Required",
 };
 const INVOICES_MESSAGES = {
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
@@ -96,6 +96,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     COUNTRY_INVALID: 'Country must be a valid string',
     // TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a valid number with precision and scale',
     TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a number',
+    COMPANY_NAME_REQUIRED: "Company name is required",
+    COMPANY_NAME_VALIDATIONAS: 'POC must only contain alphabets and spaces',
 };
 const INVOICE_VALIDATION_MESSAGES = {
     SERVICE_ID_REQUIRED: 'Service ID is required.',
