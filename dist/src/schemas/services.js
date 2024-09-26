@@ -3,9 +3,11 @@ import { index, numeric, pgEnum, pgTable, serial, timestamp, varchar } from 'dri
 import { clientServices } from './clientServices';
 import { invoices } from './invoices';
 export const statusEnum = pgEnum('status', ['ACTIVE', 'INACTIVE']);
+export const serviceTypesEnum = pgEnum('type', ['RECURRING', 'ONE-TIME']);
 export const services = pgTable('services', {
     id: serial('id').primaryKey(),
-    type: varchar('type').notNull(),
+    service_name: varchar('service_name').notNull(),
+    type: serviceTypesEnum('type').notNull(),
     status: statusEnum('status').default("ACTIVE"),
     invoice_amount: numeric('invoice_amount', { precision: 100, scale: 2 }).default('0'),
     created_at: timestamp('created_at').notNull().defaultNow(),
@@ -13,6 +15,7 @@ export const services = pgTable('services', {
 }, (table) => {
     return {
         typeIdx: index("services_type_idx").on(table.type),
+        serviceNameIdx: index("services_name_idx").on(table.service_name),
         statusIdx: index("services_status_idx").on(table.status)
     };
 });

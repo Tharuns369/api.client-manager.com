@@ -11,6 +11,12 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ CREATE TYPE "public"."type" AS ENUM('RECURRING', 'ONE-TIME');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "public"."user_type" AS ENUM('ADMIN');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -21,7 +27,7 @@ CREATE TABLE IF NOT EXISTS "clients" (
 	"client_name" varchar NOT NULL,
 	"client_phone" varchar,
 	"client_email" varchar,
-	"company_name" varchar,
+	"company_name" varchar NOT NULL,
 	"poc" varchar NOT NULL,
 	"email" varchar NOT NULL,
 	"phone" varchar NOT NULL,
@@ -80,7 +86,8 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "services" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"type" varchar NOT NULL,
+	"service_name" varchar NOT NULL,
+	"type" "type" NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
 	"invoice_amount" numeric(100, 2) DEFAULT '0',
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -112,6 +119,7 @@ CREATE INDEX IF NOT EXISTS "invoice_files_client_id_idx" ON "invoice_files" USIN
 CREATE INDEX IF NOT EXISTS "client_invoice_id_idx" ON "invoices" USING btree ("client_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "invoice_status_idx" ON "invoices" USING btree ("invoice_status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "services_type_idx" ON "services" USING btree ("type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "services_name_idx" ON "services" USING btree ("service_name");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "services_status_idx" ON "services" USING btree ("status");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "email_idx" ON "users" USING btree ("email");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_type_idx" ON "users" USING btree ("user_type");
