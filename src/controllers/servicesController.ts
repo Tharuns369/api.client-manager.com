@@ -37,28 +37,30 @@ export class ServicesController {
     }
   }
 
-  // async getService(c:Context){
-  //   try {
-  //     const id = +c.req.param('id');
+  async getService(c:Context){
+    try {
+      console.log("try");
+      
+      const id = +c.req.param('id');
 
-  //     if (isNaN(id)) {
+      if (isNaN(id)) {
 
-  //       throw new BadRequestException(COMMON_VALIDATIONS.INVALID_CLIENT_ID);
-  //     }
+        throw new BadRequestException(COMMON_VALIDATIONS.INVALID_SERVICE_ID);
+      }
 
-  //     const client: any = await servicesDataServiceProvider.getServiceById(id);
+      const service = await servicesDataServiceProvider.getServiceById(id);
 
-  //     if (!client) {
-  //       throw new NotFoundException(COMMON_VALIDATIONS.INVALID_SERVICE_ID);
-  //     }
+      if (!service) {
+        throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
+      }
 
-  //     return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCH_SUCCESS, client);
+      return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_FETCHED_SUCCESS, service);
 
-  //   } catch (error) {
-  //     throw error;
-  //   }
+    } catch (error) {
+      throw error;
+    }
 
-  // }
+  }
 
 
 
