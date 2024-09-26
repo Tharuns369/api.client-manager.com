@@ -164,8 +164,10 @@ export class InvoiceController {
                 slug
             );
 
-            validatedData[0].key = fileName;
-            validatedData[1].key = fileName;
+            validatedData.forEach((item) => {
+                item.key = fileName;
+            });
+
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
 
             let data = {
