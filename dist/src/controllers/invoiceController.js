@@ -80,7 +80,6 @@ export class InvoiceController {
             return c.json(response);
         }
         catch (error) {
-            console.log("error", error);
             throw error;
         }
     }
@@ -128,7 +127,6 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_UPLOADED_SUCCESS, data);
         }
         catch (error) {
-            console.log(error);
             throw error;
         }
     }
@@ -159,14 +157,12 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {
-            console.log(error);
             throw error;
         }
     }
     async downloadInvoice(c) {
         try {
             const id = +c.req.param('id');
-            console.log("id", id);
             const invoiceFile = await invoicesDataServiceProvider.getInvoiceFileById(id);
             if (!invoiceFile) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
