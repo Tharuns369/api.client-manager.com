@@ -46,6 +46,7 @@ export class FilterHelper {
       to_date: toDate,
       status: status,
       search_string: searchString,
+      type
     } = query;
 
 
@@ -54,8 +55,12 @@ export class FilterHelper {
       filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
+    if (type) {
+      filter.push(`type = '${type}'`);
+
+    }
     if (searchString) {
-      filter.push(`type ILIKE '%${searchString}%'`);
+      filter.push(`service_name ILIKE '%${searchString}%'`);
     }
 
     if (!status) {

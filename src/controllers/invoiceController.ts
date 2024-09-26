@@ -118,6 +118,7 @@ export class InvoiceController {
     public async viewInvoice(c: Context) {
         try {
             const id = +c.req.param('id');
+            let url;
 
             const invoice = await invoicesDataServiceProvider.getInvoiceByIdWithPopulate(id);
 
@@ -125,21 +126,26 @@ export class InvoiceController {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
 
-            const slug = `client_invoices/${invoice.client_id}`;
+            const slug = 'client_invoices' + '/' + invoice.client_id;
 
             if (invoice.key) {
-                console.log(invoice);
-
-                return await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
-                console.log(invoice);
-
-                return invoice;
-
-            } else {
-                return null;
+                url = await s3FileService.generatePresignedUrl(
+                    invoice.key,
+                    'get',
+                    slug,
+                );
+            }
+            else {
+                url = null;
             }
 
-            return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', invoice);
+            const modifiedInvoice = {
+                ...invoice,
+                url,
+
+            };
+
+            return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', modifiedInvoice);
 
         } catch (error) {
             throw error;

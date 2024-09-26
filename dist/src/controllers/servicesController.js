@@ -67,9 +67,6 @@ export class ServicesController {
                 servicesDataServiceProvider.getServices({ limit, skip, filters, sort }),
                 servicesDataServiceProvider.getServicesCount(filters)
             ]);
-            if (!invoicesList || invoicesList.length === 0) {
-                throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
-            }
             const response = paginationHelper.getPaginationResponse({
                 page,
                 count: totalCount,

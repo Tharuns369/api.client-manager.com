@@ -28,7 +28,7 @@ export class ServicesController {
       const newService = await servicesDataServiceProvider.insertService(serviceData);
 
       console.log(newService);
-      
+
 
       return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
     } catch (error) {
@@ -37,10 +37,10 @@ export class ServicesController {
     }
   }
 
-  async getService(c:Context){
+  async getService(c: Context) {
     try {
       console.log("try");
-      
+
       const id = +c.req.param('id');
 
       if (isNaN(id)) {
@@ -99,10 +99,6 @@ export class ServicesController {
         servicesDataServiceProvider.getServices({ limit, skip, filters, sort }),
         servicesDataServiceProvider.getServicesCount(filters)
       ]);
-
-      if (!invoicesList || invoicesList.length === 0) {
-        throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
-      }
 
       const response = paginationHelper.getPaginationResponse({
         page,
@@ -186,18 +182,18 @@ export class ServicesController {
     }
   }
 
-  
+
   async getlistServiceForDropDown(c: Context) {
 
     try {
 
-    const  listServices = await servicesDataServiceProvider.listDropDown()
+      const listServices = await servicesDataServiceProvider.listDropDown();
 
-    return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS, listServices);
+      return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS, listServices);
 
-      } catch (error) {
-        throw error
-      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getInvoiceAmountCountForRecurringServiceType(c: Context) {

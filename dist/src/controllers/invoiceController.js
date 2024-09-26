@@ -87,21 +87,23 @@ export class InvoiceController {
     async viewInvoice(c) {
         try {
             const id = +c.req.param('id');
+            let url;
             const invoice = await invoicesDataServiceProvider.getInvoiceByIdWithPopulate(id);
             if (!invoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
-            const slug = `client_invoices/${invoice.client_id}`;
+            const slug = 'client_invoices' + '/' + invoice.client_id;
             if (invoice.key) {
-                console.log(invoice);
-                return await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
-                console.log(invoice);
-                return invoice;
+                url = await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
             }
             else {
-                return null;
+                url = null;
             }
-            return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', invoice);
+            const modifiedInvoice = {
+                ...invoice,
+                url,
+            };
+            return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', modifiedInvoice);
         }
         catch (error) {
             throw error;
@@ -223,11 +225,21 @@ export class InvoiceController {
             if (!id) {
                 return ResponseHelper.sendErrorResponse(c, 400, CLIENT_MESSAGES.CLIENT_ID_REQUIRED);
             }
-            const invoicesList = await invoicesDataServiceProvider.getAllInvoicesByClientId(id);
-            if (invoicesList.length === 0) {
-                return ResponseHelper.sendErrorResponse(c, 404, INVOICES_MESSAGES.INVOICES_NOT_FOUND);
-            }
-            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS, invoicesList);
+            const filters = filterHelper.invoices(c.req.query());
+            const invoicesList = await invoicesDataServiceProvider.getAllInvoicesByClientId(id, filters);
+            const listInvoicesWithDownloadUrls = await Promise.all(invoicesList.map(async (invoice) => {
+                // Only generate the URL if the key is not null or undefined
+                if (invoice.key) {
+                    const slug = 'client_invoices' + '/' + invoice.client_id;
+                    const download_url = await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
+                    invoice.url = download_url;
+                }
+                else {
+                    invoice.url = null; // Optionally set the URL to null if no key
+                }
+                return invoice;
+            }));
+            return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICES_FETCHED_SUCCESS, listInvoicesWithDownloadUrls);
         }
         catch (error) {
             console.error("Error fetching invoices:", error);

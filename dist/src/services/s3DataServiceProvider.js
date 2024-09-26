@@ -20,7 +20,6 @@ export class S3FileService {
     async generatePresignedUrl(fileName, type = "put", slug, contentType, isPublic = false, expireSeconds = this.config.expires, bucket = this.config.s3_bucket) {
         try {
             const key = await this.prepareKey(fileName, slug);
-            console.log('key', key);
             const params = {
                 Bucket: bucket,
                 Key: key

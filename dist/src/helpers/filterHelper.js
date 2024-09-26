@@ -25,12 +25,15 @@ export class FilterHelper {
     }
     services(query) {
         let filter = [];
-        const { from_date: fromDate, to_date: toDate, status: status, search_string: searchString, } = query;
+        const { from_date: fromDate, to_date: toDate, status: status, search_string: searchString, type } = query;
         if (fromDate && toDate) {
             filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
+        if (type) {
+            filter.push(`type = '${type}'`);
+        }
         if (searchString) {
-            filter.push(`type ILIKE '%${searchString}%'`);
+            filter.push(`service_name ILIKE '%${searchString}%'`);
         }
         if (!status) {
             filter.push(`status = 'ACTIVE'`);
@@ -46,7 +49,7 @@ export class FilterHelper {
     }
     invoices(query) {
         let filter = [];
-        const { from_date: fromDate, to_date: toDate, status, client_id: clientId, service_id: serviceId, search_string: searchString, } = query;
+        const { from_date: fromDate, to_date: toDate, status, client_id: clientId, service_id: serviceId, search_string: searchString, type } = query;
         if (fromDate && toDate) {
             filter.push(`i.invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
@@ -61,6 +64,9 @@ export class FilterHelper {
         }
         if (status) {
             filter.push(`i.invoice_status = '${status}'`);
+        }
+        if (type) {
+            filter.push(`sr.type = '${type}'`);
         }
         let queryString = filter.length > 0 ? filter.join(' AND ') : '';
         return queryString;
