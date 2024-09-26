@@ -10,20 +10,17 @@ export class ServiceDataServiceProvider {
     }
     async getServices({ skip, limit, filters, sort }) {
         const query = db.select().from(services);
-        if (filters) {
-            query.where(sql `${sql.raw(filters)}`);
-        }
-        if (sort) {
-            query.orderBy(sql `${sql.raw(sort)}`);
-        }
         query.limit(limit).offset(skip);
         const data = await query.execute();
         return data;
     }
     async getServicesCount(filters) {
-        const result = await db.select({ count: sql `COUNT(*)` })
-            .from(services);
-        return result[0].count;
+        const query = db.select({ count: sql `COUNT(*)` }).from(services);
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        const data = await query.execute();
+        return data[0].count;
     }
     async deleteService(id) {
         const result = await db

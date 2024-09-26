@@ -66,15 +66,13 @@ export class FilterHelper {
     if (!status) {
       filter.push(`status = 'ACTIVE'`);
     } else {
-      filter.push(`status = ${status}`);
+      filter.push(`status = '${status}'`);
     }
 
-    let queryString;
-    if (filter.length > 0) {
-      queryString = filter.join("AND ");
-    }
-
+    let queryString = filter.length > 0 ? filter.join(' AND ') : '';
     return queryString;
+
+
   }
 
   invoices(query: any) {

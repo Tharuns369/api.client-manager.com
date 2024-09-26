@@ -109,6 +109,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_ROLE_INVALID: "Role must only contain alphabets and spaces",
     EMAIL_REQUIRED: "Email is required",
     INVALID_EMAIL_FORMAT: "Invalid email format",
+    CLIENT_EMAIL_REQUIRED: "Email is required",
+    CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits",
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
@@ -129,7 +131,7 @@ const CLIENT_VALIDATION_MESSAGES = {
 };
 
 const INVOICE_VALIDATION_MESSAGES = {
-    SERVICE_ID_REQUIRED: "Service Id is required.",
+    SERVICE_ID_REQUIRED: "Service id is required.",
     SERVICE_ID_INVALID: "Service Id must be a positive integer.",
     CLIENT_ID_REQUIRED: "Client Id is required.",
     CLIENT_ID_INVALID: "Client Id must be a positive integer.",
@@ -170,8 +172,8 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
 };
 
 const SERVICE_VALIDATION_MESSAGES = {
-    SERVICE_NAME_REQUIRED: "Service name is required.",
-    SERVICE_NAME_INVALID: "Service name not empty.",
+    SERVICE_NAME_REQUIRED: "Service is required.",
+    SERVICE_NAME_INVALID: "Service not empty.",
     TYPE_REQUIRED: "Type is required.",
     INVALID_TYPE: "Type must be either RECURRING or ONE-TIME.",
     TITLE_REQUIRED: "Title is required.",
