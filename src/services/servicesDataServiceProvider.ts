@@ -95,9 +95,9 @@ export class ServiceDataServiceProvider {
         return data;
     }
 
-    
-    async listDropDown(){
-        return await db.select({ id: services.id,name: services.type}).from(services).orderBy(services.type);
+
+    async listDropDown() {
+        return await db.select({ id: services.id, name: services.type }).from(services).orderBy(services.type);
     }
 
     async updateTotalInvoiceAmount(serviceId: number, amountDifference: number) {
@@ -105,7 +105,20 @@ export class ServiceDataServiceProvider {
             .set({
                 invoice_amount: sql`invoice_amount + ${amountDifference}`,
             })
-            .where(eq(services.id,serviceId));
+            .where(eq(services.id, serviceId));
+    }
+
+    
+
+    async getInvoiceAmountCountBasedOnServiceType(filters?: string) {
+        const query = db.select({
+            totalAmount: sql`SUM(invoice_amount)`.as('total_amount')
+        }).from(services);
+        if (filters) {
+            query.where(sql`${sql.raw(filters)}`);
+        }
+        const data = await query.execute();
+        return data[0].totalAmount || 0;
     }
 
 }

@@ -80,4 +80,14 @@ export class ServiceDataServiceProvider {
         })
             .where(eq(services.id, serviceId));
     }
+    async getInvoiceAmountCountBasedOnServiceType(filters) {
+        const query = db.select({
+            totalAmount: sql `SUM(invoice_amount)`.as('total_amount')
+        }).from(services);
+        if (filters) {
+            query.where(sql `${sql.raw(filters)}`);
+        }
+        const data = await query.execute();
+        return data[0].totalAmount || 0;
+    }
 }
