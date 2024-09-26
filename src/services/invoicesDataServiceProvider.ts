@@ -217,7 +217,7 @@ export class InvoicesDataServiceProvider {
   }
 
 
-  async getAllInvoicesByClientId(clientId: string) {
+  async getAllInvoicesByClientId(clientId: string, filters: string) {
     const query = sql`
     SELECT 
         i.id,
@@ -229,12 +229,17 @@ export class InvoicesDataServiceProvider {
         i.invoice_status,
         i.invoice_amount,
         sr.id AS service_id,
-        i.created_at
+        i.created_at,
+        if.key
+
         
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
+    LEFT JOIN ${invoiceFiles} AS if ON i.id = if.invoice_id
     WHERE i.client_id = ${clientId}
+    ${filters ? sql`AND ${sql.raw(filters)}` : sql``}
+
     `;
 
     const data = await db.execute(query);

@@ -81,6 +81,7 @@ export class FilterHelper {
       client_id: clientId,
       service_id: serviceId,
       search_string: searchString,
+      type
     } = query;
 
     if (fromDate && toDate) {
@@ -101,6 +102,11 @@ export class FilterHelper {
 
     if (status) {
       filter.push(`i.invoice_status = '${status}'`);
+    }
+
+    if (type) {
+      filter.push(`sr.type = '${type}'`);
+
     }
 
     let queryString = filter.length > 0 ? filter.join(' AND ') : '';
