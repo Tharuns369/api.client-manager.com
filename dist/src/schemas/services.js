@@ -1,6 +1,5 @@
 import { relations } from 'drizzle-orm';
 import { index, numeric, pgEnum, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { clientServices } from './clientServices';
 import { invoices } from './invoices';
 export const statusEnum = pgEnum('status', ['ACTIVE', 'INACTIVE']);
 export const serviceTypesEnum = pgEnum('type', ['RECURRING', 'ONE-TIME']);
@@ -21,6 +20,5 @@ export const services = pgTable('services', {
     };
 });
 export const servicesAndClientServicesRelations = relations(services, ({ many }) => ({
-    clientServices: many(clientServices),
     invoices: many(invoices)
 }));

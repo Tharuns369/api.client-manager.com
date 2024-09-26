@@ -10,7 +10,6 @@ clientsRouter.get('/:id', authMiddleware.checkAndValidateAuthToken, clientsContr
 clientsRouter.post('/', authMiddleware.checkAndValidateAuthToken, clientsController.addClient);
 clientsRouter.patch('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.updateClient);
 clientsRouter.delete('/:id', authMiddleware.checkAndValidateAuthToken, clientsController.deleteClient);
-clientsRouter.get('/:id/services', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseServices);
 clientsRouter.get('/:id/invoices', authMiddleware.checkAndValidateAuthToken, clientsController.getClientWiseInvoices);
 clientsRouter.get('/invoice/amount', authMiddleware.checkAndValidateAuthToken, clientsController.getClientsWiseInvoiceAmountCount);
 clientsRouter.get('/export/json', authMiddleware.checkAndValidateAuthToken, clientsController.exportClientsAsJson);

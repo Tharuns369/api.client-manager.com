@@ -165,28 +165,6 @@ export class ClientsController {
 
 
 
-  async getClientsWiseServices(c: Context) {
-    try {
-
-      const clientId = +c.req.param('id');
-
-      const client = await clientsDataServiceProvider.getClientById(clientId);
-
-      if (!client) {
-        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
-      }
-
-      const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
-
-      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
-
-    }
-    catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
   async getClientWiseInvoices(c: Context) {
     try {
 

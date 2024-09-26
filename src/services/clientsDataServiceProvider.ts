@@ -1,9 +1,8 @@
-import { and, between, eq, inArray, SQL, sql } from "drizzle-orm";
+import { and, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
-import { clientServices } from "../schemas/clientServices";
 import { services } from "../schemas/services";
 
 
@@ -79,22 +78,6 @@ export class ClientsDataServiceProvider {
   }
 
 
-  async getClientsWiseServices(clientId: number) {
-
-    const result = await db.select({
-      id: clientServices.id,
-      client_id: clientServices.client_id,
-      title: clientServices.title,
-      type: services.type,
-      invoice_amount: clientServices.invoice_amount,
-      created_at: clientServices.created_at,
-      updated_at: clientServices.updated_at
-
-    }).from(clientServices).where(eq(clientServices.client_id, clientId)).innerJoin(services, eq(clientServices.service_id, services.id));
-
-    return result;
-
-  }
 
   async getClientsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
 
@@ -112,36 +95,6 @@ export class ClientsDataServiceProvider {
 
     return result;
 
-  }
-
-  async getClintsWiseInvoices(clientId: number, fromDate: string, toDate: string, invoiceStatus?: 'PENDING' | 'COMPLETED') {
-    const result = await db.query.clients.findMany({
-      where: (clients, { eq }) => (eq(clients.id, clientId)),
-      columns: {},
-      with: {
-        invoices: {
-          columns: {
-            id: true,
-            invoice_amount: true,
-            invoice_date: true,
-            invoice_status: true,
-            payment_date: true,
-            client_id: true,
-
-          },
-          where: (invoices) =>
-            and(
-              fromDate && toDate ? between(invoices.invoice_date, fromDate, toDate) : undefined,
-              invoiceStatus ? eq(invoices.invoice_status, invoiceStatus) : undefined
-            ),
-          orderBy: (invoices, { desc }) => [desc(invoices.invoice_date)]
-
-        }
-
-      }
-    });
-
-    return result;
   }
 
 
