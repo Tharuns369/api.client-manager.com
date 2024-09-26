@@ -30,18 +30,14 @@ export class FilterHelper {
             filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
         if (searchString) {
-            filter.push(`type ILIKE '%${searchString}%'`);
+            filter.push(`type ILIKE '%${searchString}%' OR service_name ILIKE '%${searchString}%'`);
         }
-        if (!status) {
-            filter.push(`status = 'ACTIVE'`);
-        }
-        else {
-            filter.push(`status = ${status}`);
-        }
-        let queryString;
-        if (filter.length > 0) {
-            queryString = filter.join("AND ");
-        }
+        // if (!status) {
+        //   filter.push(`status = 'ACTIVE'`);
+        // } else {
+        //   filter.push(`status = '${status}'`);
+        // }
+        let queryString = filter.length > 0 ? filter.join(' AND ') : '';
         return queryString;
     }
     invoices(query) {
