@@ -33,6 +33,7 @@ export class InvoicesDataServiceProvider {
         c.id as client_id,
         c.client_name,
         c.company_name,
+        i.remarks,
         if.key
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
@@ -93,6 +94,7 @@ export class InvoicesDataServiceProvider {
             invoice_date: invoices.invoice_date,
             payment_date: invoices.payment_date,
             created_at: invoices.created_at,
+            remarks: invoices.remarks,
             key: invoiceFiles.key
         })
             .from(invoices)
@@ -101,7 +103,6 @@ export class InvoicesDataServiceProvider {
             .leftJoin(invoiceFiles, eq(invoices.id, invoiceFiles.invoice_id))
             .where(eq(invoices.id, id))
             .execute();
-        console.log('Invoice :', data);
         return data.length ? data[0] : null;
     }
     async getInvoiceFiles(id) {
