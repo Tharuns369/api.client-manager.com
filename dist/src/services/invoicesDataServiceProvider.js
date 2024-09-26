@@ -87,6 +87,25 @@ export class InvoicesDataServiceProvider {
         const data = await query.execute();
         return data[0].totalAmount || 0;
     }
+    // async getInvoiceByIdWithPopulate(id: number) {
+    //   const data = await db.select(
+    //     {
+    //       id: invoices.id,
+    //       name: invoices.name,
+    //       client_id: invoices.client_id,
+    //       service_id: invoices.service_id,
+    //       client_name: clients.client_name,
+    //       company_name: clients.company_name,
+    //       service_name: services.type,
+    //       invoice_amount: invoices.invoice_amount,
+    //       invoice_status: invoices.invoice_status,
+    //       invoice_date: invoices.invoice_date,
+    //       payment_date: invoices.payment_date,
+    //       created_at: invoices.created_at
+    //     }
+    //   ).from(invoices).innerJoin(services, eq(invoices.service_id, services.id)).innerJoin(clients, eq(invoices.client_id, clients.id)).where(eq(invoices.id, id)).execute();
+    //   return data;
+    // }
     async getInvoiceByIdWithPopulate(id) {
         const data = await db.select({
             id: invoices.id,
@@ -100,16 +119,23 @@ export class InvoicesDataServiceProvider {
             invoice_status: invoices.invoice_status,
             invoice_date: invoices.invoice_date,
             payment_date: invoices.payment_date,
-            created_at: invoices.created_at
-        }).from(invoices).innerJoin(services, eq(invoices.service_id, services.id)).innerJoin(clients, eq(invoices.client_id, clients.id)).where(eq(invoices.id, id)).execute();
-        return data;
+            created_at: invoices.created_at,
+            key: invoiceFiles.key
+        })
+            .from(invoices)
+            .innerJoin(clients, eq(invoices.client_id, clients.id))
+            .innerJoin(services, eq(invoices.service_id, services.id))
+            .leftJoin(invoiceFiles, eq(invoices.id, invoiceFiles.invoice_id))
+            .where(eq(invoices.id, id))
+            .execute();
+        console.log('Invoice :', data);
+        return data.length ? data[0] : null;
     }
     async getInvoiceFiles(id) {
         const res = await db.select().from(invoiceFiles).where(eq(invoiceFiles.invoice_id, id));
         return res;
     }
     async getFiveLatestInvoices(filters) {
-        console.log('Filters:', filters);
         let query = sql `
       SELECT 
           i.id,
@@ -121,18 +147,20 @@ export class InvoicesDataServiceProvider {
           sr.type,
           c.id as client_id,
           c.client_name,
-          c.company_name
+          c.company_name,
+          if.key
       FROM invoices as i
       JOIN clients as c 
           ON i.client_id = c.id
       JOIN services as sr 
           ON i.service_id = sr.id  -- Fixed join condition
+      LEFT JOIN invoice_files AS if ON i.id = if.invoice_id
+
       ${filters ? sql `WHERE ${sql.raw(filters)}` : sql ``}
       ORDER BY i.created_at DESC
       LIMIT 5
       `;
         const data = await db.execute(query);
-        console.log('Data fetched:', data.rows);
         return data.rows;
     }
     async getAllInvoicesByClientId(clientId) {

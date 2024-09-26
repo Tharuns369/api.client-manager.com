@@ -91,7 +91,17 @@ export class InvoiceController {
             if (!invoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
-            return ResponseHelper.sendSuccessResponse(c, 200, "Invoice fetched successfully", invoice);
+            const slug = `client_invoices/${invoice.client_id}`;
+            if (invoice.key) {
+                console.log(invoice);
+                return await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
+                console.log(invoice);
+                return invoice;
+            }
+            else {
+                return null;
+            }
+            return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', invoice);
         }
         catch (error) {
             throw error;
@@ -188,7 +198,18 @@ export class InvoiceController {
             const query = c.req.query();
             const filters = filterHelper.invoices(query);
             const invoicesList = await invoicesDataServiceProvider.getFiveLatestInvoices(filters);
-            return ResponseHelper.sendSuccessResponse(c, 201, "latest invoices fetched successfully", invoicesList);
+            const invoicesWithUrls = await Promise.all(invoicesList.map(async (invoice) => {
+                if (invoice.key) {
+                    const slug = 'client_invoices' + '/' + invoice.client_id;
+                    const download_url = await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
+                    invoice.url = download_url;
+                }
+                else {
+                    invoice.url = null;
+                }
+                return invoice;
+            }));
+            return ResponseHelper.sendSuccessResponse(c, 201, "Latest invoices fetched successfully", invoicesWithUrls);
         }
         catch (error) {
             console.log("error", error);

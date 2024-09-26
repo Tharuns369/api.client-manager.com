@@ -129,7 +129,9 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
     INVALID_CLIENT_ID: 'Invalid client id',
     INVOICE_ID_REQUIRED: 'Client id is required',
     INVALID_INVOICE_ID: 'Invalid client id',
-    INVALID_KEY: 'Invalid key'
+    INVALID_KEY: 'Invalid key',
+    SERVICE_ID_REQUIRED: "Service id required",
+    INVALID_SERVICE_ID: "Invalid Service id"
 };
 const SERVICE_VALIDATION_MESSAGES = {
     TITLE_REQUIRED: "Title is required.",
