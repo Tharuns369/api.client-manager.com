@@ -222,13 +222,12 @@ export class InvoicesDataServiceProvider {
     SELECT 
         i.id,
         sr.type,
-        c.company_name,
         c.id AS client_id,
-        c.client_name,
         i.invoice_date,
         i.invoice_status,
         i.invoice_amount,
         sr.id AS service_id,
+        sr.service_name,
         i.created_at,
         if.key
 
