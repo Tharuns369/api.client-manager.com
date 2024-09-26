@@ -1,5 +1,5 @@
 {
-  "id": "f713e19b-a5f5-45ba-8aaa-fac29534b64d",
+  "id": "4638375e-756b-412b-8506-72eda81e5330",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -543,6 +543,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'0'"
+        },
+        "remarks": {
+          "name": "remarks",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

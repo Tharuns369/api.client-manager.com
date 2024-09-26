@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS "services" (
 	"type" "type" NOT NULL,
 	"status" "status" DEFAULT 'ACTIVE',
 	"invoice_amount" numeric(100, 2) DEFAULT '0',
+	"remarks" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

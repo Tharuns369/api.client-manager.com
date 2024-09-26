@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { index, numeric, pgEnum, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { index, numeric, pgEnum, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { clientServices } from './clientServices';
 import { invoices } from './invoices';
 export const statusEnum = pgEnum('status', ['ACTIVE', 'INACTIVE']);
@@ -11,6 +11,7 @@ export const services = pgTable('services', {
     type: serviceTypesEnum('type').notNull(),
     status: statusEnum('status').default("ACTIVE"),
     invoice_amount: numeric('invoice_amount', { precision: 100, scale: 2 }).default('0'),
+    remarks: text('remarks'),
     created_at: timestamp('created_at').notNull().defaultNow(),
     updated_at: timestamp('updated_at').notNull().defaultNow(),
 }, (table: any) => {
