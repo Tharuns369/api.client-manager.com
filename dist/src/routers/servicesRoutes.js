@@ -14,4 +14,6 @@ servicesRouter.post('/', servicesController.addService);
 servicesRouter.patch('/:id', servicesController.updateService);
 servicesRouter.delete('/:id', servicesController.deleteService);
 servicesRouter.get('/drop-down', servicesController.getlistServiceForDropDown);
+servicesRouter.get('/recurring-type/invoice-count', servicesController.getInvoiceAmountCountForRecurringServiceType);
+servicesRouter.get('/one-time-type/invoice-count', servicesController.getInvoiceAmountCountForOneTimeServiceType);
 export default servicesRouter;
