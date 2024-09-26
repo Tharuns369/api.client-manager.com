@@ -166,9 +166,12 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
 };
 
 const SERVICE_VALIDATION_MESSAGES = {
+    SERVICE_NAME_REQUIRED: 'Service name is required.',
+    SERVICE_NAME_INVALID: 'Service name not empty.',
+    TYPE_REQUIRED: 'Type is required.',
+    INVALID_TYPE: 'Type must be either RECURRING or ONE-TIME.',
     TITLE_REQUIRED: "Title is required.",
     TITLE_INVALID: "Title must be alphanumeric and cannot contain special characters.",
-    TYPE_REQUIRED: "Type is required.",
     TYPE_INVALID: "Type must be a characters.",
     CLIENT_ID_REQUIRED: "Client ID is required.",
     CLIENT_ID_INVALID: "Client ID must be a valid integer.",

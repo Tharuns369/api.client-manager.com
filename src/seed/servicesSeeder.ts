@@ -1,32 +1,35 @@
-// import { db } from '../db'; 
-// import { services } from '../schemas/services'; 
+import { db } from '../db';
+import { services, NewService } from '../schemas/services';
 
-// const serviceTypes = [
-//     'WordPress', 
-//     'Static', 
-//     'Custom', 
-//     'Web Application', 
-//     'Mobile Application', 
-//     'Social Media Marketing', 
-//     'Maintenance Services', 
-//     'Hosting'
-// ];
+const serviceNames = [
+    'WordPress',
+    'Static',
+    'Custom',
+    'Web Application',
+    'Mobile Application',
+    'Social Media Marketing',
+    'Maintenance Services',
+    'Hosting'
+];
 
-// const seedServices = async () => {
-//     const sampleServices = Array.from({ length: 8 }, () => ({
-//         type: serviceTypes[Math.floor(Math.random() * serviceTypes.length)], 
-//         status: 'ACTIVE', 
-//         invoice_amount: (Math.random() * 1000).toFixed(2),
-//         created_at: new Date(),
-//         updated_at: new Date(),
-//     }));
+const serviceTypes: Array<"RECURRING" | "ONE-TIME"> = ['RECURRING', 'ONE-TIME'];
 
-//     try {
-//         await db.insert(services).values(sampleServices);
-//         console.log('Seeding completed successfully.');
-//     } catch (error) {
-//         console.error('Error seeding services:', error);
-//     }
-// };
+const seedServices = async () => {
+    const sampleServices: NewService[] = serviceNames.map((name) => ({
+        service_name: name,
+        type: serviceTypes[Math.floor(Math.random() * serviceTypes.length)],
+        status: 'ACTIVE',
+        invoice_amount: (Math.random() * 1000).toFixed(2),
+        created_at: new Date(),
+        updated_at: new Date(),
+    }));
 
-// seedServices();
+    try {
+        await db.insert(services).values(sampleServices);
+        console.log('Seeding completed successfully.');
+    } catch (error) {
+        console.error('Error seeding services:', error);
+    }
+};
+
+seedServices();
