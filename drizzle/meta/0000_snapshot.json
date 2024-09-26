@@ -1,6 +1,6 @@
 {
-  "id": "ab45e12b-a378-4feb-89a3-d37273225e57",
-  "prevId": "1057d9c3-7835-4c97-9f39-96958b36f342",
+  "id": "f713e19b-a5f5-45ba-8aaa-fac29534b64d",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -516,9 +516,16 @@
           "primaryKey": true,
           "notNull": true
         },
+        "service_name": {
+          "name": "service_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "type": {
           "name": "type",
-          "type": "varchar",
+          "type": "type",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -558,6 +565,21 @@
           "columns": [
             {
               "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "services_name_idx": {
+          "name": "services_name_idx",
+          "columns": [
+            {
+              "expression": "service_name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -726,6 +748,14 @@
       "values": [
         "PENDING",
         "COMPLETED"
+      ]
+    },
+    "public.type": {
+      "name": "type",
+      "schema": "public",
+      "values": [
+        "RECURRING",
+        "ONE-TIME"
       ]
     },
     "public.user_type": {
