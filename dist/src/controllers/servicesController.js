@@ -27,6 +27,7 @@ export class ServicesController {
     }
     async getService(c) {
         try {
+            console.log("try");
             const id = +c.req.param('id');
             if (isNaN(id)) {
                 throw new BadRequestException(COMMON_VALIDATIONS.INVALID_SERVICE_ID);
@@ -61,22 +62,21 @@ export class ServicesController {
             const limit = parseInt(query.limit || '10');
             const sort = sortHelper.sort(query);
             const filters = filterHelper.services(query);
-            console.log(filters);
             const skip = (page - 1) * limit;
-            const [totalCount] = await Promise.all([
+            const [invoicesList, totalCount] = await Promise.all([
+                servicesDataServiceProvider.getServices({ limit, skip, filters, sort }),
                 servicesDataServiceProvider.getServicesCount(filters)
             ]);
             const response = paginationHelper.getPaginationResponse({
                 page,
                 count: totalCount,
                 limit,
-                data: totalCount,
+                data: invoicesList,
                 message: SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS
             });
             return c.json(response);
         }
         catch (error) {
-            console.log(error);
             throw error;
         }
     }
