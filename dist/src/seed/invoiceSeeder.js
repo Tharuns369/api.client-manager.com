@@ -42,7 +42,6 @@ const seedInvoices = async () => {
             }
         });
         if (invoiceData.length > 0) {
-            console.log(`Inserting final batch of ${invoiceData.length} invoices...`);
             await db.insert(invoices).values(invoiceData);
         }
         console.log('Successfully seeded invoices.');
