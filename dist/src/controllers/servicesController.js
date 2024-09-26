@@ -16,6 +16,7 @@ export class ServicesController {
             const serviceData = await c.req.json();
             const validatedData = await validate(serviceValidationSchema, serviceData);
             const newService = await servicesDataServiceProvider.insertService(serviceData);
+            console.log(newService);
             return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
         }
         catch (error) {
