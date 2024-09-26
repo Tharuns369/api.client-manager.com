@@ -46,7 +46,7 @@ export class FilterHelper {
     }
     invoices(query) {
         let filter = [];
-        const { from_date: fromDate, to_date: toDate, status, client_id: clientId, service_id: serviceId, search_string: searchString, } = query;
+        const { from_date: fromDate, to_date: toDate, status, client_id: clientId, service_id: serviceId, search_string: searchString, type } = query;
         if (fromDate && toDate) {
             filter.push(`i.invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
@@ -61,6 +61,9 @@ export class FilterHelper {
         }
         if (status) {
             filter.push(`i.invoice_status = '${status}'`);
+        }
+        if (type) {
+            filter.push(`sr.type = '${type}'`);
         }
         let queryString = filter.length > 0 ? filter.join(' AND ') : '';
         return queryString;
