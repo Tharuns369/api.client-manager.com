@@ -136,4 +136,24 @@ export class ServicesController {
             throw error;
         }
     }
+    async getInvoiceAmountCountForRecurringServiceType(c) {
+        try {
+            const filters = filterHelper.invoicesForRecurringServices(c.req.query());
+            const totalAmount = await servicesDataServiceProvider.getInvoiceAmountCountBasedOnServiceType(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Recurring service types invoice amount", totalAmount);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getInvoiceAmountCountForOneTimeServiceType(c) {
+        try {
+            const filters = filterHelper.invoicesForOneTimeServices(c.req.query());
+            const totalAmount = await servicesDataServiceProvider.getInvoiceAmountCountBasedOnServiceType(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "One time service types invoice amount", totalAmount);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }
