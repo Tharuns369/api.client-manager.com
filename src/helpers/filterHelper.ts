@@ -55,21 +55,19 @@ export class FilterHelper {
     }
 
     if (searchString) {
-      filter.push(`type ILIKE '%${searchString}%'`);
-    }
+      filter.push(`type ILIKE '%${searchString}%' OR service_name ILIKE '%${searchString}%'`);
+  }
 
-    if (!status) {
-      filter.push(`status = 'ACTIVE'`);
-    } else {
-      filter.push(`status = ${status}`);
-    }
+    // if (!status) {
+    //   filter.push(`status = 'ACTIVE'`);
+    // } else {
+    //   filter.push(`status = '${status}'`);
+    // }
 
-    let queryString;
-    if (filter.length > 0) {
-      queryString = filter.join("AND ");
-    }
+      let queryString = filter.length > 0 ? filter.join(' AND ') : '';
+      return queryString;
 
-    return queryString;
+    
   }
 
   invoices(query: any) {

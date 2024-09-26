@@ -38,9 +38,7 @@ export class ServicesController {
   }
 
   async getService(c:Context){
-    try {
-      console.log("try");
-      
+    try {      
       const id = +c.req.param('id');
 
       if (isNaN(id)) {
@@ -92,27 +90,24 @@ export class ServicesController {
       const sort: string = sortHelper.sort(query);
 
       const filters = filterHelper.services(query);
-
+       console.log(filters);
+       
       const skip: number = (page - 1) * limit;
 
-      const [invoicesList, totalCount]: any = await Promise.all([
-        servicesDataServiceProvider.getServices({ limit, skip, filters, sort }),
+      const [totalCount]: any = await Promise.all([
         servicesDataServiceProvider.getServicesCount(filters)
       ]);
-
-      if (!invoicesList || invoicesList.length === 0) {
-        throw new NotFoundException(SERVICES_MESSAGES.SERVICES_NOT_FOUND);
-      }
-
+      
       const response = paginationHelper.getPaginationResponse({
         page,
         count: totalCount,
         limit,
-        data: invoicesList,
+        data: totalCount,
         message: SERVICES_MESSAGES.SERVICES_FETCHED_SUCCESS
       });
       return c.json(response);
     } catch (error) {
+      console.log(error)
       throw error;
     }
   }
