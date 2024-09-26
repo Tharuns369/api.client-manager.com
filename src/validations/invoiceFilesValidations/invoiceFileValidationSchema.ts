@@ -21,6 +21,7 @@ export const invoiceFileValidationSchema = v.object({
         v.number(INVOICE_FILES_VALIDATION_MESSAGES.CLIENT_ID_REQUIRED),
         v.integer(INVOICE_FILES_VALIDATION_MESSAGES.INVALID_CLIENT_ID)
     ),
+
     invoice_id: v.pipe(
         v.number(INVOICE_FILES_VALIDATION_MESSAGES.INVOICE_ID_REQUIRED),
         v.integer(INVOICE_FILES_VALIDATION_MESSAGES.INVALID_INVOICE_ID)
