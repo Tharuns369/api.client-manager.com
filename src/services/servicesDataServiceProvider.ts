@@ -3,6 +3,7 @@ import { eq, inArray, name, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
+import { invoices } from "../schemas/invoices";
 export class ServiceDataServiceProvider {
 
     async insertService(serviceData: Service) {
@@ -108,17 +109,18 @@ export class ServiceDataServiceProvider {
             .where(eq(services.id, serviceId));
     }
 
-    
 
     async getInvoiceAmountCountBasedOnServiceType(filters?: string) {
-        const query = db.select({
-            totalAmount: sql`SUM(invoice_amount)`.as('total_amount')
-        }).from(services);
-        if (filters) {
-            query.where(sql`${sql.raw(filters)}`);
-        }
-        const data = await query.execute();
-        return data[0].totalAmount || 0;
+        const query = sql`
+    SELECT 
+        SUM(i.invoice_amount) AS total_amount
+    FROM ${invoices} AS i
+    JOIN ${services} AS sr ON i.service_id = sr.id
+    ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
+    `;
+
+        const data = await db.execute(query);
+        return data.rows[0]?.total_amount || 0;
     }
 
 }

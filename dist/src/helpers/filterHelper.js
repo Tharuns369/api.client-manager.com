@@ -69,14 +69,9 @@ export class FilterHelper {
         let filter = [];
         const { from_date: fromDate, to_date: toDate, status: status } = query;
         if (fromDate && toDate) {
-            filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
+            filter.push(`invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
-        if (!status) {
-            filter.push(`status = 'ACTIVE'`);
-        }
-        else {
-            filter.push(`type = 'RECURRING'`);
-        }
+        filter.push(`type = 'RECURRING'`);
         let queryString;
         if (filter.length > 0) {
             queryString = filter.join("AND ");
@@ -85,16 +80,11 @@ export class FilterHelper {
     }
     invoicesForOneTimeServices(query) {
         let filter = [];
-        const { from_date: fromDate, to_date: toDate, status: status } = query;
+        const { from_date: fromDate, to_date: toDate, } = query;
         if (fromDate && toDate) {
-            filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
+            filter.push(`invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
         }
-        if (!status) {
-            filter.push(`status = 'ACTIVE'`);
-        }
-        else {
-            filter.push(`type = 'ONE-TIME'`);
-        }
+        filter.push(`type = 'ONE-TIME'`);
         let queryString;
         if (filter.length > 0) {
             queryString = filter.join("AND ");

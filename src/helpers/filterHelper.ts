@@ -121,14 +121,10 @@ export class FilterHelper {
 
     if (fromDate && toDate) {
 
-      filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
+      filter.push(`invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
-    if (!status) {
-      filter.push(`status = 'ACTIVE'`);
-    } else {
-      filter.push(`type = 'RECURRING'`);
-    }
+    filter.push(`type = 'RECURRING'`);
 
 
     let queryString;
@@ -145,20 +141,15 @@ export class FilterHelper {
     const {
       from_date: fromDate,
       to_date: toDate,
-      status: status
     } = query;
 
 
     if (fromDate && toDate) {
 
-      filter.push(`created_at BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
+      filter.push(`invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
-    if (!status) {
-      filter.push(`status = 'ACTIVE'`);
-    } else {
-      filter.push(`type = 'ONE-TIME'`);
-    }
+    filter.push(`type = 'ONE-TIME'`);
 
 
     let queryString;
