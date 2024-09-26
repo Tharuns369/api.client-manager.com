@@ -43,7 +43,6 @@ export class ServiceDataServiceProvider {
 
     async getServiceById(id: number) {
         const serviceData = await getRecordByColumnValue<Service>(services, 'id', id);
-
         return serviceData;
     }
 
