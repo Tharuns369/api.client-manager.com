@@ -7,7 +7,7 @@ import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
 import { InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
-import { invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { InvoiceFileValidationSchema, } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
 import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
@@ -110,16 +110,16 @@ export class InvoiceController {
     async uploadInvoice(c) {
         try {
             const inputBody = await c.req.json();
-            const validatedData = await validate(invoiceFileValidationSchema, inputBody);
-            const fileName = await fileHelper.fileNameHelper(validatedData.file_name);
-            const slug = 'client_invoices' + '/' + validatedData.client_id;
+            const validatedData = await validate(InvoiceFileValidationSchema, inputBody);
+            const fileName = await fileHelper.fileNameHelper(validatedData[0].file_name);
+            const slug = 'client_invoices' + '/' + validatedData[0].client_id;
             const targetUrl = await s3FileService.generatePresignedUrl(fileName, 'put', slug);
-            validatedData.key = fileName;
+            validatedData[0].key = fileName;
+            validatedData[1].key = fileName;
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
             let data = {
                 key: fileName,
-                file_name: validatedData.file_name,
-                size: validatedData.size,
+                file_name: validatedData[0].file_name,
                 upload_url: targetUrl,
             };
             return ResponseHelper.sendSuccessResponse(c, 201, INVOICE_VALIDATION_MESSAGES.INVOICE_UPLOADED_SUCCESS, data);

@@ -6,7 +6,7 @@ export enum invoiceStatusEnum {
     COMPLETED = 'COMPLETED',
 }
 
-export const invoiceFileValidationSchema = v.object({
+export const invoiceFileItemValidationSchema = v.object({
     file_name: v.pipe(
         v.string(INVOICE_FILES_VALIDATION_MESSAGES.FILE_NAME_INVALID),
         v.nonEmpty(INVOICE_FILES_VALIDATION_MESSAGES.FILE_NAME_REQUIRED)
@@ -32,4 +32,6 @@ export const invoiceFileValidationSchema = v.object({
 
 });
 
-export type InvoiceFileValidationInput = v.InferInput<typeof invoiceFileValidationSchema>;
+export const InvoiceFileValidationSchema = v.array(invoiceFileItemValidationSchema);
+
+export type InvoiceFileValidationInput = v.InferInput<typeof InvoiceFileValidationSchema>;

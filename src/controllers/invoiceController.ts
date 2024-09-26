@@ -8,7 +8,7 @@ import { sortHelper } from "../helpers/sortHelper";
 import validate from "../helpers/validationHelper";
 import { InvoicesDataServiceProvider } from "../services/invoicesDataServiceProvider";
 import { InvoiceValidationInput, InvoiceValidationSchema } from "../validations/invoiceValidations/addInvoiceValidationSchema";
-import { InvoiceFileValidationInput, invoiceFileValidationSchema } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
+import { InvoiceFileValidationInput, InvoiceFileValidationSchema, } from "../validations/invoiceFilesValidations/invoiceFileValidationSchema";
 import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
@@ -117,32 +117,32 @@ export class InvoiceController {
 
     public async viewInvoice(c: Context) {
         try {
-            const id = +c.req.param('id'); 
-    
+            const id = +c.req.param('id');
+
             const invoice = await invoicesDataServiceProvider.getInvoiceByIdWithPopulate(id);
-    
+
             if (!invoice) {
-                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND); 
+                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
-    
-            const slug = `client_invoices/${invoice.client_id}`; 
-    
+
+            const slug = `client_invoices/${invoice.client_id}`;
+
             if (invoice.key) {
                 console.log(invoice);
-                
-                 return await s3FileService.generatePresignedUrl(invoice.key, 'get', slug); 
-               console.log(invoice);
-               
+
+                return await s3FileService.generatePresignedUrl(invoice.key, 'get', slug);
+                console.log(invoice);
+
                 return invoice;
-                
+
             } else {
-                 return null
+                return null;
             }
-    
+
             return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', invoice);
-    
+
         } catch (error) {
-            throw error; 
+            throw error;
         }
     }
 
@@ -152,11 +152,11 @@ export class InvoiceController {
 
             const inputBody = await c.req.json();
 
-            const validatedData: InvoiceFileValidationInput = await validate(invoiceFileValidationSchema, inputBody);
+            const validatedData: InvoiceFileValidationInput = await validate(InvoiceFileValidationSchema, inputBody);
 
-            const fileName = await fileHelper.fileNameHelper(validatedData.file_name);
+            const fileName = await fileHelper.fileNameHelper(validatedData[0].file_name);
 
-            const slug = 'client_invoices' + '/' + validatedData.client_id;
+            const slug = 'client_invoices' + '/' + validatedData[0].client_id;
 
             const targetUrl = await s3FileService.generatePresignedUrl(
                 fileName,
@@ -164,13 +164,13 @@ export class InvoiceController {
                 slug
             );
 
-            validatedData.key = fileName;
+            validatedData[0].key = fileName;
+            validatedData[1].key = fileName;
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
 
             let data = {
                 key: fileName,
-                file_name: validatedData.file_name,
-                size: validatedData.size,
+                file_name: validatedData[0].file_name,
                 upload_url: targetUrl,
             };
 
@@ -187,45 +187,45 @@ export class InvoiceController {
 
     async updateInvoice(c: Context) {
         try {
-            const id = +c.req.param('id');  
-            const body = await c.req.json();  
-    
+            const id = +c.req.param('id');
+            const body = await c.req.json();
+
             const validatedData: UpdateInvoiceValidationSchema = await validate(updateInvoiceValidationSchema, body);
-    
+
             const oldInvoice = await invoicesDataServiceProvider.getInvoiceById(id);
             if (!oldInvoice) {
                 throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
             }
-    
-            const oldInvoiceAmount = parseFloat(oldInvoice.invoice_amount || '0'); 
+
+            const oldInvoiceAmount = parseFloat(oldInvoice.invoice_amount || '0');
             const newInvoiceAmount = validatedData.invoice_amount || 0;
-            
+
             if (isNaN(oldInvoiceAmount) || isNaN(newInvoiceAmount)) {
                 throw new Error("Invalid invoice amounts.");
             }
-    
+
             const amountDifference = newInvoiceAmount - oldInvoiceAmount;
-            
+
 
             const updatedInvoice = await invoicesDataServiceProvider.editInvoice(id, body);
-    
+
             if (amountDifference > 0) {
-                
+
                 await clientsDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.client_id, amountDifference);
                 await servicesDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.service_id, amountDifference);
             } else {
                 await servicesDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.service_id, amountDifference);
                 await clientsDataServiceProvider.updateTotalInvoiceAmount(oldInvoice.client_id, amountDifference);
             }
-    
+
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
-    
+
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
-    
+
 
     async downloadInvoice(c: Context) {
         try {
@@ -295,7 +295,7 @@ export class InvoiceController {
 
 
             const invoicesWithUrls = await Promise.all(invoicesList.map(async (invoice: any) => {
-                
+
                 if (invoice.key) {
                     const slug = 'client_invoices' + '/' + invoice.client_id;
                     const download_url = await s3FileService.generatePresignedUrl(
@@ -305,16 +305,16 @@ export class InvoiceController {
                     );
                     invoice.url = download_url;
                 } else {
-                    invoice.url = null; 
+                    invoice.url = null;
                 }
 
                 return invoice;
-               
+
             }));
-    
+
             return ResponseHelper.sendSuccessResponse(c, 201, "Latest invoices fetched successfully", invoicesWithUrls);
-    
-        }  catch (error) {
+
+        } catch (error) {
             console.log("error", error);
             throw error;
         }
