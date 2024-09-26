@@ -48,7 +48,8 @@ const SERVICES_MESSAGES = {
     SERVICE_NOT_FOUND: "Service Not Found With given Id",
     SERVICE_UPDATE_SUCCESS: "Service Updated Successfully",
     SERVICE_ID_INVALID: "Invalid Service ID",
-    SERVICE_ADDED_SUCCESS: "Service Added Successfully"
+    SERVICE_ADDED_SUCCESS: "Service Added Successfully",
+    SERVICE_FETCHED_SUCCESS: "Service List Fetched Successfully",
 };
 const VALIDATION_MESSAGES = {
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
