@@ -40,8 +40,6 @@ export class S3FileService {
 
             const key = await this.prepareKey(fileName, slug);
 
-            console.log('key', key);
-
             const params: any = {
                 Bucket: bucket,
                 Key: key

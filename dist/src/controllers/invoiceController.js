@@ -114,8 +114,9 @@ export class InvoiceController {
             const fileName = await fileHelper.fileNameHelper(validatedData[0].file_name);
             const slug = 'client_invoices' + '/' + validatedData[0].client_id;
             const targetUrl = await s3FileService.generatePresignedUrl(fileName, 'put', slug);
-            validatedData[0].key = fileName;
-            validatedData[1].key = fileName;
+            validatedData.forEach((item) => {
+                item.key = fileName;
+            });
             await invoicesDataServiceProvider.addInvoiceFile(validatedData);
             let data = {
                 key: fileName,
