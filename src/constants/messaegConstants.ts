@@ -5,9 +5,9 @@ const USER_MESSAGES = {
     USER_NOT_FOUND: "User Not Found",
     INVALID_PASSWORD: "Invalid Password.",
     LOGIN_SUCCESS: "User Login Successfully.",
-    REFRESH_TOKEN_REQUIRED: 'Refresh token is required.',
-    INVALID_REFRESH_TOKEN: 'Invalid refresh token.',
-    TOKEN_REFRESHED_SUCCESS: 'Access token refreshed successfully.',
+    REFRESH_TOKEN_REQUIRED: "Refresh token is required.",
+    INVALID_REFRESH_TOKEN: "Invalid refresh token.",
+    TOKEN_REFRESHED_SUCCESS: "Access token refreshed successfully.",
     USER_FETCHED_SUCCESS: "User Details Fetched Successfully.",
     EMAIL_REQUIRED: "Email Is Required.",
     INVALID_CREDENTIALS: "Invalid credentials.",
@@ -39,7 +39,7 @@ const CLIENT_MESSAGES = {
 const INVOICES_MESSAGES = {
 
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
-    INVOICES_FETCHED_SUCCESS: "'Invoices List Fetched Successfully.",
+    INVOICES_FETCHED_SUCCESS: "Invoices List Fetched Successfully.",
     INVOICES_NOT_FOUND: "Invoices Not Found",
     TOTAL_AMOUNT_FETCHED_SUCCESS: "Total invoice amount fetched successfully.",
     INVOICE_NOT_FOUND: "Invoice Not Found With Id",
@@ -93,72 +93,74 @@ const COMMON_VALIDATIONS = {
 
     SOMETHING_WENT_WRONG: "Something Went Wrong",
     INVALID_CLIENT_ID: "Invalid client ID provided",
-    MISSING_REQUIRED_FIELDS: "Required fields are missing"
+    MISSING_REQUIRED_FIELDS: "Required fields are missing",
+    INVALID_SERVICE_ID: "Invalid service Id provided"
+
 };
 
 
 const CLIENT_VALIDATION_MESSAGES = {
-    CLIENT_NAME_REQUIRED: 'Client name is required',
-    CLIENT_NAME_INVALID: 'Client name must only contain alphabets and spaces',
-    CLIENT_POC_REQUIRED: 'Point of contact (POC) is required',
-    CLIENT_POC_INVALID: 'POC must only contain alphabets and spaces',
-    CLIENT_ROLE_INVALID: 'Role must only contain alphabets and spaces',
-    EMAIL_REQUIRED: 'Email is required',
-    INVALID_EMAIL_FORMAT: 'Invalid email format',
-    PHONE_REQUIRED: 'Phone number is required',
-    PHONE_TOO_SHORT: 'Phone number must be exactly 10 digits',
-    SECONDARY_PHONE_REQUIRED: 'Secondary phone number is required',
-    SECONDARY_PHONE_INVALID: 'Secondary phone number must be exactly 10 digits',
-    INVALID_STATUS: 'Status must be either ACTIVE or INACTIVE',
-    REMARKS_INVALID: 'Remarks must be a string',
-    BUSINESS_URL_INVALID: 'Business URL must be a valid string',
-    ADDRESS_INVALID: 'Address must be a valid string',
-    STATE_INVALID: 'State must be a valid string',
-    CITY_INVALID: 'City must be a valid string',
-    GST_INVALID: 'GST value must be a boolean',
-    COUNTRY_INVALID: 'Country must be a valid string',
-    // TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a valid number with precision and scale',
-    TOTAL_INVOICE_AMOUNT_INVALID: 'Total invoice amount must be a number',
+    CLIENT_NAME_REQUIRED: "Client name is required",
+    CLIENT_NAME_INVALID: "Client name must only contain alphabets and spaces",
+    CLIENT_POC_REQUIRED: "Point of contact (POC) is required",
+    CLIENT_POC_INVALID: "POC must only contain alphabets and spaces",
+    CLIENT_ROLE_INVALID: "Role must only contain alphabets and spaces",
+    EMAIL_REQUIRED: "Email is required",
+    INVALID_EMAIL_FORMAT: "Invalid email format",
+    PHONE_REQUIRED: "Phone number is required",
+    PHONE_TOO_SHORT: "Phone number must be exactly 10 digits",
+    SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
+    SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
+    INVALID_STATUS: "Status must be either ACTIVE or INACTIVE",
+    REMARKS_INVALID: "Remarks must be a string",
+    BUSINESS_URL_INVALID: "Business URL must be a valid string",
+    ADDRESS_INVALID: "Address must be a valid string",
+    STATE_INVALID: "State must be a valid string",
+    CITY_INVALID: "City must be a valid string",
+    GST_INVALID: "GST value must be a boolean",
+    COUNTRY_INVALID: "Country must be a valid string",
+    // TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a valid number with precision and scale",
+    TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a number",
     COMPANY_NAME_REQUIRED: "Company name is required",
-    COMPANY_NAME_VALIDATIONAS: 'POC must only contain alphabets and spaces',
+    COMPANY_NAME_VALIDATIONAS: "POC must only contain alphabets and spaces",
 
 };
 
 const INVOICE_VALIDATION_MESSAGES = {
-    SERVICE_ID_REQUIRED: 'Service Id is required.',
-    SERVICE_ID_INVALID: 'Service Id must be a positive integer.',
-    CLIENT_ID_REQUIRED: 'Client Id is required.',
-    CLIENT_ID_INVALID: 'Client Id must be a positive integer.',
-    INVALID_INVOICE_STATUS: 'Invalid invoice status.',
-    REMARKS_INVALID: 'Invalid remarks format.',
-    INVOICE_DATE_REQUIRED: 'Invoice date is required.',
-    INVALID_INVOICE_DATE: 'Invalid invoice date format.',
-    INVOICE_DATE_MINIMUM: 'Invoice date must be today or later.',
-    PAYMENT_DATE_INVALID: 'Invalid payment date format.',
-    INVOICE_AMOUNT_REQUIRED: 'Invoice amount is required.',
-    INVALID_INVOICE_AMOUNT: 'Invalid invoice amount format. Must be a valid number with up to 2 decimal places.',
-    INVOICE_ALREADY_EXISTS: 'An invoice with this service ID already exists.',
-    INVOICE_ADDED_SUCCESS: 'Invoice added successfully.',
-    INVOICE_UPLOADED_SUCCESS: 'Invoice uploaded successfully.',
-    INVOICE_DOWNLOADED_SUCCESS: 'Invoice uploaded successfully.',
-    INVOICE_NAME_INVALID: 'Invalid Invoice name ',
-    NAME_REQUIRED: 'Invoice name is required.',
-    NAME_TOO_SHORT: 'Invoice name cannot be empty.',
+    SERVICE_ID_REQUIRED: "Service Id is required.",
+    SERVICE_ID_INVALID: "Service Id must be a positive integer.",
+    CLIENT_ID_REQUIRED: "Client Id is required.",
+    CLIENT_ID_INVALID: "Client Id must be a positive integer.",
+    INVALID_INVOICE_STATUS: "Invalid invoice status.",
+    REMARKS_INVALID: "Invalid remarks format.",
+    INVOICE_DATE_REQUIRED: "Invoice date is required.",
+    INVALID_INVOICE_DATE: "Invalid invoice date format.",
+    INVOICE_DATE_MINIMUM: "Invoice date must be today or later.",
+    PAYMENT_DATE_INVALID: "Invalid payment date format.",
+    INVOICE_AMOUNT_REQUIRED: "Invoice amount is required.",
+    INVALID_INVOICE_AMOUNT: "Invalid invoice amount format. Must be a valid number with up to 2 decimal places.",
+    INVOICE_ALREADY_EXISTS: "An invoice with this service ID already exists.",
+    INVOICE_ADDED_SUCCESS: "Invoice added successfully.",
+    INVOICE_UPLOADED_SUCCESS: "Invoice uploaded successfully.",
+    INVOICE_DOWNLOADED_SUCCESS: "Invoice uploaded successfully.",
+    INVOICE_NAME_INVALID: "Invalid Invoice name ",
+    NAME_REQUIRED: "Invoice name is required.",
+    NAME_TOO_SHORT: "Invoice name cannot be empty.",
 
 
 };
 
 const INVOICE_FILES_VALIDATION_MESSAGES = {
 
-    FILE_NAME_INVALID: 'File name must be a string',
-    FILE_NAME_REQUIRED: 'File name is required',
-    INVALID_SIZE: 'Invalid file size',
-    SIZE_NOT_INTEGER: 'File size must be an integer',
-    CLIENT_ID_REQUIRED: 'Client id is required',
-    INVALID_CLIENT_ID: 'Invalid client id',
-    INVOICE_ID_REQUIRED: 'Client id is required',
-    INVALID_INVOICE_ID: 'Invalid client id',
-    INVALID_KEY: 'Invalid key',
+    FILE_NAME_INVALID: "File name must be a string",
+    FILE_NAME_REQUIRED: "File name is required",
+    INVALID_SIZE: "Invalid file size",
+    SIZE_NOT_INTEGER: "File size must be an integer",
+    CLIENT_ID_REQUIRED: "client id is required",
+    INVALID_CLIENT_ID: "Invalid client id",
+    INVOICE_ID_REQUIRED: "Invoice id is required",
+    INVALID_INVOICE_ID: "Invalid invoice id",
+    INVALID_KEY: "Invalid key",
     SERVICE_ID_REQUIRED:"Service id required",
     INVALID_SERVICE_ID:"Invalid Service id"
 
@@ -166,10 +168,10 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
 };
 
 const SERVICE_VALIDATION_MESSAGES = {
-    SERVICE_NAME_REQUIRED: 'Service name is required.',
-    SERVICE_NAME_INVALID: 'Service name not empty.',
-    TYPE_REQUIRED: 'Type is required.',
-    INVALID_TYPE: 'Type must be either RECURRING or ONE-TIME.',
+    SERVICE_NAME_REQUIRED: "Service name is required.",
+    SERVICE_NAME_INVALID: "Service name not empty.",
+    TYPE_REQUIRED: "Type is required.",
+    INVALID_TYPE: "Type must be either RECURRING or ONE-TIME.",
     TITLE_REQUIRED: "Title is required.",
     TITLE_INVALID: "Title must be alphanumeric and cannot contain special characters.",
     TYPE_INVALID: "Type must be a characters.",
@@ -178,6 +180,7 @@ const SERVICE_VALIDATION_MESSAGES = {
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE.",
     INVOICE_AMOUNT_REQUIRED: "Invoice amount is required.",
     INVALID_INVOICE_AMOUNT: "Invoice amount must be a valid number with up to two decimal places.",
+    REMARKS_INVALID: "Remarks must be a valid text",
 };
 
 const CLIENT_SERVICES_MESSAGES = {
@@ -192,15 +195,15 @@ const CLIENT_SERVICES_MESSAGES = {
 
 
 const CLIENT_SERVICES_VALIDATION_MESSAGES = {
-    CLIENT_ID_REQUIRED: 'Client ID is required.',
-    CLIENT_ID_INVALID: 'Client ID must be a valid integer.',
-    SERVICE_ID_REQUIRED: 'Service ID is required.',
-    SERVICE_ID_INVALID: 'Service ID must be a valid integer.',
-    TITLE_REQUIRED: 'Title is required.',
-    TITLE_INVALID: 'Title must be a non-empty string.',
-    STATUS_INVALID: 'Status must be either ACTIVE or INACTIVE.',
-    INVOICE_AMOUNT_REQUIRED: 'Invoice amount is required.',
-    INVOICE_AMOUNT_INVALID: 'Invoice amount must be a valid number.',
+    CLIENT_ID_REQUIRED: "Client ID is required.",
+    CLIENT_ID_INVALID: "Client ID must be a valid integer.",
+    SERVICE_ID_REQUIRED: "Service ID is required.",
+    SERVICE_ID_INVALID: "Service ID must be a valid integer.",
+    TITLE_REQUIRED: "Title is required.",
+    TITLE_INVALID: "Title must be a non-empty string.",
+    STATUS_INVALID: "Status must be either ACTIVE or INACTIVE.",
+    INVOICE_AMOUNT_REQUIRED: "Invoice amount is required.",
+    INVOICE_AMOUNT_INVALID: "Invoice amount must be a valid number.",
 };
 
 

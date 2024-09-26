@@ -13,7 +13,7 @@ servicesRouter.get('/dashboard/invoice-amount', servicesController.listServicesW
 servicesRouter.get('/count',  servicesController.getTotalServices);
 servicesRouter.get('/',  servicesController.listServices);
 servicesRouter.post('/',  servicesController.addService);
-servicesRouter.patch('/:id', servicesController.updateService);
+// servicesRouter.patch('/:id', servicesController.updateService);
 servicesRouter.delete('/:id',  servicesController.deleteService);
 servicesRouter.get('/drop-down',servicesController.getlistServiceForDropDown)
 
