@@ -2,7 +2,6 @@ import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
-const phoneRegex = /^\d{10}$/;
 
 export enum StatusEnum {
   ACTIVE = 'ACTIVE',
@@ -36,16 +35,17 @@ export const clientValidationSchema = v.object({
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED),
     v.email(CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT)
   ),
-  phone: v.pipe(
+  client_email: v.pipe(
+    v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_EMAIL_REQUIRED),
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_EMAIL_REQUIRED),
+    v.email(CLIENT_VALIDATION_MESSAGES.CLIENT_INVALID_EMAIL_FORMAT)
+  ),
+  client_phone: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT)
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED)
   ),
   secondary_phone: v.optional(
-    v.pipe(
-      v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED),
-      v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_INVALID)
-    )
+    v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),
   status: v.optional(
     v.enum(StatusEnum, CLIENT_VALIDATION_MESSAGES.INVALID_STATUS)
@@ -72,7 +72,7 @@ export const clientValidationSchema = v.object({
     v.string(CLIENT_VALIDATION_MESSAGES.COUNTRY_INVALID)
   ),
   total_invoice_amount: v.optional(
-    v.number(CLIENT_VALIDATION_MESSAGES.TOTAL_INVOICE_AMOUNT_INVALID),
+    v.number(CLIENT_VALIDATION_MESSAGES.TOTAL_INVOICE_AMOUNT_INVALID)
   )
 });
 
