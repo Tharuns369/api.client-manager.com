@@ -1,7 +1,6 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 const alphaRegex = /^[a-zA-Z\s]+$/;
-const phoneRegex = /^\d{10}$/;
 export var StatusEnum;
 (function (StatusEnum) {
     StatusEnum["ACTIVE"] = "ACTIVE";
@@ -13,8 +12,9 @@ export const clientValidationSchema = v.object({
     poc: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.regex(alphaRegex, CLIENT_VALIDATION_MESSAGES.CLIENT_POC_INVALID)),
     role: v.optional(v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_ROLE_INVALID), v.regex(alphaRegex, CLIENT_VALIDATION_MESSAGES.CLIENT_ROLE_INVALID))),
     email: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.email(CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT)),
-    phone: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT)),
-    secondary_phone: v.optional(v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED), v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_INVALID))),
+    client_email: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_EMAIL_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_EMAIL_REQUIRED), v.email(CLIENT_VALIDATION_MESSAGES.CLIENT_INVALID_EMAIL_FORMAT)),
+    client_phone: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED)),
+    secondary_phone: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)),
     status: v.optional(v.enum(StatusEnum, CLIENT_VALIDATION_MESSAGES.INVALID_STATUS)),
     remarks: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.REMARKS_INVALID)),
     bussiness_url: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.BUSINESS_URL_INVALID)),

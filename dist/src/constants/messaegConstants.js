@@ -84,6 +84,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_ROLE_INVALID: "Role must only contain alphabets and spaces",
     EMAIL_REQUIRED: "Email is required",
     INVALID_EMAIL_FORMAT: "Invalid email format",
+    CLIENT_EMAIL_REQUIRED: "Email is required",
+    CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required",
     PHONE_TOO_SHORT: "Phone number must be exactly 10 digits",
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
