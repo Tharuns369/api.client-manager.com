@@ -14,7 +14,12 @@ export class ServiceDataServiceProvider {
 
     async getServices({ skip, limit, filters, sort }: { skip: number; limit: number; filters?: string; sort?: string; }) {
         const query = db.select().from(services);
-        
+        if (filters) {
+            query.where(sql`${sql.raw(filters)}`);
+        }
+        if (sort) {
+            query.orderBy(sql`${sql.raw(sort)}`);
+        }
         query.limit(limit).offset(skip);
         const data = await query.execute();
         return data;
