@@ -91,8 +91,9 @@ export class FilterHelper {
       filter.push(`i.invoice_date BETWEEN '${fromDate} 00:00:00' AND '${toDate} 23:59:59'`);
     }
 
+  
     if (searchString) {
-      filter.push(`(c.client_name ILIKE '%${searchString}%' OR sr.type ILIKE '%${searchString}%')`);
+      filter.push(`c.client_name ILIKE '%${searchString}%' `);
     }
 
     if (clientId) {

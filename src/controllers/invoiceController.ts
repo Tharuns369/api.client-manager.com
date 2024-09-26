@@ -110,7 +110,6 @@ export class InvoiceController {
             return c.json(response);
 
         } catch (error) {
-            console.log("error", error);
             throw error;
         }
     }
@@ -144,7 +143,7 @@ export class InvoiceController {
                 url,
 
             };
-
+            
             return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', modifiedInvoice);
 
         } catch (error) {
@@ -186,7 +185,6 @@ export class InvoiceController {
 
         }
         catch (error) {
-            console.log(error);
             throw error;
         }
 
@@ -229,7 +227,6 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
 
         } catch (error) {
-            console.log(error);
             throw error;
         }
     }
@@ -239,8 +236,6 @@ export class InvoiceController {
         try {
 
             const id = +c.req.param('id');
-
-            console.log("id", id);
 
             const invoiceFile = await invoicesDataServiceProvider.getInvoiceFileById(id);
 
