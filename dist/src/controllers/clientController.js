@@ -170,4 +170,14 @@ export class ClientsController {
             throw error;
         }
     }
+    async getlistServiceForDropDown(c) {
+        try {
+            const clientId = +c.req.param('id');
+            const listServices = await clientsDataServiceProvider.listDropDownForServices(clientId);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Clients services fetched successfully", listServices);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

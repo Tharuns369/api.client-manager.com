@@ -40,6 +40,7 @@ export class InvoicesDataServiceProvider {
         i.created_at,
         i.invoice_date,
         sr.id as service_id,
+        sr.service_name,
         sr.type,
         c.id as client_id,
         c.client_name,
@@ -124,7 +125,7 @@ export class InvoicesDataServiceProvider {
         invoice_date: invoices.invoice_date,
         payment_date: invoices.payment_date,
         created_at: invoices.created_at,
-        remarks:invoices.remarks,
+        remarks: invoices.remarks,
         key: invoiceFiles.key
       }
     )
@@ -155,6 +156,7 @@ export class InvoicesDataServiceProvider {
           i.created_at,
           i.invoice_date,
           sr.id as service_id,
+          sr.service_name,
           sr.type,
           c.id as client_id,
           c.client_name,

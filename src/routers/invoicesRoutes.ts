@@ -5,8 +5,6 @@ const invoicesRouter = new Hono();
 const invoicesController = new InvoiceController();
 
 invoicesRouter.get('/amount', invoicesController.getTotalInvoicesAmount);
-// invoicesRouter.get('/clients-total-amount',  invoicesController.getTotalInvoiceAmount);
-// invoicesRouter.get('/services-total-amount',  invoicesController.getTotalInvoiceAmount);
 invoicesRouter.get('/', invoicesController.listInvoices);
 invoicesRouter.get('/:id', invoicesController.viewInvoice);
 invoicesRouter.post('/upload', invoicesController.uploadInvoice);
@@ -17,7 +15,7 @@ invoicesRouter.get('/files/:id/download', invoicesController.downloadInvoice);
 invoicesRouter.get('/:id/invoice-files', invoicesController.getInvoiceFiles);
 
 invoicesRouter.get('/latest/five', invoicesController.latestInvoices);
-invoicesRouter.get('/list/:client_id',invoicesController.listInvoicesByClientId)
+invoicesRouter.get('/list/:client_id', invoicesController.listInvoicesByClientId);
 
 
 export default invoicesRouter;

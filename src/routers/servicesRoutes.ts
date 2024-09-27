@@ -22,4 +22,6 @@ servicesRouter.get('/recurring-type/invoice-count', servicesController.getInvoic
 servicesRouter.get('/one-time-type/invoice-count', servicesController.getInvoiceAmountCountForOneTimeServiceType);
 
 
+
+
 export default servicesRouter;

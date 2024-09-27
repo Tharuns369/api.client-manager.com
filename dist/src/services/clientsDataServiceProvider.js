@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
@@ -105,5 +105,8 @@ export class ClientsDataServiceProvider {
             total_invoice_amount: sql `total_invoice_amount + ${amountDifference}`,
         })
             .where(eq(clients.id, clientId));
+    }
+    async listDropDownForServices(clientId) {
+        return await db.select({ id: services.id, service_name: services.service_name }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id)).orderBy(asc(services.service_name));
     }
 }

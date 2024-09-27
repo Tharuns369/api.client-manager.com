@@ -1,4 +1,4 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, asc, between, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { Client, clients } from "../schemas/clients";
@@ -99,7 +99,7 @@ export class ClientsDataServiceProvider {
 
 
   async updateInvoiceAmountByClientIds(data: any[]) {
-    const clientId = data[0].client_id; 
+    const clientId = data[0].client_id;
     const totalInvoiceAmount = data.reduce((sum: number, input: { invoice_amount: string | number; }) =>
       sum + parseFloat(input.invoice_amount.toString()), 0);
 
@@ -134,20 +134,28 @@ export class ClientsDataServiceProvider {
   }
 
 
-  async listDropDown(){
-     return await db
-        .select({ id: clients.id, client_name: clients.client_name })
-        .from(clients)
-        .orderBy(clients.client_name);
-    }
-
-
-    async updateTotalInvoiceAmount(clientId: number, amountDifference: number) {
-      await db.update(clients)
-          .set({
-              total_invoice_amount: sql`total_invoice_amount + ${amountDifference}`,
-          })
-          .where(eq(clients.id,clientId));
+  async listDropDown() {
+    return await db
+      .select({ id: clients.id, client_name: clients.client_name })
+      .from(clients)
+      .orderBy(clients.client_name);
   }
+
+
+  async updateTotalInvoiceAmount(clientId: number, amountDifference: number) {
+    await db.update(clients)
+      .set({
+        total_invoice_amount: sql`total_invoice_amount + ${amountDifference}`,
+      })
+      .where(eq(clients.id, clientId));
+  }
+
+
+
+  async listDropDownForServices(clientId: number) {
+    return await db.select({ id: services.id, service_name: services.service_name }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id)).orderBy(asc(services.service_name));
+
+  }
+
 }
 
