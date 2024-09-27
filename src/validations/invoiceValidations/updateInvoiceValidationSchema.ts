@@ -19,12 +19,6 @@ export const updateInvoiceValidationSchema = v.object({
   invoice_status: v.optional(
       v.enum(invoiceStatusEnum, INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_STATUS)
   ),
-  remarks: v.optional(
-      v.pipe(
-          v.string(INVOICE_VALIDATION_MESSAGES.REMARKS_INVALID),
-          v.minLength(1, INVOICE_VALIDATION_MESSAGES.REMARKS_INVALID)
-      )
-  ),
   invoice_date: v.pipe(
       v.string(INVOICE_VALIDATION_MESSAGES.INVOICE_DATE_REQUIRED),
       v.transform((dateStr) => new Date(dateStr)),
