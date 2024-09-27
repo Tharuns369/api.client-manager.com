@@ -53,7 +53,6 @@ export class InvoiceController {
             const skip = (page - 1) * limit;
             const filters = filterHelper.invoices(query);
             const sort = sortHelper.sort(query);
-            await invoicesDataServiceProvider.getInvoices({ limit, skip, filters, sort });
             const [invoicesList, totalCount] = await Promise.all([
                 invoicesDataServiceProvider.getInvoices({ skip, limit, filters, sort }),
                 invoicesDataServiceProvider.getInvoicesCount(filters)
@@ -157,6 +156,7 @@ export class InvoiceController {
             return ResponseHelper.sendSuccessResponse(c, 200, INVOICES_MESSAGES.INVOICE_UPDATE_SUCCESS, updatedInvoice);
         }
         catch (error) {
+            console.log("error", error);
             throw error;
         }
     }

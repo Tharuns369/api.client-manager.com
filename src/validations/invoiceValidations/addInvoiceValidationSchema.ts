@@ -5,9 +5,7 @@ export enum invoiceStatusEnum {
   COMPLETED = 'COMPLETED',
 }
 export const invoiceItemValidationSchema = v.object({
-  name: v.optional(
-    v.string(INVOICE_VALIDATION_MESSAGES.INVOICE_NAME_INVALID)
-  ), service_id: v.pipe(
+  service_id: v.pipe(
     v.number(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_REQUIRED),
     v.integer(INVOICE_VALIDATION_MESSAGES.SERVICE_ID_INVALID)
   ),

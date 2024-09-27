@@ -8,6 +8,13 @@
       "when": 1727326991911,
       "tag": "0000_workable_mathemanic",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1727370959260,
+      "tag": "0001_equal_star_brand",
+      "breakpoints": true
     }
   ]
 }

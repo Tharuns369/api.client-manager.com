@@ -1,9 +1,8 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { getAllRecords, getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { clients } from "../schemas/clients";
 import { invoices } from "../schemas/invoices";
-import { clientServices } from "../schemas/clientServices";
 import { services } from "../schemas/services";
 export class ClientsDataServiceProvider {
     async getClientsWithPagenation({ skip, limit, filters, sort }) {
@@ -56,18 +55,6 @@ export class ClientsDataServiceProvider {
             .from(clients);
         return clientsAmountCount;
     }
-    async getClientsWiseServices(clientId) {
-        const result = await db.select({
-            id: clientServices.id,
-            client_id: clientServices.client_id,
-            title: clientServices.title,
-            type: services.type,
-            invoice_amount: clientServices.invoice_amount,
-            created_at: clientServices.created_at,
-            updated_at: clientServices.updated_at
-        }).from(clientServices).where(eq(clientServices.client_id, clientId)).innerJoin(services, eq(clientServices.service_id, services.id));
-        return result;
-    }
     async getClientsWiseInvoices(clientId, fromDate, toDate, invoiceStatus) {
         const result = await db.select({
             id: invoices.id,
@@ -79,27 +66,6 @@ export class ClientsDataServiceProvider {
             updated_at: invoices.updated_at,
             remarks: invoices.remarks
         }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id));
-        return result;
-    }
-    async getClintsWiseInvoices(clientId, fromDate, toDate, invoiceStatus) {
-        const result = await db.query.clients.findMany({
-            where: (clients, { eq }) => (eq(clients.id, clientId)),
-            columns: {},
-            with: {
-                invoices: {
-                    columns: {
-                        id: true,
-                        invoice_amount: true,
-                        invoice_date: true,
-                        invoice_status: true,
-                        payment_date: true,
-                        client_id: true,
-                    },
-                    where: (invoices) => and(fromDate && toDate ? between(invoices.invoice_date, fromDate, toDate) : undefined, invoiceStatus ? eq(invoices.invoice_status, invoiceStatus) : undefined),
-                    orderBy: (invoices, { desc }) => [desc(invoices.invoice_date)]
-                }
-            }
-        });
         return result;
     }
     async updateInvoiceAmountByClientIds(data) {
@@ -139,5 +105,16 @@ export class ClientsDataServiceProvider {
             total_invoice_amount: sql `total_invoice_amount + ${amountDifference}`,
         })
             .where(eq(clients.id, clientId));
+    }
+    async listDropDownForServices(clientId) {
+        return await db
+            .selectDistinct({
+            id: services.id,
+            service_name: services.service_name,
+        })
+            .from(invoices)
+            .leftJoin(services, eq(invoices.service_id, services.id))
+            .where(eq(invoices.client_id, clientId))
+            .orderBy(asc(services.service_name));
     }
 }

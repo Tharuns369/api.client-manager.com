@@ -7,7 +7,6 @@ import userRoutes from './routers/userRoutes';
 import clientsRouter from './routers/clientRouters';
 import servicesRouter from './routers/servicesRoutes';
 import invoicesRouter from './routers/invoicesRoutes';
-import clientServicesRouter from './routers/clientServicesRouter';
 
 const app = new Hono();
 
@@ -18,7 +17,6 @@ app.route('/' + ConfigData.VERSION + '/users', userRoutes);
 app.route('/' + ConfigData.VERSION + '/clients', clientsRouter);
 app.route('/' + ConfigData.VERSION + '/services', servicesRouter);
 app.route('/' + ConfigData.VERSION + '/invoices', invoicesRouter);
-app.route('/' + ConfigData.VERSION + '/clients/services', clientServicesRouter);
 
 
 

@@ -105,9 +105,9 @@ const CLIENT_VALIDATION_MESSAGES = {
 };
 const INVOICE_VALIDATION_MESSAGES = {
     SERVICE_ID_REQUIRED: "Service is required.",
-    SERVICE_ID_INVALID: "Service Id must be a positive integer.",
+    SERVICE_ID_INVALID: "Service must be a positive integer.",
     CLIENT_ID_REQUIRED: "Client is required.",
-    CLIENT_ID_INVALID: "Client Id must be a positive integer.",
+    CLIENT_ID_INVALID: "Client must be a positive integer.",
     INVALID_INVOICE_STATUS: "Invalid invoice status.",
     REMARKS_INVALID: "Invalid remarks format.",
     INVOICE_DATE_REQUIRED: "Invoice date is required.",

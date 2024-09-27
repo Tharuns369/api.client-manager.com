@@ -24,11 +24,12 @@ export class InvoicesDataServiceProvider {
         const query = sql `
     SELECT 
         i.id,
-        i.invoice_amount,
+        CAST(i.invoice_amount AS INTEGER),
         i.invoice_status,
         i.created_at,
         i.invoice_date,
         sr.id as service_id,
+        sr.service_name,
         sr.type,
         c.id as client_id,
         c.client_name,
@@ -88,12 +89,12 @@ export class InvoicesDataServiceProvider {
             service_id: invoices.service_id,
             client_name: clients.client_name,
             company_name: clients.company_name,
-            service_name: services.type,
-            invoice_amount: invoices.invoice_amount,
+            type: services.type,
+            service_name: services.service_name,
+            invoice_amount: sql `CAST(${invoices.invoice_amount} AS INTEGER)`,
             invoice_status: invoices.invoice_status,
             invoice_date: invoices.invoice_date,
             payment_date: invoices.payment_date,
-            created_at: invoices.created_at,
             remarks: invoices.remarks,
             key: invoiceFiles.key
         })
@@ -118,6 +119,7 @@ export class InvoicesDataServiceProvider {
           i.created_at,
           i.invoice_date,
           sr.id as service_id,
+          sr.service_name,
           sr.type,
           c.id as client_id,
           c.client_name,

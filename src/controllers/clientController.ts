@@ -41,7 +41,7 @@ export class ClientsController {
 
       const filters = await filterHelper.clients(c.req.query());
 
-      const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);      
+      const totalClientCount = await clientsDataServiceProvider.getclientsCount(filters);
 
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENTS_COUNT, totalClientCount);
     }
@@ -57,15 +57,15 @@ export class ClientsController {
       const page: number = parseInt(query.page || '1');
       const limit: number = parseInt(query.limit || '10');
       const skip: number = (page - 1) * limit;
-  
+
       const sort: string = sortHelper.sort(query);
       const filters = filterHelper.clients(query);
-  
+
       const [clientsList, totalCount]: any = await Promise.all([
         clientsDataServiceProvider.getClientsWithPagenation({ skip, limit, filters, sort }),
         clientsDataServiceProvider.getclientsCount(filters)
       ]);
-  
+
       const response = paginationHelper.getPaginationResponse({
         page,
         count: totalCount,
@@ -73,8 +73,8 @@ export class ClientsController {
         data: clientsList,
         message: CLIENT_MESSAGES.CLIENT_LIST_FETCH_SUCCESS
       });
-        return c.json(response);
-  
+      return c.json(response);
+
     } catch (error) {
       throw error;
     }
@@ -165,28 +165,6 @@ export class ClientsController {
 
 
 
-  async getClientsWiseServices(c: Context) {
-    try {
-
-      const clientId = +c.req.param('id');
-
-      const client = await clientsDataServiceProvider.getClientById(clientId);
-
-      if (!client) {
-        throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
-      }
-
-      const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
-
-      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
-
-    }
-    catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
   async getClientWiseInvoices(c: Context) {
     try {
 
@@ -240,11 +218,27 @@ export class ClientsController {
 
   async dropDownForListOfClients(c: Context) {
     try {
-    const  listClients = await clientsDataServiceProvider.listDropDown()
-    return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
-      } catch (error) {
-        throw error
-      }
+      const listClients = await clientsDataServiceProvider.listDropDown();
+      return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getlistServiceForDropDown(c: Context) {
+
+    try {
+
+      const clientId = +c.req.param('id');
+
+      const listServices = await clientsDataServiceProvider.listDropDownForServices(clientId);
+
+      return ResponseHelper.sendSuccessResponse(c, 200, "Clients services fetched successfully", listServices);
+
+    } catch (error) {
+      throw error;
+    }
   }
 
 }

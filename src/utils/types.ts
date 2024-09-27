@@ -1,7 +1,6 @@
 import { Client, ClientTable, NewClient } from "../schemas/clients";
 import { InvoiceFile, InvoiceFileTable, NewInvoiceFile } from "../schemas/invoicefiles";
 import { Invoice, InvoiceTable, NewInvoice } from "../schemas/invoices";
-import { NewClientService, ClientService, ClientServiceTable } from "../schemas/clientServices";
 import { NewUser, User, UserTable } from "../schemas/users";
 import { NewService, Service, ServiceTable } from "../schemas/services";
 
@@ -36,6 +35,6 @@ export interface Config {
     S3: S3;
 }
 
-export type DbTable = UserTable | ClientTable | ClientServiceTable | InvoiceTable | InvoiceFileTable | ServiceTable;
-export type NewDbRecord = NewUser | NewClient | NewClientService | NewInvoice | NewInvoiceFile | NewService;
-export type DbRecord = User | Client | ClientService | Invoice | InvoiceFile | Service;
+export type DbTable = UserTable | ClientTable | InvoiceTable | InvoiceFileTable | ServiceTable;
+export type NewDbRecord = NewUser | NewClient | NewInvoice | NewInvoiceFile | NewService;
+export type DbRecord = User | Client | Invoice | InvoiceFile | Service;

@@ -124,21 +124,6 @@ export class ClientsController {
             throw error;
         }
     }
-    async getClientsWiseServices(c) {
-        try {
-            const clientId = +c.req.param('id');
-            const client = await clientsDataServiceProvider.getClientById(clientId);
-            if (!client) {
-                throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(clientId));
-            }
-            const clientsWiseServicesData = await clientsDataServiceProvider.getClientsWiseServices(clientId);
-            return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_BASED_SERVICES_FETCH_SUCCESS, clientsWiseServicesData);
-        }
-        catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
     async getClientWiseInvoices(c) {
         try {
             const clientId = +c.req.param('id');
@@ -180,6 +165,16 @@ export class ClientsController {
         try {
             const listClients = await clientsDataServiceProvider.listDropDown();
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_FETCHED_SUCCESS, listClients);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getlistServiceForDropDown(c) {
+        try {
+            const clientId = +c.req.param('id');
+            const listServices = await clientsDataServiceProvider.listDropDownForServices(clientId);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Clients services fetched successfully", listServices);
         }
         catch (error) {
             throw error;
