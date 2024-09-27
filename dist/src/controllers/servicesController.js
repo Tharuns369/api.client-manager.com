@@ -16,6 +16,8 @@ export class ServicesController {
         try {
             const serviceData = await c.req.json();
             const validatedData = await validate(serviceValidationSchema, serviceData);
+            // const slug = slugify(validatedData.service_name, { lower: true });
+            // validatedData.slug = slug;
             const newService = await servicesDataServiceProvider.insertService(serviceData);
             console.log(newService);
             return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
