@@ -24,7 +24,7 @@ export class InvoicesDataServiceProvider {
         const query = sql `
     SELECT 
         i.id,
-        i.invoice_amount,
+        CAST(i.invoice_amount AS INTEGER),
         i.invoice_status,
         i.created_at,
         i.invoice_date,
