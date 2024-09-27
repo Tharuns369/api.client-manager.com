@@ -1,4 +1,4 @@
-import { eq, inArray, sql } from "drizzle-orm";
+import { asc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "../db";
 import { services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
@@ -75,7 +75,7 @@ export class ServiceDataServiceProvider {
         return data;
     }
     async listDropDown() {
-        return await db.select({ id: services.id, name: services.service_name }).from(services).orderBy(services.type);
+        return await db.select({ id: services.id, name: services.service_name }).from(services).orderBy(asc(services.service_name));
     }
     async updateTotalInvoiceAmount(serviceId, amountDifference) {
         await db.update(services)

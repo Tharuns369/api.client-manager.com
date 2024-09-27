@@ -107,6 +107,14 @@ export class ClientsDataServiceProvider {
             .where(eq(clients.id, clientId));
     }
     async listDropDownForServices(clientId) {
-        return await db.select({ id: services.id, service_name: services.service_name }).from(invoices).where(eq(invoices.client_id, clientId)).innerJoin(services, eq(invoices.service_id, services.id)).orderBy(asc(services.service_name));
+        return await db
+            .selectDistinct({
+            id: services.id,
+            service_name: services.service_name,
+        })
+            .from(invoices)
+            .leftJoin(services, eq(invoices.service_id, services.id))
+            .where(eq(invoices.client_id, clientId))
+            .orderBy(asc(services.service_name));
     }
 }

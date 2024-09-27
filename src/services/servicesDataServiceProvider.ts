@@ -1,5 +1,5 @@
 
-import { eq, inArray, name, SQL, sql } from "drizzle-orm";
+import { asc, eq, inArray, name, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
@@ -23,18 +23,18 @@ export class ServiceDataServiceProvider {
         query.limit(limit).offset(skip);
         const data = await query.execute();
         return data;
-      }
-    
+    }
 
-    
+
+
     async getServicesCount(filters?: string) {
         const query = db.select({ count: sql<number>`COUNT(*)` }).from(services);
         if (filters) {
-          query.where(sql`${sql.raw(filters)}`);
+            query.where(sql`${sql.raw(filters)}`);
         }
         const data = await query.execute();
         return data[0].count;
-      }
+    }
 
     async deleteService(id: number) {
         const result = await db
@@ -100,7 +100,7 @@ export class ServiceDataServiceProvider {
 
 
     async listDropDown() {
-        return await db.select({ id: services.id, name: services.service_name }).from(services).orderBy(services.type);
+        return await db.select({ id: services.id, name: services.service_name }).from(services).orderBy(asc(services.service_name));
     }
 
     async updateTotalInvoiceAmount(serviceId: number, amountDifference: number) {
