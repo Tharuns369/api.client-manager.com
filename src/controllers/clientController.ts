@@ -241,5 +241,18 @@ export class ClientsController {
     }
   }
 
+
+  async recurringClientsSummary(c: Context) {
+    try {
+
+      const clients = await clientsDataServiceProvider.recurringClientsSummary();
+      return ResponseHelper.sendSuccessResponse(c, 200, "Clients services fetched successfully", clients);
+
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
 }
 

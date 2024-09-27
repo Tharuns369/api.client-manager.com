@@ -164,6 +164,28 @@ export class ClientsDataServiceProvider {
       .orderBy(asc(services.service_name));
   }
 
+  async recurringClientsSummary() {
+
+    let query = sql`
+      SELECT 
+          SUM(i.invoice_amount) AS clients_total_amount,
+          COUNT(c.id) AS total_clients,
+          COUNT(sr.id) AS total_services,
+          SUM(sr.invoice_amount) AS services_total_amount
+      FROM invoices as i
+      JOIN clients as c 
+          ON i.client_id = c.id
+      JOIN services as sr 
+          ON i.service_id = sr.id
+      WHERE sr.type = 'RECURRING'
+      `;
+
+    const data = await db.execute(query);
+
+
+    return data.rows;
+  }
+
 
 }
 
