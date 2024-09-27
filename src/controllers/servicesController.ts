@@ -10,6 +10,8 @@ import { ServiceValidationInput, serviceValidationSchema } from '../validations/
 import validate from '../helpers/validationHelper';
 import { ServiceUpdateValidationInput, serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
 import { BadRequestException } from '../exceptions/badRequestException';
+import slugify  from 'slugify';
+
 
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
 
@@ -23,6 +25,10 @@ export class ServicesController {
       const serviceData = await c.req.json();
 
       const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, serviceData);
+
+      // const slug = slugify(validatedData.service_name, { lower: true });
+
+      // validatedData.slug = slug;
 
 
       const newService = await servicesDataServiceProvider.insertService(serviceData);
