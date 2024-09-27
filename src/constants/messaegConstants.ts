@@ -32,6 +32,8 @@ const CLIENT_MESSAGES = {
     CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists",
     CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
     CLIENT_ID_REQUIRED: "Client Id is Required",
+    PHONE_INVALID_LENGTH: "Phone number must be more than 9 digits.",
+
 
 
 };
