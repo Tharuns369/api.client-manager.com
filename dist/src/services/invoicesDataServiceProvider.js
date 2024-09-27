@@ -90,11 +90,10 @@ export class InvoicesDataServiceProvider {
             client_name: clients.client_name,
             company_name: clients.company_name,
             service_name: services.type,
-            invoice_amount: invoices.invoice_amount,
+            invoice_amount: sql `CAST(${invoices.invoice_amount} AS INTEGER)`,
             invoice_status: invoices.invoice_status,
             invoice_date: invoices.invoice_date,
             payment_date: invoices.payment_date,
-            created_at: invoices.created_at,
             remarks: invoices.remarks,
             key: invoiceFiles.key
         })
