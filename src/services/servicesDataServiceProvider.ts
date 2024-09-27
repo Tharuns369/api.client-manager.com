@@ -4,10 +4,11 @@ import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
 import { invoices } from "../schemas/invoices";
+import slugify from "slugify";
 export class ServiceDataServiceProvider {
 
     async insertService(serviceData: Service) {
-        const insertedService = await insertRecord<Service>(services, serviceData);
+      const insertedService = await insertRecord<Service>(services, serviceData);
         return insertedService;
     }
 
