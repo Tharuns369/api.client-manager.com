@@ -24,13 +24,6 @@ export const updateInvoiceValidationSchema = v.object({
       v.transform((dateStr) => new Date(dateStr)),
       v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE)
   ),
-  payment_date: v.optional(
-      v.pipe(
-          v.string(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE),
-          v.transform((dateStr) => new Date(dateStr)),
-          v.date(INVOICE_VALIDATION_MESSAGES.INVALID_INVOICE_DATE)
-      )
-  ),
   invoice_amount: (
       v.number(INVOICE_VALIDATION_MESSAGES.INVOICE_AMOUNT_REQUIRED)
   )
