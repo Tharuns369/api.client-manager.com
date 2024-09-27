@@ -31,9 +31,6 @@ export const serviceUpdateValidationSchema = v.object({
     ),
     invoice_amount: v.optional(
         v.number(SERVICE_VALIDATION_MESSAGES.INVOICE_AMOUNT_REQUIRED)
-    ),
-    remarks: v.optional(
-      v.string(SERVICE_VALIDATION_MESSAGES.REMARKS_INVALID) 
     )
        
   });
