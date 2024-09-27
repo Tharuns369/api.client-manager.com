@@ -34,9 +34,8 @@ export const clientValidationSchema = v.object({
   phone: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),  
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),    
-    v.regex(/^[0-9]{10,15}$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID), 
-    v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT)  
-),
+    v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
+  ),
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),

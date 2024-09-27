@@ -10,6 +10,7 @@ import { ClientValidationInput, clientValidationSchema } from '../validations/cl
 import validate from '../helpers/validationHelper';
 import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 import { FilterHelper } from '../helpers/filterHelper';
+import { error } from 'console';
 
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 const filterHelper = new FilterHelper();
@@ -21,6 +22,10 @@ export class ClientsController {
       const clientData = await c.req.json();
 
       const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);
+
+      if (validatedData.phone.length <= 9) {
+        return ResponseHelper.sendValidationErrorResponse(c,422,CLIENT_MESSAGES.PHONE_INVALID_LENGTH,error); 
+    }
 
       const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
       if (existingClient) {
