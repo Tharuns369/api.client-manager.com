@@ -30,6 +30,7 @@ const CLIENT_MESSAGES = {
     CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
     CLIENT_ID_REQUIRED: "Client Id is Required",
     PHONE_INVALID_LENGTH: "Phone number must be more than 9 digits.",
+    CLIENT_NAME_EXIST: "client name already exist"
 };
 const INVOICES_MESSAGES = {
     FAILED_INVOICES_LIST: "Failed to Fetch List of Invoices.",
@@ -48,10 +49,10 @@ const SERVICES_MESSAGES = {
     SERVICE_COUNT: "Successfully Fetched Services Count.",
     SERVICE_NOT_FOUND: "Service Not Found With given Id",
     SERVICE_UPDATE_SUCCESS: "Service Updated Successfully",
-    SERVICE_ID_INVALID: "Invalid Service ID",
+    SERVICE_ID_INVALID: "Invalid Service id",
     SERVICE_ADDED_SUCCESS: "Service Added Successfully",
     SERVICE_FETCHED_SUCCESS: "Service List Fetched Successfully",
-    SERVICE_ALREADY_EXIST: "this service already exist"
+    SERVICE_ALREADY_EXIST: "service name already exist"
 };
 const VALIDATION_MESSAGES = {
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
@@ -80,17 +81,18 @@ const COMMON_VALIDATIONS = {
 };
 const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_NAME_REQUIRED: "Client name is required",
-    CLIENT_NAME_INVALID: "Client name must only contain alphabets and spaces",
+    CLIENT_NAME_INVALID: "invalid client name",
     CLIENT_POC_REQUIRED: "Point of contact (POC) is required",
     CLIENT_POC_INVALID: "POC must only contain alphabets and spaces",
     CLIENT_ROLE_INVALID: "Role must only contain alphabets and spaces",
     EMAIL_REQUIRED: "Email is required",
-    INVALID_EMAIL_FORMAT: "Invalid email format",
+    INVALID_EMAIL_FORMAT: "Invalid email",
     CLIENT_EMAIL_REQUIRED: "Email is required",
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be 10 digits (India) or 10-15 digits (international)",
-    PHONE_INVALID: "Invalid phone",
+    PHONE_INVALID: "invalid phone number",
+    PHONE_LENGTH: 'invalid phone number',
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
     SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE",
@@ -104,7 +106,7 @@ const CLIENT_VALIDATION_MESSAGES = {
     // TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a valid number with precision and scale",
     TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a number",
     COMPANY_NAME_REQUIRED: "Company name is required",
-    COMPANY_NAME_VALIDATIONAS: "POC must only contain alphabets and spaces",
+    COMPANY_NAME_VALIDATIONAS: "company name must only contain alphabets and spaces",
 };
 const INVOICE_VALIDATION_MESSAGES = {
     SERVICE_ID_REQUIRED: "Service is required.",
@@ -142,7 +144,7 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
 };
 const SERVICE_VALIDATION_MESSAGES = {
     SERVICE_NAME_REQUIRED: "Service is required.",
-    SERVICE_NAME_INVALID: "Service not empty.",
+    SERVICE_NAME_INVALID: "invalid service name.",
     TYPE_REQUIRED: "Type is required.",
     INVALID_TYPE: "Type must be either RECURRING or ONE-TIME.",
     TITLE_REQUIRED: "Title is required.",
@@ -152,7 +154,7 @@ const SERVICE_VALIDATION_MESSAGES = {
     CLIENT_ID_INVALID: "Client ID must be a valid integer.",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE.",
     INVOICE_AMOUNT_REQUIRED: "Invoice amount is required.",
-    INVALID_INVOICE_AMOUNT: "Invoice amount must be a valid number with up to two decimal places.",
+    INVALID_INVOICE_AMOUNT: "Invoice amount invalid.",
     REMARKS_INVALID: "Remarks must be a valid text",
 };
 const CLIENT_SERVICES_MESSAGES = {

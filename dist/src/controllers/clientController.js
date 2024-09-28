@@ -10,6 +10,7 @@ import validate from '../helpers/validationHelper';
 import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 import { FilterHelper } from '../helpers/filterHelper';
 import { error } from 'console';
+import { clientUpdateValidationSchema } from '../validations/clientsValidations/updateClientValidations';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 const filterHelper = new FilterHelper();
 export class ClientsController {
@@ -105,16 +106,26 @@ export class ClientsController {
     async updateClient(c) {
         try {
             const id = +c.req.param('id');
+            if (isNaN(id)) {
+                return ResponseHelper.sendErrorResponse(c, 400, COMMON_VALIDATIONS.INVALID_CLIENT_ID);
+            }
             const body = await c.req.json();
+            const validatedData = await validate(clientUpdateValidationSchema, body);
             const client = await clientsDataServiceProvider.getClientById(id);
             if (!client) {
                 throw new NotFoundException(CLIENT_MESSAGES.CLIENT_ID_NOT_FOUND(id));
+            }
+            if (validatedData.client_name && validatedData.client_name !== client.client_name) {
+                const existingClient = await clientsDataServiceProvider.getClientByName(validatedData.client_name);
+                if (existingClient) {
+                    throw new ResourceAlreadyExistsException('client_name', CLIENT_MESSAGES.CLIENT_NAME_EXIST);
+                }
             }
             await clientsDataServiceProvider.editClient(id, body);
             return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         }
     }
