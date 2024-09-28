@@ -95,4 +95,12 @@ export class ServiceDataServiceProvider {
         const data = await db.execute(query);
         return data.rows[0]?.total_amount || 0;
     }
+    async getServiceByName(serviceName) {
+        const result = await db
+            .select()
+            .from(services)
+            .where(sql `${services.service_name} ILIKE ${serviceName}`)
+            .limit(1);
+        return result.length ? result[0] : null;
+    }
 }

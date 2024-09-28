@@ -1,5 +1,5 @@
 
-import { asc, eq, inArray, name, SQL, sql } from "drizzle-orm";
+import { asc, eq, ilike, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import { Service, services } from "../schemas/services";
 import { getRecordByColumnValue, insertRecord, updateRecordById } from "../db/abstractions";
@@ -124,5 +124,17 @@ export class ServiceDataServiceProvider {
         const data = await db.execute(query);
         return data.rows[0]?.total_amount || 0;
     }
+
+    async getServiceByName(serviceName: string) {
+        const result = await db
+          .select()
+          .from(services)
+          .where(sql`${services.service_name} ILIKE ${serviceName}`)
+          .limit(1);
+      
+        return result.length ? result[0] : null;
+      }
+      
+      
 
 }

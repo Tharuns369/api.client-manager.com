@@ -1,14 +1,15 @@
 import { COMMON_VALIDATIONS, SERVICES_MESSAGES } from '../constants/messaegConstants';
+import { BadRequestException } from '../exceptions/badRequestException';
 import { NotFoundException } from '../exceptions/notFoundException';
+import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
+import { FilterHelper } from '../helpers/filterHelper';
 import { paginationHelper } from '../helpers/paginationResponseHelper';
 import { ResponseHelper } from '../helpers/responseHelper';
 import { sortHelper } from '../helpers/sortHelper';
-import { FilterHelper } from '../helpers/filterHelper';
+import validate from '../helpers/validationHelper';
 import { ServiceDataServiceProvider } from '../services/servicesDataServiceProvider';
 import { serviceValidationSchema } from '../validations/serviceValidations/addServiceValidation';
-import validate from '../helpers/validationHelper';
 import { serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
-import { BadRequestException } from '../exceptions/badRequestException';
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
 const filterHelper = new FilterHelper();
 export class ServicesController {
@@ -16,20 +17,20 @@ export class ServicesController {
         try {
             const serviceData = await c.req.json();
             const validatedData = await validate(serviceValidationSchema, serviceData);
-            // const slug = slugify(validatedData.service_name, { lower: true });
-            // validatedData.slug = slug;
-            const newService = await servicesDataServiceProvider.insertService(serviceData);
-            console.log(newService);
-            return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
+            const existingService = await servicesDataServiceProvider.getServiceByName(validatedData.service_name);
+            if (!existingService) {
+                const newService = await servicesDataServiceProvider.insertService(serviceData);
+                return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
+            }
+            throw new ResourceAlreadyExistsException('service_name', SERVICES_MESSAGES.SERVICE_ALREADY_EXIST);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         }
     }
     async getService(c) {
         try {
-            console.log("try");
             const id = +c.req.param('id');
             if (isNaN(id)) {
                 throw new BadRequestException(COMMON_VALIDATIONS.INVALID_SERVICE_ID);
@@ -94,10 +95,17 @@ export class ServicesController {
             if (!service) {
                 throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
             }
+            if (validatedData.service_name && validatedData.service_name !== service.service_name) {
+                const existingService = await servicesDataServiceProvider.getServiceByName(validatedData.service_name);
+                if (existingService) {
+                    throw new ResourceAlreadyExistsException('service_name', SERVICES_MESSAGES.SERVICE_ALREADY_EXIST);
+                }
+            }
             const updatedService = await servicesDataServiceProvider.editService(id, body);
             return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS, updatedService);
         }
         catch (error) {
+            console.error(error);
             throw error;
         }
     }

@@ -2,6 +2,8 @@ import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
+const phoneRegex = /^(\+91|91|0)?[6-9]\d{9}$|^\+?[1-9]\d{1,14}$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export enum StatusEnum {
   ACTIVE = 'ACTIVE',
@@ -27,11 +29,12 @@ export const clientValidationSchema = v.object({
   email: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED),
-    v.email(CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT)
+    v.regex(emailRegex,CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT)
   ),
   phone: v.pipe(
-    v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED)
+    v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),  
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),    
+    v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
   ),
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)

@@ -21,7 +21,7 @@ async function seedClients() {
             city: faker.location.city(),
             gst: faker.datatype.boolean(),
             country: faker.location.country(),
-            total_invoice_amount: parseFloat((Math.random() * (50000 - 1000) + 1000).toFixed(2)).toString(),
+            total_invoice_amount: "0",
             created_at: new Date(),
             updated_at: new Date(),
         });
