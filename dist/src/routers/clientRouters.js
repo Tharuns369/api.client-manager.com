@@ -16,4 +16,6 @@ clientsRouter.get('/export/json', authMiddleware.checkAndValidateAuthToken, clie
 clientsRouter.get('/dashboard/invoice-amount', clientsController.listClientsWiseInvoicesAmount);
 clientsRouter.get('/list/drop-down', authMiddleware.checkAndValidateAuthToken, clientsController.dropDownForListOfClients);
 clientsRouter.get(':id/services', clientsController.getlistServiceForDropDown);
+clientsRouter.get('/recurring-type/summary', clientsController.recurringTypeSummary);
+clientsRouter.get('/one-time-type/summary', clientsController.oneTimeTypeSummary);
 export default clientsRouter;

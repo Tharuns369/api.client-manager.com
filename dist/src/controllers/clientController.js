@@ -180,4 +180,26 @@ export class ClientsController {
             throw error;
         }
     }
+    async recurringTypeSummary(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.invoices(query);
+            const clients = await clientsDataServiceProvider.recurringTypeSummary(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Recurring type summary fetched successfully", clients);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async oneTimeTypeSummary(c) {
+        try {
+            const query = c.req.query();
+            const filters = filterHelper.invoices(query);
+            const clients = await clientsDataServiceProvider.oneTimeTypeSummary(filters);
+            return ResponseHelper.sendSuccessResponse(c, 200, "One time service type summary fetched successfully", clients);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

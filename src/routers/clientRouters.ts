@@ -23,7 +23,9 @@ clientsRouter.get('/list/drop-down', authMiddleware.checkAndValidateAuthToken, c
 clientsRouter.get(':id/services', clientsController.getlistServiceForDropDown);
 
 
-clientsRouter.get('/recurring-type/summary', clientsController.recurringClientsSummary);
+clientsRouter.get('/recurring-type/summary', clientsController.recurringTypeSummary);
+clientsRouter.get('/one-time-type/summary', clientsController.oneTimeTypeSummary);
+
 
 
 export default clientsRouter;

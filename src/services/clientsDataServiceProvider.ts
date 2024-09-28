@@ -164,27 +164,54 @@ export class ClientsDataServiceProvider {
       .orderBy(asc(services.service_name));
   }
 
-  async recurringClientsSummary() {
 
-    let query = sql`
+  async recurringTypeSummary(filters?: string) {
+    // Define your query using Drizzle SQL API
+    const query = sql`
       SELECT 
-          SUM(i.invoice_amount) AS clients_total_amount,
-          COUNT(c.id) AS total_clients,
-          COUNT(sr.id) AS total_services,
-          SUM(sr.invoice_amount) AS services_total_amount
-      FROM invoices as i
-      JOIN clients as c 
-          ON i.client_id = c.id
-      JOIN services as sr 
-          ON i.service_id = sr.id
+          CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_recurring_clients,
+          CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_recurring_services,
+          CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_recurring_clients_invoice_amount,
+          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoices_amount
+      FROM 
+          ${invoices} as i
+      JOIN 
+          ${clients} as c ON i.client_id = c.id
+      JOIN 
+          ${services} as sr ON i.service_id = sr.id
       WHERE sr.type = 'RECURRING'
-      `;
+      ${filters ? sql`AND ${sql.raw(filters)}` : sql``}
+    `;
 
-    const data = await db.execute(query);
-
-
-    return data.rows;
+    const result = await db.execute(query);
+    return result.rows;
   }
+
+
+  async oneTimeTypeSummary(filters: string) {
+    // Define your query using Drizzle SQL API
+    const query = sql`
+      SELECT 
+          CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_one_time_clients,
+          CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_one_time_services,
+          CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_one_time_clients_invoice_amount,
+          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoices_amount
+      FROM 
+          ${invoices} as i
+      JOIN 
+          ${clients} as c ON i.client_id = c.id
+      JOIN 
+          ${services} as sr ON i.service_id = sr.id
+      WHERE sr.type = 'ONE-TIME'
+      ${filters ? sql`AND ${sql.raw(filters)}` : sql``}
+
+    `;
+
+    const result = await db.execute(query);
+    return result.rows;
+  }
+
+
 
 
 }

@@ -10,7 +10,6 @@ import { ServiceValidationInput, serviceValidationSchema } from '../validations/
 import validate from '../helpers/validationHelper';
 import { ServiceUpdateValidationInput, serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
 import { BadRequestException } from '../exceptions/badRequestException';
-import slugify  from 'slugify';
 
 
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
