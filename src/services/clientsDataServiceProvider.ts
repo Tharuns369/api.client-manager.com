@@ -164,6 +164,16 @@ export class ClientsDataServiceProvider {
       .orderBy(asc(services.service_name));
   }
 
+  async getClientByName(clientName: string) {
+    const result = await db
+      .select()
+      .from(clients)
+      .where(sql`${clients.client_name} ILIKE ${clientName}`)
+      .limit(1);
+  
+    return result.length ? result[0] : null;
+  }
+
 
   async recurringTypeSummary(filters?: string) {
     // Define your query using Drizzle SQL API
