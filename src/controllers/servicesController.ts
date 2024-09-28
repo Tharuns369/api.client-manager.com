@@ -11,6 +11,8 @@ import validate from '../helpers/validationHelper';
 import { ServiceUpdateValidationInput, serviceUpdateValidationSchema } from '../validations/serviceValidations/updateServiceInputValidations';
 import { BadRequestException } from '../exceptions/badRequestException';
 import slugify  from 'slugify';
+import { Service } from '../schemas/services';
+import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 
 
 const servicesDataServiceProvider = new ServiceDataServiceProvider();
@@ -19,33 +21,28 @@ const filterHelper = new FilterHelper();
 
 export class ServicesController {
 
-
   async addService(c: Context) {
     try {
       const serviceData = await c.req.json();
-
+  
       const validatedData: ServiceValidationInput = await validate(serviceValidationSchema, serviceData);
-
-      // const slug = slugify(validatedData.service_name, { lower: true });
-
-      // validatedData.slug = slug;
-
-
+    
+      const existingService = await servicesDataServiceProvider.getServiceByName(validatedData.service_name);
+      
+    if (!existingService) {
       const newService = await servicesDataServiceProvider.insertService(serviceData);
-
-      console.log(newService);
-
-
       return ResponseHelper.sendSuccessResponse(c, 201, SERVICES_MESSAGES.SERVICE_ADDED_SUCCESS, newService);
+    }
+    throw new ResourceAlreadyExistsException('service_name',SERVICES_MESSAGES.SERVICE_ALREADY_EXIST);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
+  
 
   async getService(c: Context) {
     try {
-      console.log("try");
 
       const id = +c.req.param('id');
 
@@ -122,28 +119,36 @@ export class ServicesController {
   async updateService(c: Context) {
     try {
       const id = +c.req.param('id');
-
+  
       if (isNaN(id)) {
         return ResponseHelper.sendErrorResponse(c, 400, SERVICES_MESSAGES.SERVICE_ID_INVALID);
       }
-
+  
       const body = await c.req.json();
-
+  
       const validatedData: ServiceUpdateValidationInput = await validate(serviceUpdateValidationSchema, body);
-
-
+  
       const service = await servicesDataServiceProvider.getServiceById(id);
-
+  
       if (!service) {
         throw new NotFoundException(SERVICES_MESSAGES.SERVICE_NOT_FOUND);
       }
-
+  
+      if (validatedData.service_name && validatedData.service_name !== service.service_name) {
+        const existingService = await servicesDataServiceProvider.getServiceByName(validatedData.service_name);
+  
+        if (existingService) {
+          throw new ResourceAlreadyExistsException('service_name', SERVICES_MESSAGES.SERVICE_ALREADY_EXIST);
+        }
+      }
+  
       const updatedService = await servicesDataServiceProvider.editService(id, body);
-
+  
       return ResponseHelper.sendSuccessResponse(c, 200, SERVICES_MESSAGES.SERVICE_UPDATE_SUCCESS, updatedService);
-
+  
     } catch (error) {
-      throw error;
+      console.error(error);
+      throw error; 
     }
   }
 

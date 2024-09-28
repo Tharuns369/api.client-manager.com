@@ -64,7 +64,7 @@ const SERVICES_MESSAGES = {
     SERVICE_ID_INVALID: "Invalid Service ID",
     SERVICE_ADDED_SUCCESS: "Service Added Successfully",
     SERVICE_FETCHED_SUCCESS: "Service List Fetched Successfully",
-
+    SERVICE_ALREADY_EXIST:"this service already exist"
 
 
 
