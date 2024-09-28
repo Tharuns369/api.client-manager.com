@@ -47,7 +47,7 @@ const seedInvoices = async () => {
                     remarks: faker.lorem.sentence(),
                     invoice_date: formatDateString(getRandomInvoiceDate()),
                     payment_date: Math.random() > 0.5 ? formatDateString(getRandomInvoiceDate()) : null,
-                    invoice_amount: (Math.random() * (5000 - 100) + 100).toFixed(2)
+                    invoice_amount: "0"
                 });
 
                 if (invoiceData.length === BATCH_SIZE) {
