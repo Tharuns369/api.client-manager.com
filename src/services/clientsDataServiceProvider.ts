@@ -172,7 +172,7 @@ export class ClientsDataServiceProvider {
           CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_recurring_clients,
           CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_recurring_services,
           CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_recurring_clients_invoice_amount,
-          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoices_amount
+          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_recurring_services_invoice_amount
       FROM 
           ${invoices} as i
       JOIN 
@@ -195,7 +195,7 @@ export class ClientsDataServiceProvider {
           CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_one_time_clients,
           CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_one_time_services,
           CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_one_time_clients_invoice_amount,
-          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoices_amount
+          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoice_amount
       FROM 
           ${invoices} as i
       JOIN 
