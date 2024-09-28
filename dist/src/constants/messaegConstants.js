@@ -90,7 +90,7 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be 10 digits (India) or 10-15 digits (international)",
-    PHONE_INVALID: "Phone number must only contain numeric characters.",
+    PHONE_INVALID: "Invalid phone",
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
     SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE",

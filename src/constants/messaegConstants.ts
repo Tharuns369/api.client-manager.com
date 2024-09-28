@@ -64,7 +64,7 @@ const SERVICES_MESSAGES = {
     SERVICE_ID_INVALID: "Invalid Service ID",
     SERVICE_ADDED_SUCCESS: "Service Added Successfully",
     SERVICE_FETCHED_SUCCESS: "Service List Fetched Successfully",
-    SERVICE_ALREADY_EXIST:"this service already exist"
+    SERVICE_ALREADY_EXIST: "this service already exist"
 
 
 
@@ -114,8 +114,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_EMAIL_REQUIRED: "Email is required",
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
-    PHONE_TOO_SHORT:"Phone number must be 10 digits (India) or 10-15 digits (international)",
-    PHONE_INVALID: "Phone number must only contain numeric characters.",
+    PHONE_TOO_SHORT: "Phone number must be 10 digits (India) or 10-15 digits (international)",
+    PHONE_INVALID: "Invalid phone",
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
     SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE",
