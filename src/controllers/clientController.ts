@@ -28,6 +28,11 @@ export class ClientsController {
         return ResponseHelper.sendValidationErrorResponse(c,422,CLIENT_MESSAGES.PHONE_INVALID_LENGTH,error); 
     }
 
+    const existingClientName = await clientsDataServiceProvider.getClientByName(validatedData.client_name);
+    if (existingClientName) {
+      throw new ResourceAlreadyExistsException("client_name", CLIENT_MESSAGES.CLIENT_NAME_EXIST);
+    }
+
       const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
       if (existingClient) {
         throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
