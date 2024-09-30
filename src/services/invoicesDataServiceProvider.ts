@@ -215,14 +215,15 @@ export class InvoicesDataServiceProvider {
 
   async getInvoiceAmountSum(filters?: string) {
 
-    let query = sql`
-      SELECT 
+    const query = sql`
+    SELECT 
         SUM(i.invoice_amount) AS total_amount
-      FROM invoices as i
-      
-      ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
-    
-      `;
+    FROM ${invoices} AS i
+    JOIN ${clients} AS c ON i.client_id = c.id
+    JOIN ${services} AS sr ON i.service_id = sr.id
+    ${filters ? sql`WHERE ${sql.raw(filters)}` : sql``}
+   
+    `;
 
     const data = await db.execute(query);
     return data.rows;

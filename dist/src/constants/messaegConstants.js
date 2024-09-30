@@ -139,7 +139,7 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
     INVOICE_ID_REQUIRED: "Invoice id is required",
     INVALID_INVOICE_ID: "Invalid invoice id",
     INVALID_KEY: "Invalid key",
-    SERVICE_ID_REQUIRED: "Service id required",
+    SERVICE_ID_REQUIRED: "Service is required",
     INVALID_SERVICE_ID: "Invalid Service id"
 };
 const SERVICE_VALIDATION_MESSAGES = {
@@ -168,7 +168,7 @@ const CLIENT_SERVICES_MESSAGES = {
 const CLIENT_SERVICES_VALIDATION_MESSAGES = {
     CLIENT_ID_REQUIRED: "Client ID is required.",
     CLIENT_ID_INVALID: "Client ID must be a valid integer.",
-    SERVICE_ID_REQUIRED: "Service ID is required.",
+    SERVICE_ID_REQUIRED: "Service Id is required.",
     SERVICE_ID_INVALID: "Service ID must be a valid integer.",
     TITLE_REQUIRED: "Title is required.",
     TITLE_INVALID: "Title must be a non-empty string.",

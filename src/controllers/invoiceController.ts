@@ -13,7 +13,7 @@ import { FileHelper } from "../helpers/fileHelper";
 import { S3FileService } from "../services/s3DataServiceProvider";
 import { ServiceDataServiceProvider } from "../services/servicesDataServiceProvider";
 import { ClientsDataServiceProvider } from "../services/clientsDataServiceProvider";
-import {  InvoiceUpdateValidationInput, updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
+import { InvoiceUpdateValidationInput, updateInvoiceValidationSchema } from "../validations/invoiceValidations/updateInvoiceValidationSchema";
 
 const s3FileService = new S3FileService();
 const filterHelper = new FilterHelper();
@@ -94,8 +94,7 @@ export class InvoiceController {
                     return invoice;
                 }),
             );
-
-
+            
 
             const response = paginationHelper.getPaginationResponse({
                 page,
@@ -141,7 +140,7 @@ export class InvoiceController {
                 url,
 
             };
-            
+
             return ResponseHelper.sendSuccessResponse(c, 200, 'Invoice fetched successfully', modifiedInvoice);
 
         } catch (error) {
@@ -194,7 +193,7 @@ export class InvoiceController {
             const id = +c.req.param('id');
             const body = await c.req.json();
 
-            const validatedData:InvoiceUpdateValidationInput = await validate(updateInvoiceValidationSchema, body);
+            const validatedData: InvoiceUpdateValidationInput = await validate(updateInvoiceValidationSchema, body);
 
             const oldInvoice = await invoicesDataServiceProvider.getInvoiceById(id);
             if (!oldInvoice) {
