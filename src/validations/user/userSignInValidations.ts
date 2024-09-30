@@ -12,7 +12,6 @@ export const userSignInValidationSchema = v.object({
   password: v.pipe(
     v.string(VALIDATION_MESSAGES.PASSWORD_REQUIRED),
     v.nonEmpty(VALIDATION_MESSAGES.PASSWORD_REQUIRED),
-    v.minLength(8, VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
   ),
 });
 
