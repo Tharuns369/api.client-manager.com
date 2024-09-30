@@ -1,7 +1,7 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 const alphaRegex = /^[a-zA-Z\s]+$/;
-const phoneRegex = /^(\+91|91|0)?[6-9]\d{9}$|^\+?[1-9](?!0{4,14})\d{1,14}$/;
+const phoneRegex = /^(?:\+\d{1,3})?\d{10,}$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export var StatusEnum;
 (function (StatusEnum) {

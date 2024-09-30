@@ -52,7 +52,7 @@ const SERVICES_MESSAGES = {
     SERVICE_ID_INVALID: "Invalid Service id",
     SERVICE_ADDED_SUCCESS: "Service Added Successfully",
     SERVICE_FETCHED_SUCCESS: "Service List Fetched Successfully",
-    SERVICE_ALREADY_EXIST: "service name already exist"
+    SERVICE_ALREADY_EXIST: "Service name already exist"
 };
 const VALIDATION_MESSAGES = {
     VALIDATION_ERROR: "Validation failed. Please check the input data.",
@@ -91,8 +91,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT: "Phone number must be 10 digits (India) or 10-15 digits (international)",
-    PHONE_INVALID: "invalid phone number",
-    PHONE_LENGTH: 'invalid phone number',
+    PHONE_INVALID: "Invalid phone number",
+    PHONE_LENGTH: 'Invalid phone number',
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
     SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
     INVALID_STATUS: "Status must be either ACTIVE or INACTIVE",
@@ -144,7 +144,7 @@ const INVOICE_FILES_VALIDATION_MESSAGES = {
 };
 const SERVICE_VALIDATION_MESSAGES = {
     SERVICE_NAME_REQUIRED: "Service is required.",
-    SERVICE_NAME_INVALID: "invalid service name.",
+    SERVICE_NAME_INVALID: "Invalid service name.",
     TYPE_REQUIRED: "Type is required.",
     INVALID_TYPE: "Type must be either RECURRING or ONE-TIME.",
     TITLE_REQUIRED: "Title is required.",
