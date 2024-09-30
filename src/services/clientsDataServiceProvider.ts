@@ -170,7 +170,7 @@ export class ClientsDataServiceProvider {
       .from(clients)
       .where(sql`${clients.client_name} ILIKE ${clientName}`)
       .limit(1);
-  
+
     return result.length ? result[0] : null;
   }
 
@@ -182,7 +182,7 @@ export class ClientsDataServiceProvider {
           CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_recurring_clients,
           CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_recurring_services,
           CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_recurring_clients_invoice_amount,
-          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_recurring_services_invoice_amount
+          CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_recurring_services_invoice_amount
       FROM 
           ${invoices} as i
       JOIN 
@@ -205,7 +205,7 @@ export class ClientsDataServiceProvider {
           CAST(COUNT(DISTINCT c.id) AS INTEGER) AS total_one_time_clients,
           CAST(COUNT(DISTINCT sr.id) AS INTEGER) AS total_one_time_services,
           CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_one_time_clients_invoice_amount,
-          CAST(COALESCE(SUM(DISTINCT sr.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoice_amount
+          CAST(COALESCE(SUM(i.invoice_amount), 0) AS INTEGER) AS total_one_time_services_invoice_amount
       FROM 
           ${invoices} as i
       JOIN 

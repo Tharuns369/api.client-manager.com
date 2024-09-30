@@ -129,7 +129,7 @@ export class InvoicesDataServiceProvider {
       JOIN clients as c 
           ON i.client_id = c.id
       JOIN services as sr 
-          ON i.service_id = sr.id  -- Fixed join condition
+          ON i.service_id = sr.id
       LEFT JOIN invoice_files AS if ON i.id = if.invoice_id
 
       ${filters ? sql `WHERE ${sql.raw(filters)}` : sql ``}
