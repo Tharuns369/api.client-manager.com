@@ -128,7 +128,7 @@ export class InvoicesDataServiceProvider {
         payment_date: invoices.payment_date,
         remarks: invoices.remarks,
         key: invoiceFiles.key,
-        file_id: invoiceFiles.id 
+        file_id: invoiceFiles.id
       }
     )
       .from(invoices)
@@ -153,7 +153,7 @@ export class InvoicesDataServiceProvider {
     let query = sql`
       SELECT 
           i.id,
-          i.invoice_amount,
+          CAST(i.invoice_amount AS INTEGER),
           i.invoice_status,
           i.created_at,
           i.invoice_date,
@@ -219,7 +219,7 @@ export class InvoicesDataServiceProvider {
 
     const query = sql`
     SELECT 
-        SUM(i.invoice_amount) AS total_amount
+    CAST(SUM(i.invoice_amount) AS INTEGER) AS total_amount
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
