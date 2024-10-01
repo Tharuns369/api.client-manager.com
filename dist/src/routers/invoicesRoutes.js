@@ -12,4 +12,5 @@ invoicesRouter.get('/files/:id/download', invoicesController.downloadInvoice);
 invoicesRouter.get('/:id/invoice-files', invoicesController.getInvoiceFiles);
 invoicesRouter.get('/latest/five', invoicesController.latestInvoices);
 invoicesRouter.get('/list/:client_id', invoicesController.listInvoicesByClientId);
+invoicesRouter.delete('files/:id', invoicesController.deleteInvoice);
 export default invoicesRouter;

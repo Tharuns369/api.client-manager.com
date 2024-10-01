@@ -242,4 +242,18 @@ export class InvoiceController {
             throw error;
         }
     }
+    async deleteInvoice(c) {
+        try {
+            const id = +c.req.param('id');
+            const invoiceFile = await invoicesDataServiceProvider.getInvoiceFileById(id);
+            if (!invoiceFile) {
+                throw new NotFoundException(INVOICES_MESSAGES.INVOICE_NOT_FOUND);
+            }
+            await invoicesDataServiceProvider.deleteInvoiceFileById(id);
+            return ResponseHelper.sendSuccessResponse(c, 200, "Invoice file deleted successfully");
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }

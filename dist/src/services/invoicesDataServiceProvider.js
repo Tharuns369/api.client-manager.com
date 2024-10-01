@@ -1,10 +1,10 @@
-import { sql, eq } from "drizzle-orm";
-import { getRecordByColumnValue, insertRecords, updateRecordById } from "../db/abstractions";
+import { eq, sql } from "drizzle-orm";
+import { deleteRecordById, getRecordByColumnValue, insertRecords, updateRecordById } from "../db/abstractions";
 import { db } from "../db/index";
-import { invoices } from "../schemas/invoices";
-import { invoiceFiles } from "../schemas/invoicefiles";
-import { services } from "../schemas/services";
 import { clients } from "../schemas/clients";
+import { invoiceFiles } from "../schemas/invoicefiles";
+import { invoices } from "../schemas/invoices";
+import { services } from "../schemas/services";
 export class InvoicesDataServiceProvider {
     async getTotalInvoicesAmount() {
         const result = await db
@@ -177,5 +177,8 @@ export class InvoicesDataServiceProvider {
     `;
         const data = await db.execute(query);
         return data.rows;
+    }
+    async deleteInvoiceFileById(id) {
+        return await deleteRecordById(invoiceFiles, id);
     }
 }
