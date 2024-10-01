@@ -35,7 +35,8 @@ export class InvoicesDataServiceProvider {
         c.client_name,
         c.company_name,
         i.remarks,
-        if.key
+        if.key,
+        if.id as file_id
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
@@ -55,6 +56,7 @@ export class InvoicesDataServiceProvider {
     FROM ${invoices} AS i
     JOIN ${clients} AS c ON i.client_id = c.id
     JOIN ${services} AS sr ON i.service_id = sr.id
+    LEFT JOIN ${invoiceFiles} AS if ON i.id = if.invoice_id
     ${filters ? sql `WHERE ${sql.raw(filters)}` : sql ``}
     `;
         const data = await db.execute(query);
@@ -96,7 +98,8 @@ export class InvoicesDataServiceProvider {
             invoice_date: invoices.invoice_date,
             payment_date: invoices.payment_date,
             remarks: invoices.remarks,
-            key: invoiceFiles.key
+            key: invoiceFiles.key,
+            file_id: invoiceFiles.id
         })
             .from(invoices)
             .innerJoin(clients, eq(invoices.client_id, clients.id))
