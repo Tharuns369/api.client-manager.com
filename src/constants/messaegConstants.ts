@@ -113,7 +113,7 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
     PHONE_TOO_SHORT:"Phone number must be 10 digits",
-    PHONE_INVALID: "Invalid length",
+    PHONE_INVALID: "Invalid phone number",
     PHONE_LENGTH: 'Invalid phone number',
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",
     SECONDARY_PHONE_INVALID: "Secondary phone number must be exactly 10 digits",
