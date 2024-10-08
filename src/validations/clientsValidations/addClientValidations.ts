@@ -3,6 +3,8 @@ import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const phoneNumberRegex = /^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/;
+
 
 export enum StatusEnum {
   ACTIVE = 'ACTIVE',
@@ -41,32 +43,13 @@ export const clientValidationSchema = v.object({
     v.transform((value) => value.trim()),
   ),
  phone: v.pipe(
-  v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), 
-  v.transform((value) => value.trim()),                
-  v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-  v.custom((value: any) => {
-    // Step 1: Remove all non-digit characters
-    let digitsOnly = value.replace(/\D/g, ''); // Keep only digits
-    
-    // Step 2: Handle country codes (e.g., +1, +91)
-    if (digitsOnly.length > 10) {
-      if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
-        digitsOnly = digitsOnly.slice(2); // Remove '91' country code for India
-      } else if (digitsOnly.startsWith('1') && digitsOnly.length === 11) {
-        digitsOnly = digitsOnly.slice(1); // Remove '1' country code for US
-      }
-    }
-    
-    // Step 3: Ensure the final number is exactly 10 digits
-    return digitsOnly.length === 10;
-  }, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID),
-  // Step 4: Validate the format of the phone number
-  v.regex(
-    /^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/, 
-    CLIENT_VALIDATION_MESSAGES.PHONE_INVALID
-  )
-),
+    v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
+    v.transform((value) => value.trim()),
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
+    v.minLength(7, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID),
 
+    v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
+  ),
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),

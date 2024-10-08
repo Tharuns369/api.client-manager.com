@@ -26,7 +26,7 @@ export const clientValidationSchema = v.object({
         }
         // Step 3: Ensure the final number is exactly 10 digits
         return digitsOnly.length === 10;
-    }, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID_LENGTH), 
+    }, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID), 
     // Step 4: Validate the format of the phone number
     v.regex(/^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)),
     secondary_phone: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)),
