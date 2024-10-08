@@ -41,15 +41,13 @@ export const clientValidationSchema = v.object({
     v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT),
     v.transform((value) => value.trim()),
   ),
-   phone: v.pipe(
+ phone: v.pipe(
   v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),  
-  v.transform((value) => value.trim()),              
+  v.transform((value) => value.trim()),                 
   v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), 
-  v.custom((value: any) => {
-    const digitsOnly = value.replace(/\D/g, '');  
-    return digitsOnly.length === 10;
-  }, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT)  
+  v.regex(/^(?:\+?[1-9]\d{0,3}[\s-]?)?(\d[\s-]?){9}\d$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
 ),
+
 
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)

@@ -107,7 +107,8 @@ const CLIENT_VALIDATION_MESSAGES = {
     TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a number",
     COMPANY_NAME_REQUIRED: "Company name is required",
     COMPANY_NAME_VALIDATIONAS: "company name must only contain alphabets and spaces",
-    MIN_REQUIRED: "Must be a 3 letters"
+    MIN_REQUIRED: "Must be a 3 letters",
+    PHONE_INVALID_LENGTH: 'Phone number must be between 7 and 15 digits long.'
 };
 const INVOICE_VALIDATION_MESSAGES = {
     SERVICE_ID_REQUIRED: "Service is required.",
