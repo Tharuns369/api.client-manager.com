@@ -9,32 +9,27 @@ import { clientValidationSchema } from '../validations/clientsValidations/addCli
 import validate from '../helpers/validationHelper';
 import { ResourceAlreadyExistsException } from '../exceptions/resourceAlreadyExistsException';
 import { FilterHelper } from '../helpers/filterHelper';
-import { error } from 'console';
 import { clientUpdateValidationSchema } from '../validations/clientsValidations/updateClientValidations';
 const clientsDataServiceProvider = new ClientsDataServiceProvider();
 const filterHelper = new FilterHelper();
 export class ClientsController {
     async addClient(c) {
         try {
-            console.log("started");
             const clientData = await c.req.json();
             const validatedData = await validate(clientValidationSchema, clientData);
-            if (validatedData.phone.length <= 9) {
-                return ResponseHelper.sendValidationErrorResponse(c, 422, CLIENT_MESSAGES.PHONE_INVALID_LENGTH, error);
+            const existingClientByName = await clientsDataServiceProvider.getClientByName(validatedData.client_name);
+            if (existingClientByName) {
+                throw new ResourceAlreadyExistsException('client_name', CLIENT_MESSAGES.CLIENT_NAME_EXIST);
             }
-            const existingClientName = await clientsDataServiceProvider.getClientByName(validatedData.client_name);
-            if (existingClientName) {
-                throw new ResourceAlreadyExistsException("client_name", CLIENT_MESSAGES.CLIENT_NAME_EXIST);
-            }
-            const existingClient = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
-            if (existingClient) {
-                throw new ResourceAlreadyExistsException("email", CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
+            const existingClientByEmail = await clientsDataServiceProvider.findClientByEmail(validatedData.email);
+            if (existingClientByEmail) {
+                throw new ResourceAlreadyExistsException('email', CLIENT_MESSAGES.CLIENT_EMAIL_ALREADY_EXISTS);
             }
             const newClient = await clientsDataServiceProvider.insertClient(clientData);
             return ResponseHelper.sendSuccessResponse(c, 201, CLIENT_MESSAGES.CLIENT_ADDED_SUCCESS, newClient);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         }
     }

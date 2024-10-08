@@ -29,7 +29,7 @@ const CLIENT_MESSAGES = {
     CLIENT_EMAIL_ALREADY_EXISTS: "Client with this email already exist",
     CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
     CLIENT_ID_REQUIRED: "Client Id is Required",
-    PHONE_INVALID_LENGTH: "Phone number must be more than 9 digits.",
+    PHONE_INVALID_LENGTH: "Phone number must be 10 digits.",
     CLIENT_NAME_EXIST: "Client name already exist"
 };
 const INVOICES_MESSAGES = {
@@ -90,7 +90,7 @@ const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_EMAIL_REQUIRED: "Email is required",
     CLIENT_INVALID_EMAIL_FORMAT: "Invalid email format",
     PHONE_REQUIRED: "Phone number is required.",
-    PHONE_TOO_SHORT: "Phone number must be 10 digits (India) or 10-15 digits (international)",
+    PHONE_TOO_SHORT: "Phone number must be 10 digits",
     PHONE_INVALID: "Invalid phone number",
     PHONE_LENGTH: 'Invalid phone number',
     SECONDARY_PHONE_REQUIRED: "Secondary phone number is required",

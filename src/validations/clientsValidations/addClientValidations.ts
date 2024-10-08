@@ -42,12 +42,12 @@ export const clientValidationSchema = v.object({
     v.transform((value) => value.trim()),
   ),
    phone: v.pipe(
-        v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),   
-        v.transform((value) => value.trim()),                  
-        v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), 
-        v.regex(/^\d{10}$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID), 
-        v.custom((value: any) => value.length === 10, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT) 
-    ),
+    v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),  
+    v.transform((value) => value.trim()),                
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), 
+    v.regex(/^\+?[1-9]\d{1,14}$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID), 
+    v.custom((value: any) => value.length >= 7 && value.length <= 15, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID_LENGTH) 
+),
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),
