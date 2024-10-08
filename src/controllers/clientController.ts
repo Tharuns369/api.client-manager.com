@@ -20,6 +20,8 @@ export class ClientsController {
 
   async addClient(c: Context) {
     try {
+      console.log("started");
+      
       const clientData = await c.req.json();
 
       const validatedData: ClientValidationInput = await validate(clientValidationSchema, clientData);

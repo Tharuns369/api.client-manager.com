@@ -14,24 +14,39 @@ export const clientValidationSchema = v.object({
   client_name: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
+    v.transform((value) => value.trim()),
+    v.minLength(1, CLIENT_VALIDATION_MESSAGES.CLIENT_NAME_REQUIRED),
+    v.custom((value: any) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED),
+    v.transform((value) => value.trim()),
   ),
   company_name: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED),
+    v.transform((value) => value.trim()),
+    v.minLength(1, CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED),
+    v.custom((value: any) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED),
+    v.transform((value) => value.trim()),
   ),
   poc: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED),
+    v.transform((value) => value.trim()),
+    v.minLength(1, CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED),
+    v.custom((value: any) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED),
+    v.transform((value) => value.trim()),
   ),
   email: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED),
-    v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT)
+    v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT),
+    v.transform((value) => value.trim()),
   ),
   phone: v.pipe(
     v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
+    v.transform((value) => value.trim()),
     v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.regex(phoneRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
+    v.regex(/^\d{10}$/, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID),
+    v.custom((value: any) => value.length !== 10, CLIENT_VALIDATION_MESSAGES.PHONE_TOO_SHORT)
   ),
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)

@@ -16,6 +16,7 @@ const filterHelper = new FilterHelper();
 export class ClientsController {
     async addClient(c) {
         try {
+            console.log("started");
             const clientData = await c.req.json();
             const validatedData = await validate(clientValidationSchema, clientData);
             if (validatedData.phone.length <= 9) {

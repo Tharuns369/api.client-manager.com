@@ -29,11 +29,11 @@ const CLIENT_MESSAGES = {
     CLIENT_BASED_SERVICES_FETCH_SUCCESS: "Client based services fetched successfully.",
     CLIENT_BASED_INVOICES_FETCH_SUCCESS: "Client based invoices fetched successfully.",
     CLIENT_ADDED_SUCCESS: "Client added successfully",
-    CLIENT_EMAIL_ALREADY_EXISTS: "client with this email already exists",
+    CLIENT_EMAIL_ALREADY_EXISTS: "Client with this email already exist",
     CLIENT_LIST_EXPORT_SUCCESS: "Clients Data Exported Successfully",
     CLIENT_ID_REQUIRED: "Client Id is Required",
-    PHONE_INVALID_LENGTH: "Phone number must be more than 9 digits.",
-    CLIENT_NAME_EXIST: "client name already exist"
+    PHONE_INVALID_LENGTH: "Phone number must be 10 digits.",
+    CLIENT_NAME_EXIST: "Client name already exist"
 
 
 
@@ -103,7 +103,7 @@ const COMMON_VALIDATIONS = {
 
 const CLIENT_VALIDATION_MESSAGES = {
     CLIENT_NAME_REQUIRED: "Client name is required",
-    CLIENT_NAME_INVALID: "invalid client name",
+    CLIENT_NAME_INVALID: "Invalid client name",
     CLIENT_POC_REQUIRED: "Point of contact (POC) is required",
     CLIENT_POC_INVALID: "POC must only contain alphabets and spaces",
     CLIENT_ROLE_INVALID: "Role must only contain alphabets and spaces",
@@ -129,6 +129,7 @@ const CLIENT_VALIDATION_MESSAGES = {
     TOTAL_INVOICE_AMOUNT_INVALID: "Total invoice amount must be a number",
     COMPANY_NAME_REQUIRED: "Company name is required",
     COMPANY_NAME_VALIDATIONAS: "company name must only contain alphabets and spaces",
+    MIN_REQUIRED: "Must be a 3 letters"
 
 };
 
