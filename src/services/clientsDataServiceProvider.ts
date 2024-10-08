@@ -165,6 +165,7 @@ export class ClientsDataServiceProvider {
   }
 
   async getClientByName(clientName: string) {
+    
     const result = await db
       .select()
       .from(clients)
