@@ -1,6 +1,7 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 
+const alphaRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const phoneNumberRegex = /^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/;
 
@@ -49,34 +50,34 @@ export const clientUpdateValidationSchema = v.object({
 
     v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
   ),
-  secondary_phone: v.optional(
+  secondary_phone: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),
-  status: v.optional(
+  status: v.nullish(
     v.enum(StatusEnum, CLIENT_VALIDATION_MESSAGES.INVALID_STATUS)
   ),
-  remarks: v.optional(
+  remarks: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.REMARKS_INVALID)
   ),
-  bussiness_url: v.optional(
+  bussiness_url: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.BUSINESS_URL_INVALID)
   ),
-  address: v.optional(
+  address: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.ADDRESS_INVALID)
   ),
-  state: v.optional(
+  state: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.STATE_INVALID)
   ),
-  city: v.optional(
+  city: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.CITY_INVALID)
   ),
-  gst: v.optional(
+  gst: v.nullish(
     v.boolean(CLIENT_VALIDATION_MESSAGES.GST_INVALID)
   ),
-  country: v.optional(
+  country: v.nullish(
     v.string(CLIENT_VALIDATION_MESSAGES.COUNTRY_INVALID)
   ),
-  total_invoice_amount: v.optional(
+  total_invoice_amount: v.nullish(
     v.number(CLIENT_VALIDATION_MESSAGES.TOTAL_INVOICE_AMOUNT_INVALID)
   )
 });
