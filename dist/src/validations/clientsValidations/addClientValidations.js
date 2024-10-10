@@ -1,10 +1,10 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const indiaPhoneNumberRegex = /^(?:\+91[-.\s]?)?[6-9]\d{9}$/; // Matches +91 or 10 digits
-const usaPhoneNumberRegex = /^(?:\+1[-.\s]?)?\d{10}$/; // Matches +1 or 10 digits
-const ukPhoneNumberRegex = /^(?:\+44[-.\s]?)?\d{10}$/; // Matches +44 or 10 digits
-const australiaPhoneNumberRegex = /^(?:\+61[-.\s]?)?\d{9}$/; // Matches +61 or 9 digits
+const indiaPhoneNumberRegex = /^(?:\+91[-.\s]?|91[-.\s]?|0)?[6-9]\d{4}[-.\s]?\d{5}$/; // Matches +91 or 10 digits
+const usaPhoneNumberRegex = /^(?:\+1[-.\s]?|1[-.\s]?|\(1\)\s?)?(?:\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$/; // Matches +1 or 10 digits
+const ukPhoneNumberRegex = /^(?:\+44[-.\s]?|0)?(?:\d{4}[-.\s]?|\(?\d{3}\)?[-.\s]?)?\d{6}$/; // Matches +44 or 10 digits
+const australiaPhoneNumberRegex = /^(?:\+61[-.\s]?|0)?(?:2[-.\s]?\d{4}[-.\s]?\d{4}|\d{2}[-.\s]?\d{4}[-.\s]?\d{4}|\d{4}[-.\s]?\d{4})$/; // Matches +61 or 9 digits
 // Combined regex for all countries
 const combinedPhoneRegex = new RegExp(`^(${indiaPhoneNumberRegex.source}|${usaPhoneNumberRegex.source}|${ukPhoneNumberRegex.source}|${australiaPhoneNumberRegex.source})$`);
 export var StatusEnum;

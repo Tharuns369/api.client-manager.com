@@ -161,7 +161,7 @@ export class ClientsController {
           throw new ResourceAlreadyExistsException('client_name', CLIENT_MESSAGES.CLIENT_NAME_EXIST);
         }
       }
-     await clientsDataServiceProvider.editClient(id, body);      
+         await clientsDataServiceProvider.editClient(id, body);            
   
       return ResponseHelper.sendSuccessResponse(c, 200, CLIENT_MESSAGES.CLIENT_UPDATE_SUCCESS);
   
