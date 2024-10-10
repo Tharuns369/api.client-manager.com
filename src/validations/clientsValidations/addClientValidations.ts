@@ -1,9 +1,10 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
+import UnprocessableContentException from '../../exceptions/unproccessableContentException';
 
 const alphaRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phoneNumberRegex = /^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/;
+const phoneNumberRegex = /^\+?\d{1,4}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
 
 
 export enum StatusEnum {
@@ -42,14 +43,42 @@ export const clientValidationSchema = v.object({
     v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT),
     v.transform((value) => value.trim()),
   ),
- phone: v.pipe(
-    v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.transform((value) => value.trim()),
-    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
-    v.minLength(7, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID),
 
-    v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
-  ),
+phone: v.pipe(
+  v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED),
+  v.transform((value) => value.trim()), // Trim leading/trailing whitespace
+  v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), // Input is not empty
+
+  // Custom validation logic
+  v.custom((value: any) => {
+    // Regex to match country code (optional, with or without spaces)
+    const countryCodeRegex = /^\+\d{1,4}\s*/;
+
+    // Remove country code and trim the result
+    let phoneWithoutCountryCode = value.replace(countryCodeRegex, '').trim();
+
+    // Remove all non-numeric characters (spaces, hyphens, etc.)
+    const digitsOnly = phoneWithoutCountryCode.replace(/[^\d]/g, '');
+
+    // If no digits are entered after the country code, throw a 'required' error
+    if (countryCodeRegex.test(value) && digitsOnly.length === 0) {
+      throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED);
+    }
+
+    // Ensure the phone number has at least 7 digits and at most 15 digits
+    if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+      throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_INVALID);
+    }
+
+    return true; // Pass validation if length is correct
+  }),
+
+  // Regex validation for general phone number format
+  v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)
+),
+
+
+
   secondary_phone: v.optional(
     v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)
   ),

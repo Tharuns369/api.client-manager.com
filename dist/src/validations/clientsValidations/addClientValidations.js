@@ -1,8 +1,9 @@
 import * as v from 'valibot';
 import { CLIENT_VALIDATION_MESSAGES } from '../../constants/messaegConstants';
+import UnprocessableContentException from '../../exceptions/unproccessableContentException';
 const alphaRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phoneNumberRegex = /^(?:\+?(\d{1,4})[-.\s]?)?(?:[(]?(\d{1,4})[)]?[-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/;
+const phoneNumberRegex = /^\+?\d{1,4}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
 export var StatusEnum;
 (function (StatusEnum) {
     StatusEnum["ACTIVE"] = "ACTIVE";
@@ -13,7 +14,25 @@ export const clientValidationSchema = v.object({
     company_name: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED), v.transform((value) => value.trim()), v.minLength(1, CLIENT_VALIDATION_MESSAGES.COMPANY_NAME_REQUIRED), v.custom((value) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED), v.transform((value) => value.trim())),
     poc: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.transform((value) => value.trim()), v.minLength(1, CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.custom((value) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED), v.transform((value) => value.trim())),
     email: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT), v.transform((value) => value.trim())),
-    phone: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.transform((value) => value.trim()), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.minLength(7, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID), v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)),
+    phone: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.transform((value) => value.trim()), // Trim leading/trailing whitespace
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), // input is not empty
+    v.custom((value) => {
+        // Regex to match country code (optional, with or without spaces)
+        const countryCodeRegex = /^\+\d{1,4}\s*/;
+        let phoneWithoutCountryCode = value.replace(countryCodeRegex, '').trim();
+        // Remove all non-numeric characters
+        const digitsOnly = phoneWithoutCountryCode.replace(/[^\d]/g, '');
+        // If no digits are entered after the country code, throw a 'required' error
+        if (countryCodeRegex.test(value) && digitsOnly.length === 0) {
+            throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED);
+        }
+        // Ensure phone number length (only digits) is between 7 and 15
+        if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+            throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_INVALID); // Invalid phone length
+        }
+        return true; // Pass validation if length is correct
+    }), v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID) // Validate overall phone number format
+    ),
     secondary_phone: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)),
     status: v.optional(v.enum(StatusEnum, CLIENT_VALIDATION_MESSAGES.INVALID_STATUS)),
     remarks: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.REMARKS_INVALID)),
