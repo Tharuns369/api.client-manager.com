@@ -15,24 +15,27 @@ export const clientValidationSchema = v.object({
     poc: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.transform((value) => value.trim()), v.minLength(1, CLIENT_VALIDATION_MESSAGES.CLIENT_POC_REQUIRED), v.custom((value) => value.length >= 3, CLIENT_VALIDATION_MESSAGES.MIN_REQUIRED), v.transform((value) => value.trim())),
     email: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.nonEmpty(CLIENT_VALIDATION_MESSAGES.EMAIL_REQUIRED), v.regex(emailRegex, CLIENT_VALIDATION_MESSAGES.INVALID_EMAIL_FORMAT), v.transform((value) => value.trim())),
     phone: v.pipe(v.string(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), v.transform((value) => value.trim()), // Trim leading/trailing whitespace
-    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), // input is not empty
+    v.nonEmpty(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED), // Input is not empty
+    // Custom validation logic
     v.custom((value) => {
         // Regex to match country code (optional, with or without spaces)
         const countryCodeRegex = /^\+\d{1,4}\s*/;
+        // Remove country code and trim the result
         let phoneWithoutCountryCode = value.replace(countryCodeRegex, '').trim();
-        // Remove all non-numeric characters
+        // Remove all non-numeric characters (spaces, hyphens, etc.)
         const digitsOnly = phoneWithoutCountryCode.replace(/[^\d]/g, '');
         // If no digits are entered after the country code, throw a 'required' error
         if (countryCodeRegex.test(value) && digitsOnly.length === 0) {
             throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_REQUIRED);
         }
-        // Ensure phone number length (only digits) is between 7 and 15
+        // Ensure the phone number has at least 7 digits and at most 15 digits
         if (digitsOnly.length < 7 || digitsOnly.length > 15) {
-            throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_INVALID); // Invalid phone length
+            throw new UnprocessableContentException(CLIENT_VALIDATION_MESSAGES.PHONE_INVALID);
         }
         return true; // Pass validation if length is correct
-    }), v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID) // Validate overall phone number format
-    ),
+    }), 
+    // Regex validation for general phone number format
+    v.regex(phoneNumberRegex, CLIENT_VALIDATION_MESSAGES.PHONE_INVALID)),
     secondary_phone: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.SECONDARY_PHONE_REQUIRED)),
     status: v.optional(v.enum(StatusEnum, CLIENT_VALIDATION_MESSAGES.INVALID_STATUS)),
     remarks: v.optional(v.string(CLIENT_VALIDATION_MESSAGES.REMARKS_INVALID)),
